@@ -20,7 +20,6 @@
 
 @property int bankSelection;
 @property int numberOfBanksToPlay;
-@property BOOL simultaneousPlayback;
 
 @property CALayer * layer;
 

@@ -8,6 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
+@interface NSString (Timecode)
++(NSString*) stringWithTimecode:(double)seconds;
+
+@end
+
 @implementation NSString (Timecode)
 
 

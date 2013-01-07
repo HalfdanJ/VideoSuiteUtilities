@@ -19,7 +19,7 @@
 @property AVPlayerLayer * avPlayerLayer;
 
 @property id timeObserverToken;
-
+@property id timeOutObserverToken;
 @end
 
 
@@ -31,7 +31,8 @@
 static void *MovieItemContext = &MovieItemContext;
 static void *AVSPPlayerLayerReadyForDisplay = &AVSPPlayerLayerReadyForDisplay;
 
-
+static void *InTimeContext = &InTimeContext;
+static void *OutTimeContext = &OutTimeContext;
 
 - (id)initWithFrame:(NSRect)frame
 {
@@ -86,6 +87,8 @@ static void *AVSPPlayerLayerReadyForDisplay = &AVSPPlayerLayerReadyForDisplay;
         [self addSubview:self.playButton];
         
         [self addObserver:self forKeyPath:@"movieItem" options:0 context:MovieItemContext];
+        [self addObserver:self forKeyPath:@"inTime" options:0 context:InTimeContext];
+        [self addObserver:self forKeyPath:@"outTime" options:0 context:OutTimeContext];
 
     }
     
@@ -94,8 +97,20 @@ static void *AVSPPlayerLayerReadyForDisplay = &AVSPPlayerLayerReadyForDisplay;
 
 
 
-
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
+    
+    if(context == InTimeContext){
+        [self.avPlayer seekToTime:CMTimeMakeWithSeconds([self.inTime doubleValue], 100) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
+    }
+    if(context == OutTimeContext){
+        if(self.timeOutObserverToken){
+            [self.avPlayer removeTimeObserver:self.timeOutObserverToken];
+        }
+        self.timeOutObserverToken = [self.avPlayer addBoundaryTimeObserverForTimes:@[[NSValue valueWithCMTime:CMTimeMakeWithSeconds([self.outTime doubleValue], 100)]]  queue:dispatch_get_current_queue() usingBlock:^{
+            [self.avPlayer pause];
+        }];
+    }
+    
     if (context == AVSPPlayerLayerReadyForDisplay)
 	{
 		if ([[change objectForKey:NSKeyValueChangeNewKey] boolValue] == YES)
@@ -115,6 +130,13 @@ static void *AVSPPlayerLayerReadyForDisplay = &AVSPPlayerLayerReadyForDisplay;
         self.timeTextField.stringValue = [NSString stringWithTimecode:0];
         
         [self.avPlayer removeTimeObserver:self.timeObserverToken];
+        self.timeObserverToken = nil;
+        
+        if(self.timeOutObserverToken){
+            [self.avPlayer removeTimeObserver:self.timeOutObserverToken];
+            self.timeOutObserverToken = nil;
+        }
+        
         if(self.avPlayerLayer){
             [self.avPlayerLayer removeFromSuperlayer];
         }
@@ -138,13 +160,25 @@ static void *AVSPPlayerLayerReadyForDisplay = &AVSPPlayerLayerReadyForDisplay;
         
         //[self.avPlayer replaceCurrentItemWithPlayerItem:playerItem];
         self.avPlayer = [AVPlayer playerWithPlayerItem:playerItem];
+        if(self.inTime){
+            [self.avPlayer seekToTime:CMTimeMakeWithSeconds([self.inTime doubleValue], 100)];
+            self.timeTextField.stringValue = [NSString stringWithTimecode:[self.inTime doubleValue]];
+
+        }
         
-        [self setTimeObserverToken:[self.avPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 10) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
+        if(self.outTime){
+            NSLog(@"Out time %@",self.outTime);
+            self.timeOutObserverToken = [self.avPlayer addBoundaryTimeObserverForTimes:@[[NSValue valueWithCMTime:CMTimeMakeWithSeconds([self.outTime doubleValue], 100)]]  queue:dispatch_get_current_queue() usingBlock:^{
+                [self.avPlayer pause];
+            }];
+        }
+        
+        self.timeObserverToken = [self.avPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 10) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
 
             [self.timeSlider setDoubleValue:CMTimeGetSeconds(time)];
             self.timeTextField.stringValue = [NSString stringWithTimecode:CMTimeGetSeconds(time)];
 
-        }]];
+        }];
         
         
         
@@ -169,6 +203,8 @@ static void *AVSPPlayerLayerReadyForDisplay = &AVSPPlayerLayerReadyForDisplay;
 
 
 #pragma mark - Getters / Setters
+
+
 - (double)duration
 {
 	AVPlayerItem *playerItem = [self.avPlayer currentItem];
@@ -193,7 +229,7 @@ static void *AVSPPlayerLayerReadyForDisplay = &AVSPPlayerLayerReadyForDisplay;
 
 - (void)setCurrentTime:(double)time
 {
-	[self.avPlayer seekToTime:CMTimeMakeWithSeconds(time, 1) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
+	[self.avPlayer seekToTime:CMTimeMakeWithSeconds(time, 100) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
 }
 
 
@@ -204,6 +240,12 @@ static void *AVSPPlayerLayerReadyForDisplay = &AVSPPlayerLayerReadyForDisplay;
 
 -(void) setPlaying:(BOOL)playing{
     if(playing){
+        if(self.inTime){
+            if(CMTimeGetSeconds(self.avPlayer.currentTime ) < [self.inTime doubleValue]){
+                [self.avPlayer seekToTime:CMTimeMakeWithSeconds([self.inTime doubleValue], 100) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
+            }
+            
+        }
         [self.avPlayer play];
     } else {
         [self.avPlayer pause];

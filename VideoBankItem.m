@@ -64,4 +64,22 @@ static void *VideoStatusContext = &VideoStatusContext;
     return [NSSet setWithObject:@"duration"];
 }
 
+
+-(NSString*)inTimeString{
+    return [NSString stringWithTimecode:[self.inTime doubleValue]];
+}
+
++(NSSet *)keyPathsForValuesAffectingInTimeString{
+    return [NSSet setWithObject:@"inTime"];
+}
+
+
+-(NSString*)outTimeString{
+    return [NSString stringWithTimecode:[self.outTime doubleValue]];
+}
+
++(NSSet *)keyPathsForValuesAffectingOutTimeString{
+    return [NSSet setWithObject:@"outTime"];
+}
+
 @end

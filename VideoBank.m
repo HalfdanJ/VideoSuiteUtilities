@@ -57,6 +57,14 @@ static void *SelectionContext = &SelectionContext;
         if(self.selectedObjects.count > 0){
             if(self.videoPreviewView){
                 VideoBankItem * item = self.selectedObjects[0];
+                
+                
+                [self.videoPreviewView unbind:@"inTime"];
+                [self.videoPreviewView bind:@"inTime" toObject:item withKeyPath:@"inTime" options:nil];
+
+                [self.videoPreviewView unbind:@"outTime"];
+                [self.videoPreviewView bind:@"outTime" toObject:item withKeyPath:@"outTime" options:nil];
+
                 self.videoPreviewView.movieItem = item.avPlayerItem;
             }
         }

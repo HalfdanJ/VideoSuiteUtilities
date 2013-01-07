@@ -16,4 +16,8 @@
 
 @property BOOL playing;
 
+@property NSNumber * inTime;
+@property NSNumber * outTime;
+
+
 @end

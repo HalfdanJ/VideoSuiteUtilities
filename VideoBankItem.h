@@ -17,7 +17,10 @@
 @property double duration;
 @property (readonly) NSString * durationString;
 
-
+@property NSNumber * inTime;
+@property (readonly) NSString * inTimeString;
+@property NSNumber * outTime;
+@property (readonly) NSString * outTimeString;
 
 @property AVPlayerItem * avPlayerItem;
 //@property AVAsset * avAsset;
