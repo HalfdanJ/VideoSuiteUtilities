@@ -34,8 +34,12 @@ static void *SelectionContext = &SelectionContext;
             //[newItem loadBankFromDrive];
             if(i==0){
                 [newItem loadBankFromPath:@"~/Movies/VideoSuite/Bif.mp4"];
-            } else {
-                [newItem loadBankFromPath:@"~/Movies/VideoSuite/Bif2.mp4"];
+            } /*else if(i==2){
+                [newItem loadBankFromPath:@"/Users/jonas/Dropbox/Public/LEDDragt.MOV"];
+
+                
+            }*/ else {
+                [newItem loadBankFromPath:@"~/Movies/VideoSuite/Bif2.mov"];
 
             }
             [self addObject:newItem];

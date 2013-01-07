@@ -22,6 +22,10 @@
 
 @end
 
+
+#pragma mark - Implementation
+
+
 @implementation VideoPlayerView
 
 static void *MovieItemContext = &MovieItemContext;
