@@ -26,14 +26,13 @@
 
 static void *MovieItemContext = &MovieItemContext;
 static void *AVSPPlayerLayerReadyForDisplay = &AVSPPlayerLayerReadyForDisplay;
-//static void *AVPlayerCurrentItemContext = &AVPlayerCurrentItemContext;
+
+
+
 - (id)initWithFrame:(NSRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
-        // Initialization code here.
-
-        
         [self setWantsLayer:YES];
         
         //Background layer
@@ -50,19 +49,6 @@ static void *AVSPPlayerLayerReadyForDisplay = &AVSPPlayerLayerReadyForDisplay;
         
 
         
-        //Player
-        self.avPlayer = [[AVPlayer alloc] init];
-
-        
-        //Player layer
-//        self.avPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:self.avPlayer];
-//        self.avPlayerLayer.frame = frame;
-//        self.avPlayerLayer.hidden = NO;
-////        
-//        [self.layer addSublayer:self.avPlayerLayer];
-
-//        [self addObserver:self forKeyPath:@"avPlayerLayer.readyForDisplay" options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew context:AVSPPlayerLayerReadyForDisplay];
-
         
         //Slider
         self.timeSlider = [[NSSlider alloc] initWithFrame:NSMakeRect(40, 0, self.frame.size.width-80, 20)];
@@ -75,7 +61,6 @@ static void *AVSPPlayerLayerReadyForDisplay = &AVSPPlayerLayerReadyForDisplay;
         
         //Time view
         self.timeTextField = [[NSTextField alloc] initWithFrame:NSMakeRect(self.frame.size.width-40, 0, 40, 20)];
-//        self.timeTextField.stringValue = @"Test";
         [self.timeTextField setEditable:NO];
         self.timeTextField.drawsBackground = NO;
         [self.timeTextField setBordered:NO];
@@ -97,34 +82,26 @@ static void *AVSPPlayerLayerReadyForDisplay = &AVSPPlayerLayerReadyForDisplay;
         [self addSubview:self.playButton];
         
         [self addObserver:self forKeyPath:@"movieItem" options:0 context:MovieItemContext];
-     //   [self addObserver:self forKeyPath:@"avPlayer.currentItem" options:0 context:AVPlayerCurrentItemContext];
 
     }
     
     return self;
 }
 
+
+
+
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
     if (context == AVSPPlayerLayerReadyForDisplay)
 	{
 		if ([[change objectForKey:NSKeyValueChangeNewKey] boolValue] == YES)
 		{
-			// The AVPlayerLayer is ready for display. Hide the loading spinner and show it.
-			//[self stopLoadingAnimationAndHandleError:nil];
+			// The AVPlayerLayer is ready for display. 
 			[self.avPlayerLayer setHidden:NO];
             [self.playButton setEnabled:YES];
             [self.timeSlider setEnabled:YES];
-            //[self.avPlayer play];
 		}
 	}
-    
- //   if(context == AVPlayerCurrentItemContext){
-
-            
-          
-       
-        
-  //  }
     
     if(context == MovieItemContext){
         NSLog(@"Changed movie item %@" , self.movieItem);
@@ -159,9 +136,10 @@ static void *AVSPPlayerLayerReadyForDisplay = &AVSPPlayerLayerReadyForDisplay;
         self.avPlayer = [AVPlayer playerWithPlayerItem:playerItem];
         
         [self setTimeObserverToken:[self.avPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 10) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
+
             [self.timeSlider setDoubleValue:CMTimeGetSeconds(time)];
             self.timeTextField.stringValue = [NSString stringWithTimecode:CMTimeGetSeconds(time)];
-//            self.timeSlider.maxValue = [self duration];
+
         }]];
         
         
@@ -185,6 +163,8 @@ static void *AVSPPlayerLayerReadyForDisplay = &AVSPPlayerLayerReadyForDisplay;
     }
 }
 
+
+#pragma mark - Getters / Setters
 - (double)duration
 {
 	AVPlayerItem *playerItem = [self.avPlayer currentItem];
@@ -200,6 +180,8 @@ static void *AVSPPlayerLayerReadyForDisplay = &AVSPPlayerLayerReadyForDisplay;
 	return [NSSet setWithObjects:@"avPlayer.currentItem", @"avPlayer.currentItem.status", nil];
 }
 
+
+
 - (double)currentTime
 {
 	return CMTimeGetSeconds([self.avPlayer currentTime]);
@@ -209,6 +191,8 @@ static void *AVSPPlayerLayerReadyForDisplay = &AVSPPlayerLayerReadyForDisplay;
 {
 	[self.avPlayer seekToTime:CMTimeMakeWithSeconds(time, 1) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
 }
+
+
 
 -(BOOL) playing {
     return self.avPlayer.rate;
