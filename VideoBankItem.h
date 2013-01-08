@@ -22,9 +22,15 @@
 @property NSNumber * outTime;
 @property (readonly) NSString * outTimeString;
 
+@property NSNumber * crossfadeTime;
+
 @property AVPlayerItem * avPlayerItem;
 //@property AVAsset * avAsset;
 @property AVPlayer * avPreviewPlayer;
+
+@property double playHeadPosition;
+@property BOOL queued;
+@property BOOL playing;
 
 -(void) loadBankFromDrive;
 -(void) loadBankFromPath:(NSString*)path;
