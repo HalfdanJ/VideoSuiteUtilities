@@ -16,6 +16,8 @@
 
 @property double duration;
 @property (readonly) NSString * durationString;
+@property double durationOriginal;
+@property (readonly) NSString * durationOriginalString;
 
 @property NSNumber * inTime;
 @property (readonly) NSString * inTimeString;
@@ -24,13 +26,18 @@
 
 @property NSNumber * crossfadeTime;
 
-@property AVPlayerItem * avPlayerItem;
 //@property AVAsset * avAsset;
-@property AVPlayer * avPreviewPlayer;
+
+@property AVPlayerItem * avPlayerItemOriginal;
+@property AVPlayerItem * avPlayerItemTrim;
+
 
 @property double playHeadPosition;
 @property BOOL queued;
 @property BOOL playing;
+
+@property NSImage * thumbnail;
+
 
 -(void) loadBankFromDrive;
 -(void) loadBankFromPath:(NSString*)path;

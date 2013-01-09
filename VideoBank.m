@@ -30,7 +30,7 @@ static void *SelectionContext = &SelectionContext;
             VideoBankItem * newItem = [[VideoBankItem alloc] init];
             
             newItem.name = [NSString stringWithFormat:@"Bank %i",i];
-            newItem.crossfadeTime = @(2);
+         //   newItem.crossfadeTime = @(2);
             //[newItem loadBankFromDrive];
             if(i==0){
                 [newItem loadBankFromPath:@"~/Movies/VideoSuite/Bif.mp4"];
@@ -41,6 +41,8 @@ static void *SelectionContext = &SelectionContext;
 
                 
             }*/ else {
+                newItem.outTime = @(4);
+
                 [newItem loadBankFromPath:@"~/Movies/VideoSuite/Bif2.mov"];
 
             }
@@ -67,7 +69,7 @@ static void *SelectionContext = &SelectionContext;
                 [self.videoPreviewView unbind:@"outTime"];
                 [self.videoPreviewView bind:@"outTime" toObject:item withKeyPath:@"outTime" options:nil];
 
-                self.videoPreviewView.movieItem = item.avPlayerItem;
+                self.videoPreviewView.movieItem = item.avPlayerItemOriginal;
             }
         }
     }

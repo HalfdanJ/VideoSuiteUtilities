@@ -18,6 +18,8 @@ static void *RedrawContext = &RedrawContext;
     if (self) {
         [self addObserver:self forKeyPath:@"objectValue" options:0 context:nil];
         [self addObserver:self forKeyPath:@"objectValue.inTime" options:0 context:RedrawContext];
+        [self addObserver:self forKeyPath:@"objectValue.durationOriginal" options:0 context:RedrawContext];
+        [self addObserver:self forKeyPath:@"objectValue.duration" options:0 context:RedrawContext];
         [self addObserver:self forKeyPath:@"objectValue.outTime" options:0 context:RedrawContext];
         [self addObserver:self forKeyPath:@"objectValue.playing" options:0 context:RedrawContext];
         [self addObserver:self forKeyPath:@"objectValue.queued" options:0 context:RedrawContext];
@@ -51,7 +53,7 @@ static void *RedrawContext = &RedrawContext;
     
     NSRect timeRange = rect;
     
-    double duration = item.duration;
+    double duration = item.durationOriginal;
     double inTime = 0;
     double outTime = 0;
     
