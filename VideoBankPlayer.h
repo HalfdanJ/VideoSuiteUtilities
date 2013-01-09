@@ -12,6 +12,18 @@
 @interface VideoBankPlayer : NSObject
 {
     BOOL _playing;
+    
+    AVQueuePlayer * avPlayer[2];
+    AVPlayerLayer * avPlayerLayer[2];
+    
+    id timeObserverToken[2];
+    id timeOutTimeObserverToken[2];
+    id fadeInObserverToken[2];
+    id fadeOutObserverToken[2];
+    id fadeOutEventObserverToken[2];
+    
+//    VideoBankItem * uiUpdateBankItem[2];
+
 }
 
 

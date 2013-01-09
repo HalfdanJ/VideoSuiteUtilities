@@ -12,15 +12,15 @@
 
 @interface VideoBankPlayer ()
 
-@property AVQueuePlayer * avPlayer;
-@property AVPlayerLayer * avPlayerLayer;
-@property id timeObserverToken;
+//@property AVQueuePlayer * avPlayer;
+//@property AVPlayerLayer * avPlayerLayer;
 
 
-@property id timeOutTimeObserverToken;
+@property BOOL pingPong;
 
-@property NSMutableArray * outTimes;
-@property NSMutableArray * bankRefs;
+//@property NSMutableArray * outTimes;
+//@property NSMutableArray * bankRefs;
+@property NSMutableDictionary * playerData;
 
 @end
 
@@ -29,6 +29,8 @@
 static void *AVSPPlayerLayerReadyForDisplay = &AVSPPlayerLayerReadyForDisplay;
 static void *AVPlayerRateContext = &AVPlayerRateContext;
 static void *AvPlayerCurrentItemContext = &AvPlayerCurrentItemContext;
+
+
 - (id)init
 {
     self = [super init];
@@ -39,7 +41,7 @@ static void *AvPlayerCurrentItemContext = &AvPlayerCurrentItemContext;
         
         self.playing = NO;
         self.bankSelection = 0;
-        self.numberOfBanksToPlay = 1;
+        self.numberOfBanksToPlay = 2;
         //self.simultaneousPlayback = NO;
         
     }
@@ -59,130 +61,368 @@ static void *AvPlayerCurrentItemContext = &AvPlayerCurrentItemContext;
             self.layer.hidden = !self.playing;
             [CATransaction commit];
             
-            [self.avPlayer play];
+//            [avPlayer[self.pingPong] play];
 		}
 	}
-    
     if(context== AvPlayerCurrentItemContext){
-        NSLog(@"CurrentItemContext");
+        [self newItemPlaying];
+        /*
+         NSLog(@"CurrentItemContext");
         NSLog(@"Out times %@",self.outTimes);
         if(self.outTimes.count > 0){
-            if(self.avPlayer.rate){
+            if(avPlayer[self.pingPong].rate){
                 NSLog(@"Rate");
             NSArray * times = @[self.outTimes[0]];
             [self.outTimes removeObjectAtIndex:0];
             [self.bankRefs removeObjectAtIndex:0];
 
-            self.timeOutTimeObserverToken = [self.avPlayer addBoundaryTimeObserverForTimes:times queue:dispatch_get_current_queue() usingBlock:^{
+            self.timeOutTimeObserverToken = [avPlayer[self.pingPong] addBoundaryTimeObserverForTimes:times queue:dispatch_get_current_queue() usingBlock:^{
                 
-                [self.avPlayer removeTimeObserver:self.timeOutTimeObserverToken];
+                [avPlayer[self.pingPong] removeTimeObserver:self.timeOutTimeObserverToken];
                 self.timeOutTimeObserverToken = nil;
                 
-                [self.avPlayer advanceToNextItem];
+                [avPlayer[self.pingPong] advanceToNextItem];
                 
             }];
             }
         } else {
             NSLog(@"Stop playing");
             self.playing = NO;
+        }*/
+    }
+}
+
+
+-(NSDictionary*)getDataForCurrentItem{
+    return  [self getDataForItem:avPlayer[self.pingPong].currentItem];
+}
+-(NSDictionary*)getDataForItem:(AVPlayerItem*)item{
+    return [self.playerData objectForKey:item.asset];
+}
+
+-(void) newItemPlaying{
+    NSLog(@"\n\nNew item playing");
+    
+    NSDictionary * data = [self getDataForCurrentItem];
+    if(data){
+        VideoBankItem * bankItem = [data valueForKey:@"bankRef"];
+        
+        double outTime = CMTimeGetSeconds( [[data valueForKey:@"outTime"] CMTimeValue] );
+        double inTime = [[data valueForKey:@"inTime"] doubleValue];
+        NSArray * times = @[[data valueForKey:@"outTime"]];
+        
+        __weak AVQueuePlayer * thisPlayer = avPlayer[self.pingPong];
+        __weak AVPlayerLayer * thisLayer = avPlayerLayer[self.pingPong];
+        int pingPong = self.pingPong;
+        
+        //Out time advance observer
+        timeOutTimeObserverToken[pingPong] = [thisPlayer addBoundaryTimeObserverForTimes:times queue:dispatch_get_current_queue() usingBlock:^{
+            
+            [thisPlayer removeTimeObserver:timeOutTimeObserverToken[pingPong]];
+            timeOutTimeObserverToken[pingPong] = nil;
+            [thisPlayer advanceToNextItem];
+        }];
+        
+        
+        //Crossfade IN 
+        double crossfadeTimeIn = [[data valueForKey:@"crossfadeTimeIn"] doubleValue];
+        if(crossfadeTimeIn == 0){
+            thisLayer.opacity = 1.0;
+        } else {
+            thisLayer.opacity = 0.0;
+            
+            fadeInObserverToken[pingPong] = [thisPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 25) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
+                
+                double p = (CMTimeGetSeconds(time)-inTime) / crossfadeTimeIn;
+                thisLayer.opacity = p;
+                avPlayer[pingPong].volume = p;
+                
+                if(p >= 1){
+                    [thisPlayer removeTimeObserver:fadeInObserverToken[pingPong]];
+                }
+
+              //  NSLog(@"Fade up %f",p);
+            }];
+   
         }
+        
+        //Crossfade OUT
+        double crossfadeTimeOut = [[data valueForKey:@"crossfadeTimeOut"] doubleValue];
+        if(crossfadeTimeOut > 0){
+            double eventTime =  outTime - crossfadeTimeOut;
+            eventTime = MAX(inTime, eventTime);
+            
+            CMTime eventCMTime = CMTimeMakeWithSeconds(eventTime, 100);
+            NSValue * value = [NSValue valueWithCMTime:eventCMTime];
+            
+            fadeOutEventObserverToken[pingPong] = [thisPlayer addBoundaryTimeObserverForTimes:@[value] queue:dispatch_get_current_queue() usingBlock:^{
+
+                
+                //Remove observers
+                [thisPlayer removeTimeObserver: fadeOutEventObserverToken[pingPong]];
+                fadeOutEventObserverToken[pingPong] = nil;
+                
+                if(fadeInObserverToken[!pingPong]){
+                    [avPlayer[!pingPong] removeTimeObserver:fadeInObserverToken[!pingPong]];
+                    fadeInObserverToken[!pingPong] = nil;
+                }
+                
+                //Switch ping pong
+                self.pingPong = !self.pingPong;
+                
+
+                fadeOutObserverToken[pingPong] = [thisPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 25) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
+                    
+                    double p = MAX(0,(CMTimeGetSeconds(time)-eventTime) / crossfadeTimeOut);
+                    thisLayer.opacity = 1-p;
+                    avPlayer[pingPong].volume = 1-p;
+                    
+                    //NSLog(@"Fade down %f",1-p);
+                    
+                    if(p == 0){
+                        [thisPlayer removeTimeObserver:fadeOutObserverToken[pingPong]];
+                        fadeOutObserverToken[pingPong] = nil;
+                    }
+                }];
+                
+                //Start new player
+                if([data objectForKey:@"playerItems"] != nil){
+               //     NSLog(@"Start new player. Current player %@ ",avPlayer[self.pingPong].currentItem);
+                    if(avPlayer[self.pingPong].currentItem){
+                        [avPlayer[self.pingPong] pause];
+                    }
+
+                    avPlayer[self.pingPong] = [AVQueuePlayer queuePlayerWithItems:[data objectForKey:@"playerItems"]];
+                    
+                    //Clear observers
+                    timeObserverToken[self.pingPong] = nil;
+                    timeOutTimeObserverToken[self.pingPong] = nil;
+                    fadeInObserverToken[self.pingPong] = nil;
+                    fadeOutObserverToken[self.pingPong] = nil;
+                    fadeOutEventObserverToken[self.pingPong] = nil;
+                    [avPlayer[!self.pingPong] removeObserver:self forKeyPath:@"currentItem"];
+
+                    //Start player
+                    [avPlayer[self.pingPong] play];
+                    
+                    [avPlayer[self.pingPong] addObserver:self forKeyPath:@"currentItem" options:0 context:AvPlayerCurrentItemContext];
+                    
+                    avPlayerLayer[self.pingPong].player = avPlayer[self.pingPong];
+                    
+                    
+//                    if(timeObserverToken[self.pingPong] ){
+//                        [avPlayer[self.pingPong] removeTimeObserver:timeObserverToken[self.pingPong]];
+//                        avPlayer[self.pingPong] = nil;
+//                    }
+
+                    
+                    int pingPongNewplayer = self.pingPong;
+                    timeObserverToken[self.pingPong] = [avPlayer[self.pingPong] addPeriodicTimeObserverForInterval:CMTimeMake(1, 50) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
+                        self.currentTimeString = [NSString stringWithTimecode:CMTimeGetSeconds(time)];
+                        
+                        if(avPlayer[self.pingPong].rate){
+                            VideoBankItem * item = [[self getDataForItem:avPlayer[pingPongNewplayer].currentItem] valueForKey:@"bankRef"];
+                            item.queued = NO;
+                            item.playing = YES;
+                            item.playHeadPosition = CMTimeGetSeconds(time);
+                        }
+                    }];
+                    
+                    [self newItemPlaying];
+                }
+                //                [CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
+                //avPlayerLayer[self.pingPong].opacity = 0.1;
+                //              [CATransaction commit];
+
+            }];
+            
+        }
+
+        
+    } else {
+        self.playing = NO;
     }
 }
 
 -(void) preparePlayback{
 
     //Cleanup
-    [self.avPlayer removeTimeObserver:self.timeOutTimeObserverToken];
-    self.timeOutTimeObserverToken = nil;
+    [avPlayer[self.pingPong] removeTimeObserver:timeOutTimeObserverToken[self.pingPong]];
+    timeOutTimeObserverToken[self.pingPong] = nil;
     
-    [self.avPlayer removeTimeObserver:self.timeObserverToken];
-    self.timeObserverToken = nil;
+    [avPlayer[self.pingPong] removeTimeObserver:timeObserverToken[self.pingPong]];
+    timeObserverToken[self.pingPong] = nil;
     
-    if(self.avPlayerLayer){
-        [self.avPlayerLayer removeFromSuperlayer];
+    if(avPlayerLayer[self.pingPong]){
+        [avPlayerLayer[self.pingPong] removeFromSuperlayer];
     }
     
-    
-    if(self.avPlayer){
-        [self removeObserver:self forKeyPath:@"avPlayer.currentItem"];
-        self.avPlayer = nil;
+    if(avPlayer[self.pingPong]){
+        [avPlayer[self.pingPong] removeObserver:self forKeyPath:@"currentItem"];
+        avPlayer[self.pingPong] = nil;
 
     }
     
+    self.pingPong = 0;
+    
     //Prepare items
     NSMutableArray * playerItems = [NSMutableArray array];
-    self.outTimes = [NSMutableArray array];
-    self.bankRefs = [NSMutableArray array];
+    NSArray * initialPlayerItems;
+    
+    self.playerData = [NSMutableDictionary dictionary];
+    
+    id lastKey = nil;
+    id newPlayerKey = nil;
     
     for(int i=self.bankSelection;i<self.bankSelection + self.numberOfBanksToPlay;i++){
         if([self.videoBank.content count] > i){
+            BOOL isLast = (i == self.bankSelection + self.numberOfBanksToPlay -1 )?YES : NO;
             VideoBankItem * bankItem = [self.videoBank content][i];
+            double duration = bankItem.duration;
+            
             AVAsset * asset = bankItem.avPlayerItem.asset;
             
             if([asset isPlayable]){
                 AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:asset];
                 
+                
+                //In time
                 CMTime inTime = CMTimeMakeWithSeconds([bankItem.inTime doubleValue], 100);
                 [playerItem seekToTime:inTime toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
                 
+                
+                //UI
                 bankItem.queued = YES;
                 
-                [playerItems addObject:playerItem];
-                [self.bankRefs addObject:bankItem];
                 
+                
+                //Out time calculation
+                double outTime;
                 if(bankItem.outTime != nil){
-                    [self.outTimes addObject:[NSValue valueWithCMTime:CMTimeMakeWithSeconds([bankItem.outTime doubleValue], 100)]];
+                    outTime = [bankItem.outTime doubleValue];
                 } else {
-                    [self.outTimes addObject:[NSValue valueWithCMTime:CMTimeMakeWithSeconds(-1, 100)] ];
+                    outTime = bankItem.duration;
                 }
-            } 
+                outTime = MIN(duration, outTime);
+                
+                NSValue * outTimeValue = [NSValue valueWithCMTime:CMTimeMakeWithSeconds(outTime, 100)];
+                
+                
+                //Crossfade times
+                double crossfadeTimeIn = [bankItem.crossfadeTime doubleValue];
+                double crossfadeTimeOut = 0;
+                
+                if(crossfadeTimeIn >  bankItem.duration){
+                    crossfadeTimeIn = bankItem.duration-0.01;
+                }
+                
+                if(crossfadeTimeIn > 0 && lastKey){
+                    NSMutableDictionary * lastDict = [NSMutableDictionary dictionaryWithDictionary:[self.playerData objectForKey:lastKey] ];
+
+                    [lastDict setValue:@(crossfadeTimeIn) forKey:@"crossfadeTimeOut"];
+                    
+                    [self.playerData setObject:[NSDictionary dictionaryWithDictionary:lastDict] forKey:lastKey];
+                }
+                
+                
+                if((crossfadeTimeIn > 0 && lastKey)){
+                    NSLog(@"----Make new player magic at index %i",i);
+                    
+                    if(newPlayerKey == nil){
+                        NSLog(@"No newPlayerKey. Store in initialPlayerItems");
+                        initialPlayerItems = playerItems;
+                    } else {
+                        NSLog(@"Store in newPlayerKey dictionary");
+                        NSMutableDictionary * lastDict = [NSMutableDictionary dictionaryWithDictionary:[self.playerData objectForKey:newPlayerKey] ];
+                        
+                        [lastDict setValue:playerItems forKey:@"playerItems"];
+                        
+                        [self.playerData setObject:[NSDictionary dictionaryWithDictionary:lastDict] forKey:newPlayerKey];
+
+                        
+                    }
+
+                    playerItems = [NSMutableArray array];
+                    newPlayerKey = lastKey;
+
+                }
+                
+                [playerItems addObject:playerItem];
+                
+                if(isLast){
+                    if(newPlayerKey == nil){
+                        initialPlayerItems = playerItems;
+                    } else {
+                        
+                        NSMutableDictionary * lastDict = [NSMutableDictionary dictionaryWithDictionary:[self.playerData objectForKey:lastKey] ];
+                        
+                        [lastDict setValue:playerItems forKey:@"playerItems"];
+                        
+                        [self.playerData setObject:[NSDictionary dictionaryWithDictionary:lastDict] forKey:lastKey];
+                        
+                        
+                    }
+                    
+   
+                }
+
+                
+                NSDictionary * dict = @{
+                @"bankRef" : bankItem,
+                @"outTime" : outTimeValue,
+                @"inTime" : @([bankItem.inTime doubleValue]),
+                @"crossfadeTimeIn" : @(crossfadeTimeIn),
+                @"crossfadeTimeOut" : @(crossfadeTimeOut),
+                @"playerItems" : @[]
+                };
+                
+
+                [self.playerData setObject:dict forKey:playerItem.asset];
+                
+                lastKey = playerItem.asset;
+                
+            }
         }
     }
     
     //Create AVPlayer
-    self.avPlayer = [AVQueuePlayer queuePlayerWithItems:playerItems];
-
+    avPlayer[self.pingPong] = [AVQueuePlayer queuePlayerWithItems:initialPlayerItems];
+    [avPlayer[self.pingPong] play];
+    
     //Layer
-    AVPlayerLayer *newPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:self.avPlayer];
-    [newPlayerLayer setFrame:self.layer.frame];
-    newPlayerLayer.videoGravity = AVLayerVideoGravityResizeAspect;
-    [newPlayerLayer setAutoresizingMask:kCALayerWidthSizable | kCALayerHeightSizable];
-    [newPlayerLayer setHidden:NO];
+    for(int i=0;i<2;i++){
+        AVPlayerLayer *newPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:avPlayer[i]];
+        [newPlayerLayer setFrame:self.layer.frame];
+        newPlayerLayer.videoGravity = AVLayerVideoGravityResizeAspect;
+        [newPlayerLayer setAutoresizingMask:kCALayerWidthSizable | kCALayerHeightSizable];
+        [newPlayerLayer setHidden:NO];
+        newPlayerLayer.opacity = 0.0;
+        
+        avPlayerLayer[i] = newPlayerLayer;
+        [self.layer addSublayer:avPlayerLayer[i]];
+    }
     
-    self.avPlayerLayer = newPlayerLayer;
-    [self.layer addSublayer:self.avPlayerLayer];
     
+    [self newItemPlaying];
     
-    //Out times
- 
-    NSLog(@"Start playing With outtimes: %@",self.outTimes);
-    NSArray * times = @[self.outTimes[0]];
-    [self.outTimes removeObjectAtIndex:0];
-    
-    self.timeOutTimeObserverToken = [self.avPlayer addBoundaryTimeObserverForTimes:times queue:dispatch_get_current_queue() usingBlock:^{
-        [self.avPlayer removeTimeObserver:self.timeOutTimeObserverToken];
-        self.timeOutTimeObserverToken = nil;
-        [self.avPlayer advanceToNextItem];
-    }];
-    
-  
     //Timecode updater
-    self.timeObserverToken = [self.avPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 50) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
+    timeObserverToken[self.pingPong] = [avPlayer[self.pingPong] addPeriodicTimeObserverForInterval:CMTimeMake(1, 50) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
         self.currentTimeString = [NSString stringWithTimecode:CMTimeGetSeconds(time)];
-
-        if(self.avPlayer.rate){
-        VideoBankItem * item = self.bankRefs[0];
-        item.queued = NO;
-        item.playing = YES;
-        item.playHeadPosition = CMTimeGetSeconds(time);
+        
+        if(avPlayer[0].rate){
+            VideoBankItem * item = [[self getDataForItem:avPlayer[0].currentItem] valueForKey:@"bankRef"];
+            item.queued = NO;
+            item.playing = YES;
+            item.playHeadPosition = CMTimeGetSeconds(time);
         }
     }];
     
     
     //Observers
-    [self addObserver:self forKeyPath:@"avPlayerLayer.readyForDisplay" options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew context:AVSPPlayerLayerReadyForDisplay];
+    [avPlayerLayer[self.pingPong] addObserver:self forKeyPath:@"readyForDisplay" options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew context:AVSPPlayerLayerReadyForDisplay];
     
-    [self addObserver:self forKeyPath:@"avPlayer.currentItem" options:0 context:AvPlayerCurrentItemContext];
+    [avPlayer[self.pingPong] addObserver:self forKeyPath:@"currentItem" options:0 context:AvPlayerCurrentItemContext];
+    
     
 }
 
@@ -206,10 +446,9 @@ static void *AvPlayerCurrentItemContext = &AvPlayerCurrentItemContext;
         } else {
             [self clearBankStatus];
 
-            [self.avPlayer pause];
+            [avPlayer[self.pingPong] pause];
             [CATransaction begin];
-            [CATransaction setValue:(id)kCFBooleanTrue
-                             forKey:kCATransactionDisableActions];
+            [CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
             self.layer.hidden = YES;
             [CATransaction commit];
             
