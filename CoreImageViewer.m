@@ -10,19 +10,30 @@
 
 @implementation CoreImageViewer
 
+static void *CIImageContext = &CIImageContext;
+
 - (id)initWithFrame:(NSRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
-        [self setWantsLayer:YES];
+        [self addObserver:self forKeyPath:@"ciImage" options:0 context:CIImageContext];
     }
     
     return self;
 }
 
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
+    if(context == CIImageContext){
+        [self setNeedsDisplay:YES];
+    }
+}
+
 - (void)drawRect:(NSRect)dirtyRect
 {
+    [super drawRect:dirtyRect];
+    
     if(!self.ciImage){
+        NSLog(@"No ciimage");
         [[NSColor blackColor] set];
         NSRectFill(dirtyRect);
     }

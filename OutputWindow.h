@@ -15,5 +15,6 @@
 //@property BOOL fullscreen;
 
 @property CoreImageViewer * imageViewer;
+@property CALayer * layer;
 
 @end

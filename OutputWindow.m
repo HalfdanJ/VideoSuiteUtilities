@@ -27,6 +27,12 @@
     [self.imageViewer setAutoresizingMask:NSViewWidthSizable|NSViewHeightSizable];
     [self.contentView addSubview:self.imageViewer];
     
+    NSView * view = [[NSView alloc] initWithFrame:contentView.frame];
+    [view setAutoresizingMask:NSViewWidthSizable|NSViewHeightSizable];
+    [view setWantsLayer:YES];
+    self.layer = view.layer;
+    [self.contentView addSubview:view];
+    
     
     /*
     //Shortcuts

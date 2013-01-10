@@ -1,0 +1,202 @@
+//
+//  VideoBankRecorder.m
+//  SH
+//
+//  Created by Flyvende Grise on 1/10/13.
+//  Copyright (c) 2013 HalfdanJ. All rights reserved.
+//
+
+#import "VideoBankRecorder.h"
+
+@interface VideoBankRecorder ()
+
+@property BlackMagicItem * deviceItem;
+@property NSArray * blackmagicItems;
+@property NSTimeInterval startRecordTime;
+
+@property AVAssetWriter *videoWriter;
+@property AVAssetWriterInput* videoWriterInput ;
+@property AVAssetWriterInputPixelBufferAdaptor *adaptor;
+
+@property dispatch_queue_t assetWriterQueue;
+
+@property NSRecursiveLock * lock;
+
+@end
+
+@implementation VideoBankRecorder
+static void *DeviceIndexContext = &DeviceIndexContext;
+static void *RecordContext = &RecordContext;
+
+- (id)initWithBlackmagicItems:(NSArray *)items
+{
+    self = [self init];
+    if (self) {
+        self.blackmagicItems = items;
+        self.deviceIndex = -1;
+        self.readyToRecord = YES;
+        
+        [self addObserver:self forKeyPath:@"deviceIndex" options:0 context:DeviceIndexContext];
+        [self addObserver:self forKeyPath:@"record" options:0 context:RecordContext];
+
+        self.deviceIndex = 0;
+        
+        self.lock = [[NSRecursiveLock alloc] init];
+        
+        self.assetWriterQueue = dispatch_queue_create("AssetWriterQueue", DISPATCH_QUEUE_SERIAL);
+        [self prepareRecording];
+
+    }
+    return self;
+}
+
+
+-(void)newFrameWithBufer:(CVPixelBufferRef)buffer image:(CIImage *)image item:(BlackMagicItem*)bmItem{
+    
+    if(self.record && self.readyToRecord){
+        NSTimeInterval time = [NSDate timeIntervalSinceReferenceDate];
+
+        //  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul), ^{
+        NSTimeInterval diffTime = time - self.startRecordTime;
+        int frameCount = diffTime*250.0;
+        
+        __block BOOL append_ok = NO;
+        int j = 0;
+       // self.adaptor.assetWriterInput
+//        NSLog(@"%ld",self.videoWriter.status);
+        if (self.videoWriterInput.readyForMoreMediaData)
+        {
+            //                    printf("appending %d attemp %d\n", frameCount, j);
+            CMTime frameTime = CMTimeMake(frameCount,(int32_t) 250.0);
+            
+            
+         //   dispatch_sync(self.assetWriterQueue, ^{
+            //   [self.lock lock];
+             //   while(!self.adaptor.assetWriterInput.readyForMoreMediaData) {}
+            //CVPixelBufferPoolCreatePixelBuffer (NULL, self.adaptor.pixelBufferPool, &buffer);
+
+                append_ok = [self.adaptor appendPixelBuffer:buffer withPresentationTime:frameTime];
+           
+             //   while(!self.adaptor.assetWriterInput.readyForMoreMediaData) {}
+                
+            //    [self.lock unlock];
+         //   });
+            
+            
+            //if(buffer)
+            //  CVBufferRelease(buffer);
+            //[NSThread sleepForTimeInterval:0.035];
+        }
+        else
+        {
+            printf("adaptor not ready %d, %d\n", frameCount, j);
+            // [NSThread sleepForTimeInterval:0.1];
+        }
+        j++;
+        //}
+        if (!append_ok) {
+            NSLog(@"%@",self.videoWriter.error);
+            printf("error appending image %d times %d\n", frameCount, j);
+        }
+        
+        // });
+
+    }    
+}
+
+
+-(void) prepareRecording {
+    self.readyToRecord = NO;
+    
+    NSError *error = nil;
+    
+    //                self.recordingIndex ++;
+    //              [[NSUserDefaults standardUserDefaults] setInteger:self.recordingIndex forKey:@"recordingIndex"];
+    
+    NSString * path = [[NSString stringWithFormat:@"~/Desktop/triumf.mov"] stringByExpandingTildeInPath];
+    NSFileManager * fileManager = [NSFileManager defaultManager];
+    [fileManager removeItemAtPath:path error:&error];
+    
+    self.videoWriter = [[AVAssetWriter alloc] initWithURL:
+                        [NSURL fileURLWithPath:path] fileType:AVFileTypeQuickTimeMovie
+                                                    error:&error];
+    NSParameterAssert(self.videoWriter);
+    
+    NSDictionary *videoSettings = [NSDictionary dictionaryWithObjectsAndKeys:
+                                   AVVideoCodecH264, AVVideoCodecKey,
+                                   [NSNumber numberWithInt:720], AVVideoWidthKey,
+                                   [NSNumber numberWithInt:576], AVVideoHeightKey,
+                                   nil];
+    
+    self.videoWriterInput = [AVAssetWriterInput
+                             assetWriterInputWithMediaType:AVMediaTypeVideo
+                             outputSettings:videoSettings];
+    
+    
+    self.adaptor = [AVAssetWriterInputPixelBufferAdaptor
+                    assetWriterInputPixelBufferAdaptorWithAssetWriterInput:self.videoWriterInput
+                    sourcePixelBufferAttributes:@{(NSString*)kCVPixelBufferPixelFormatTypeKey:[NSNumber numberWithInt:kCVPixelFormatType_32ARGB]}];
+    
+    NSParameterAssert(self.videoWriterInput);
+    NSParameterAssert([self.videoWriter canAddInput:self.videoWriterInput]);
+    self.videoWriterInput.expectsMediaDataInRealTime = YES;
+    self.adaptor.assetWriterInput.expectsMediaDataInRealTime = YES;
+    [self.videoWriter addInput:self.videoWriterInput];
+    
+    //Start a session:
+    if(![self.videoWriter startWriting]){
+        NSLog(@"Could not start writing %@",self.videoWriter.error);
+    }
+    [self.videoWriter startSessionAtSourceTime:kCMTimeZero];
+    
+    dispatch_async(dispatch_queue_create("waiter", 0), ^{
+        [NSThread sleepForTimeInterval:0.2];
+        self.readyToRecord = YES;
+    });
+}
+
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
+    
+    if(context == RecordContext){
+        self.startRecordTime = [NSDate timeIntervalSinceReferenceDate];
+        
+        if(!self.record){
+            [self willChangeValueForKey:@"recordings"];
+            
+            NSString * path = [NSString stringWithFormat:@"/Users/jonas/Desktop/triumf.mov"];
+            
+            [self.videoWriterInput markAsFinished];
+            [self.videoWriter finishWriting];
+            
+            [[NSFileManager defaultManager] moveItemAtPath:[[NSString stringWithFormat:@"~/Desktop/triumf.mov"] stringByExpandingTildeInPath] toPath:[[NSString stringWithFormat:@"~/Desktop/triumfs.mov"] stringByExpandingTildeInPath] error:nil];
+            
+            //            [self.recordings addObject:@{@"path":path, @"name":[NSString stringWithFormat:@"Rec %i", self.recordingIndex-1]}];
+            /*                NSMutableDictionary * dict = [@{@"path":path, @"active": @(YES), @"chroma":@(NO), @"name":[NSString stringWithFormat:@"Old Rec %i", self.recordingIndex-1], @"inTime":@(0), @"outTime":@(0)} mutableCopy];
+             [self.recordings addObject:dict];
+             */
+            
+            NSLog(@"Write Ended");
+            
+            self.readyToRecord = YES;
+            [self didChangeValueForKey:@"recordings"];
+            
+            [self performSelector:@selector(prepareRecording) withObject:nil afterDelay:0.5];
+            
+            //   [self prepareRecording];
+            
+            
+        }
+}
+
+if(context == DeviceIndexContext){
+        if(self.deviceItem){
+            self.deviceItem.delegate = nil;
+        }
+        
+        if(self.deviceIndex < self.blackmagicItems.count && self.deviceIndex >= 0){
+            self.deviceItem = self.blackmagicItems[self.deviceIndex];
+            self.deviceItem.delegate = self;
+        }
+    }
+}
+@end
