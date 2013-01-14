@@ -21,14 +21,23 @@
 static void *VideoStatusContext = &VideoStatusContext;
 static void *TrimContext = &TrimContext;
 static void *AssetContext = &AssetContext;
+static void *LockedContext = &LockedContext;
 
-- (id)init
+- (id)initWithName:(NSString*)name
 {
     self = [super init];
     if (self) {
+        self.name = name;
+        
+        NSNumber * locked = [[NSUserDefaults standardUserDefaults] valueForKey:[NSString stringWithFormat:@"%@Locked",self.name]];
+        if(locked){
+            self.locked = [locked boolValue];
+        }
+
         [self addObserver:self forKeyPath:@"inTime" options:0 context:TrimContext];
         [self addObserver:self forKeyPath:@"outTime" options:0 context:TrimContext];
         [self addObserver:self forKeyPath:@"avPlayerItemTrim.asset" options:0 context:AssetContext];
+        [self addObserver:self forKeyPath:@"locked" options:0 context:LockedContext];
     }
     return self;
 }
@@ -48,6 +57,16 @@ static void *AssetContext = &AssetContext;
     
     self.avPreviewPlayer = [AVPlayer playerWithPlayerItem:self.avPlayerItemOriginal];
     self.loaded = NO;
+    
+}
+
+-(void)clear{
+    if(!self.locked){
+        self.loaded = NO;
+        self.thumbnail = nil;
+        [[NSFileManager defaultManager] removeItemAtPath:self.path error:nil];
+        self.avPlayerItemOriginal = nil;
+    }
     
 }
 
@@ -84,6 +103,11 @@ static void *AssetContext = &AssetContext;
 }
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
+    
+    if(context == LockedContext){
+        NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setValue:@(self.locked) forKey:[NSString stringWithFormat:@"%@Locked", self.name]];
+    }
     if(context == AssetContext){
         NSLog(@"New asset");
         

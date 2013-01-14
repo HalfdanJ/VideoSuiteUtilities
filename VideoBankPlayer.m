@@ -284,7 +284,7 @@ static void *AvPlayerCurrentItemContext = &AvPlayerCurrentItemContext;
             
             AVAsset * asset = bankItem.avPlayerItemTrim.asset;
             
-            if([asset isPlayable]){
+            if([asset isPlayable] && bankItem.loaded){
                 AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:asset];
                 
                 
@@ -346,11 +346,7 @@ static void *AvPlayerCurrentItemContext = &AvPlayerCurrentItemContext;
                         [lastDict setValue:playerItems forKey:@"playerItems"];
                         
                         [self.playerData setObject:[NSDictionary dictionaryWithDictionary:lastDict] forKey:newPlayerKey];
-                        
-                        
                     }
-                    
-                    
                 }
                 
                 
@@ -368,6 +364,13 @@ static void *AvPlayerCurrentItemContext = &AvPlayerCurrentItemContext;
                 
             }
         }
+    }
+    
+    if(initialPlayerItems.count == 0){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.playing = NO;
+        });
+        return;
     }
     
     //Create AVPlayer

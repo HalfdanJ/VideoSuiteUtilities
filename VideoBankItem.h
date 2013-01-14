@@ -16,6 +16,7 @@
 
 @property NSString * name;
 @property NSString * path;
+@property BOOL locked;
 
 @property BOOL loaded;
 
@@ -43,7 +44,9 @@
 
 @property NSImage * thumbnail;
 
+- (id)initWithName:(NSString*)name;
 
+-(void) clear;
 -(void) loadBankFromDrive;
 -(void) loadBankFromPath:(NSString*)path;
 
