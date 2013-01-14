@@ -393,7 +393,7 @@ static void *AvPlayerCurrentItemContext = &AvPlayerCurrentItemContext;
     
     timeObserverToken[0] = [avPlayer[0] addPeriodicTimeObserverForInterval:CMTimeMake(1, 50) queue:NULL usingBlock:^(CMTime time) {
       //  NSLog(@"Update1");
-        dispatch_async(dispatch_get_main_queue(), ^{
+//        dispatch_async(dispatch_get_main_queue(), ^{
             self.currentTimeString = [NSString stringWithTimecode:CMTimeGetSeconds(time)];
             
             if(avPlayer[0].rate){
@@ -402,7 +402,7 @@ static void *AvPlayerCurrentItemContext = &AvPlayerCurrentItemContext;
                 item.playing = YES;
                 item.playHeadPosition = CMTimeGetSeconds(time)+[item.inTime doubleValue];
             }
-        });
+     //   });
     }];
     
     
