@@ -10,8 +10,13 @@
 #import <AVFoundation/AVFoundation.h>
 
 @interface VideoBankItem : NSObject
+{
+    NSString * _manualPath;
+}
 
 @property NSString * name;
+@property NSString * path;
+
 @property BOOL loaded;
 
 @property double duration;

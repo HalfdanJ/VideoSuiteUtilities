@@ -1,0 +1,307 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOGEX 0, 0, 235, 110
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "About DecklinkExportToTape"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,11,51,20,20
+    LTEXT           "Decklink Export To Tape Sample Version 1.0",IDC_STATIC,40,44,173,8,SS_NOPREFIX
+    LTEXT           "Copyright © 2003-2007 Blackmagic Design",IDC_STATIC,40,58,163,8
+    DEFPUSHBUTTON   "OK",IDOK,92,87,50,16,WS_GROUP
+    CONTROL         173,IDC_STATIC,"Static",SS_BITMAP,7,7,221,34
+    LTEXT           "http://www.blackmagic-design.com",IDC_STATIC_URLBMD,40,72,117,8
+END
+
+IDD_DECKLINKEXPORTTOTAPE_DIALOG DIALOGEX 0, 0, 447, 265
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "DecklinkExportToTape"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    CONTROL         "+",IDC_BUTTON_ADDFILE,"Button",BS_OWNERDRAW | WS_TABSTOP,14,19,16,16
+    CONTROL         "-",IDC_BUTTON_REMOVEFILE,"Button",BS_OWNERDRAW | WS_TABSTOP,31,19,16,16
+    CONTROL         "Up",IDC_BUTTON_MOVEFILEUP,"Button",BS_OWNERDRAW | WS_TABSTOP,48,19,16,16
+    CONTROL         "Dn",IDC_BUTTON_MOVEFILEDOWN,"Button",BS_OWNERDRAW | WS_TABSTOP,65,19,16,16
+    CONTROL         "{",IDC_BUTTON_SETINPOINT,"Button",BS_OWNERDRAW | WS_TABSTOP,82,19,16,16
+    CONTROL         "}",IDC_BUTTON_SETOUTPOINT,"Button",BS_OWNERDRAW | WS_TABSTOP,99,19,16,16
+    RTEXT           "Device:",IDC_STATIC,272,22,25,8
+    COMBOBOX        IDC_COMBO_DEVICE,302,20,131,111,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "",IDC_LIST_FILES,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_OWNERDRAWFIXED | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,14,40,419,98,WS_EX_ACCEPTFILES
+    CTEXT           "00:00:00:00",IDC_STATIC_TIMECODE,125,172,44,12,SS_CENTERIMAGE | SS_SUNKEN
+    EDITTEXT        IDC_EDIT_INPOINT,173,172,48,12,ES_CENTER | ES_AUTOHSCROLL | NOT WS_BORDER,WS_EX_STATICEDGE
+    EDITTEXT        IDC_EDIT_OUTPOINT,225,172,48,12,ES_CENTER | ES_AUTOHSCROLL | NOT WS_BORDER,WS_EX_STATICEDGE
+    CTEXT           "00:00:00:00",IDC_STATIC_DURATION,277,172,44,12,SS_CENTERIMAGE | SS_SUNKEN
+    CONTROL         "Play",IDC_BUTTON_PLAY,"Button",BS_OWNERDRAW | WS_TABSTOP,195,199,16,16
+    CONTROL         "Stop",IDC_BUTTON_STOP,"Button",BS_OWNERDRAW | WS_TABSTOP,236,199,16,16
+    CONTROL         "<<",IDC_BUTTON_FREW,"Button",BS_OWNERDRAW | WS_TABSTOP,175,199,16,16
+    CONTROL         ">>",IDC_BUTTON_FFWD,"Button",BS_OWNERDRAW | WS_TABSTOP,216,199,16,16
+    PUSHBUTTON      "Export",IDC_BUTTON_EXPORT,167,228,50,14
+    PUSHBUTTON      "Abort",IDC_BUTTON_ABORT,229,228,50,14
+    CONTROL         "Eject",IDC_BUTTON_EJECT,"Button",BS_OWNERDRAW | WS_TABSTOP,256,199,16,16
+    GROUPBOX        "File List",IDC_STATIC,7,7,433,138
+    GROUPBOX        "Deck Controls",IDC_STATIC,7,148,433,110
+    CTEXT           "Timecode",IDC_STATIC,125,160,44,8
+    CTEXT           "Inpoint",IDC_STATIC,175,160,44,8
+    CTEXT           "Outpoint",IDC_STATIC,227,160,44,8
+    CTEXT           "Duration",IDC_STATIC,277,160,44,8
+    EDITTEXT        IDC_EDIT_OFFSET,348,172,48,12,ES_CENTER | ES_AUTOHSCROLL | NOT WS_BORDER,WS_EX_STATICEDGE
+    CTEXT           "Offset",IDC_STATIC,350,160,44,8
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 6,4,0,8
+ PRODUCTVERSION 6,4,0,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904e4"
+        BEGIN
+            VALUE "CompanyName", "Blackmagic Design"
+            VALUE "FileDescription", "DirectShow Decklink Export to Tape Sample"
+            VALUE "FileVersion", "6, 4, 0, 8"
+            VALUE "InternalName", "DecklinkExportToTape.exe"
+            VALUE "LegalCopyright", "Copyright © 2003-2007 Blackmagic Design. All rights reserved."
+            VALUE "OriginalFilename", "DecklinkExportToTape.exe"
+            VALUE "ProductName", "Decklink Export to Tape Sample"
+            VALUE "ProductVersion", "6.4"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1252
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 228
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 103
+    END
+
+    IDD_DECKLINKEXPORTTOTAPE_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 440
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 258
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// RT_MANIFEST
+//
+
+IDR_MANIFEST            RT_MANIFEST             "res\\DecklinkExportToTape.manifest"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDS_ABOUTBOX            "&About DecklinkExportToTape..."
+END
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// English (Australia) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENA)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_AUS
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)\r\n"
+    "LANGUAGE 9, 1\r\n"
+    "#pragma code_page(1252)\r\n"
+    "#include ""res\\DecklinkExportToTape.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""afxres.rc""         // Standard components\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON                    "res\\DecklinkExportToTape.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_BITMAP_PLAYU        BITMAP                  "res\\bitmapplayu.bmp"
+IDB_BITMAP_PLAYD        BITMAP                  "res\\bitmapplayd.bmp"
+IDB_BITMAP_PLAYF        BITMAP                  "res\\bitmapplayf.bmp"
+IDB_BITMAP_PLAYX        BITMAP                  "res\\bitmapplayx.bmp"
+IDB_BITMAP_STOPU        BITMAP                  "res\\bitmapstopu.bmp"
+IDB_BITMAP_STOPD        BITMAP                  "res\\bitmapstopd.bmp"
+IDB_BITMAP_STOPF        BITMAP                  "res\\bitmapstopf.bmp"
+IDB_BITMAP_STOPX        BITMAP                  "res\\bitmapstopx.bmp"
+IDB_BITMAP_FFWDU        BITMAP                  "res\\bitmapffwdu.bmp"
+IDB_BITMAP_FFWDD        BITMAP                  "res\\bitmapffwdd.bmp"
+IDB_BITMAP_FFWDF        BITMAP                  "res\\bitmapffwdf.bmp"
+IDB_BITMAP_FFWDX        BITMAP                  "res\\bitmapffwdx.bmp"
+IDB_BITMAP_FREWU        BITMAP                  "res\\bitmapfrewu.bmp"
+IDB_BITMAP_FREWD        BITMAP                  "res\\bitmapfrewd.bmp"
+IDB_BITMAP_FREWF        BITMAP                  "res\\bitmapfrewf.bmp"
+IDB_BITMAP_FREWX        BITMAP                  "res\\bitmapfrewx.bmp"
+IDB_BITMAP_EJECTU       BITMAP                  "res\\bitmapejectu.bmp"
+IDB_BITMAP_EJECTD       BITMAP                  "res\\bitmapejectd.bmp"
+IDB_BITMAP_EJECTF       BITMAP                  "res\\bitmapejectf.bmp"
+IDB_BITMAP_EJECTX       BITMAP                  "res\\bitmapejectx.bmp"
+IDB_BITMAP_ADDFILEU     BITMAP                  "res\\bitmapaddfileu.bmp"
+IDB_BITMAP_ADDFILED     BITMAP                  "res\\bitmapaddfiled.bmp"
+IDB_BITMAP_ADDFILEF     BITMAP                  "res\\bitmapaddfilef.bmp"
+IDB_BITMAP_ADDFILEX     BITMAP                  "res\\bitmapaddfilex.bmp"
+IDB_BITMAP_REMOVEFILEU  BITMAP                  "res\\bitmapremovefileu.bmp"
+IDB_BITMAP_REMOVEFILED  BITMAP                  "res\\bitmapremovefiled.bmp"
+IDB_BITMAP_REMOVEFILEF  BITMAP                  "res\\bitmapremovefilef.bmp"
+IDB_BITMAP_REMOVEFILEX  BITMAP                  "res\\bitmapremovefilex.bmp"
+IDB_BITMAP_MOVEUPFILEU  BITMAP                  "res\\bitmapmoveupfileu.bmp"
+IDB_BITMAP_MOVEUPFILED  BITMAP                  "res\\bitmapmoveupfiled.bmp"
+IDB_BITMAP_MOVEUPFILEF  BITMAP                  "res\\bitmapmoveupfilef.bmp"
+IDB_BITMAP_MOVEUPFILEX  BITMAP                  "res\\bitmapmoveupfilex.bmp"
+IDB_BITMAP_MOVEDOWNFILEU BITMAP                  "res\\bitmapmovedownfileu.bmp"
+IDB_BITMAP_MOVEDOWNFILED BITMAP                  "res\\bitmapmovedownfiled.bmp"
+IDB_BITMAP_MOVEDOWNFILEF BITMAP                  "res\\bitmapmovedownfilef.bmp"
+IDB_BITMAP_MOVEDOWNFILEX BITMAP                  "res\\bitmapmovedownfilex.bmp"
+IDB_BITMAP_SETINPOINTU  BITMAP                  "res\\bitmapsetinpointu.bmp"
+IDB_BITMAP_SETINPOINTD  BITMAP                  "res\\bitmapsetinpointd.bmp"
+IDB_BITMAP_SETINPOINTF  BITMAP                  "res\\bitmapsetinpointf.bmp"
+IDB_BITMAP_SETINPOINTX  BITMAP                  "res\\bitmapsetinpointx.bmp"
+IDB_BITMAP_SETOUTPOINTU BITMAP                  "res\\bitmapsetoutpointu.bmp"
+IDB_BITMAP_SETOUTPOINTD BITMAP                  "res\\bitmapsetoutpointd.bmp"
+IDB_BITMAP_SETOUTPOINTF BITMAP                  "res\\bitmapsetoutpointf.bmp"
+IDB_BITMAP_SETOUTPOINTX BITMAP                  "res\\bitmapsetoutpointx.bmp"
+IDB_BITMAP_BMDLOGO      BITMAP                  "..\\common\\res\\BMDLogoSmall.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDR_ACCELERATOR ACCELERATORS 
+BEGIN
+    VK_INSERT,      IDC_BUTTON_ADDFILE,     VIRTKEY, NOINVERT
+    "I",            IDC_BUTTON_SETINPOINT,  VIRTKEY, NOINVERT
+    "O",            IDC_BUTTON_SETOUTPOINT, VIRTKEY, NOINVERT
+END
+
+#endif    // English (Australia) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE 9, 1
+#pragma code_page(1252)
+#include "res\DecklinkExportToTape.rc2"  // non-Microsoft Visual C++ edited resources
+#include "afxres.rc"         // Standard components
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

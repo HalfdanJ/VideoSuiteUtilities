@@ -40,6 +40,7 @@
 //    for(int index=0;index<deviceList.size();index++){
         BlackMagicItem * newItem = [[BlackMagicItem alloc] initWithDecklink:deviceList[index]];
         if(newItem){
+            newItem.index = index;
             [self.items addObject:newItem];
         }
     }

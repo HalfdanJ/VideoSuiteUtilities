@@ -36,6 +36,7 @@
 @property CALayer * layer;
 
 @property BOOL playing;
+@property float opacity;
 
 @property NSString * currentTimeString;
 

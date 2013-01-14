@@ -7,6 +7,7 @@
 //
 
 #import "VideoBankRecorder.h"
+#import "NSString+Timecode.h"
 
 @interface VideoBankRecorder ()
 
@@ -27,7 +28,6 @@
 @implementation VideoBankRecorder
 static void *DeviceIndexContext = &DeviceIndexContext;
 static void *RecordContext = &RecordContext;
-
 - (id)initWithBlackmagicItems:(NSArray *)items
 {
     self = [self init];
@@ -35,9 +35,10 @@ static void *RecordContext = &RecordContext;
         self.blackmagicItems = items;
         self.deviceIndex = -1;
         self.readyToRecord = YES;
-        
+               
         [self addObserver:self forKeyPath:@"deviceIndex" options:0 context:DeviceIndexContext];
         [self addObserver:self forKeyPath:@"record" options:0 context:RecordContext];
+
 
         self.deviceIndex = 0;
         
@@ -54,10 +55,16 @@ static void *RecordContext = &RecordContext;
 -(void)newFrameWithBufer:(CVPixelBufferRef)buffer image:(CIImage *)image item:(BlackMagicItem*)bmItem{
     
     if(self.record && self.readyToRecord){
+        if(!self.startRecordTime){
+            self.startRecordTime = [NSDate timeIntervalSinceReferenceDate];
+        }
         NSTimeInterval time = [NSDate timeIntervalSinceReferenceDate];
 
         //  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul), ^{
         NSTimeInterval diffTime = time - self.startRecordTime;
+        
+        self.timeString = [NSString stringWithTimecode:diffTime];
+        
         int frameCount = diffTime*250.0;
         
         __block BOOL append_ok = NO;
@@ -107,13 +114,13 @@ static void *RecordContext = &RecordContext;
 
 -(void) prepareRecording {
     self.readyToRecord = NO;
-    
+    self.timeString = @"";
     NSError *error = nil;
     
     //                self.recordingIndex ++;
     //              [[NSUserDefaults standardUserDefaults] setInteger:self.recordingIndex forKey:@"recordingIndex"];
     
-    NSString * path = [[NSString stringWithFormat:@"~/Desktop/triumf.mov"] stringByExpandingTildeInPath];
+    NSString * path = [@"~/Movies/_cache.mov" stringByExpandingTildeInPath];
     NSFileManager * fileManager = [NSFileManager defaultManager];
     [fileManager removeItemAtPath:path error:&error];
     
@@ -156,26 +163,31 @@ static void *RecordContext = &RecordContext;
 }
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
-    
+
     if(context == RecordContext){
-        self.startRecordTime = [NSDate timeIntervalSinceReferenceDate];
+        self.startRecordTime = nil;
         
         if(!self.record){
             [self willChangeValueForKey:@"recordings"];
             
-            NSString * path = [NSString stringWithFormat:@"/Users/jonas/Desktop/triumf.mov"];
-            
             [self.videoWriterInput markAsFinished];
             [self.videoWriter finishWriting];
             
-            [[NSFileManager defaultManager] moveItemAtPath:[[NSString stringWithFormat:@"~/Desktop/triumf.mov"] stringByExpandingTildeInPath] toPath:[[NSString stringWithFormat:@"~/Desktop/triumfs.mov"] stringByExpandingTildeInPath] error:nil];
-            
-            //            [self.recordings addObject:@{@"path":path, @"name":[NSString stringWithFormat:@"Rec %i", self.recordingIndex-1]}];
-            /*                NSMutableDictionary * dict = [@{@"path":path, @"active": @(YES), @"chroma":@(NO), @"name":[NSString stringWithFormat:@"Old Rec %i", self.recordingIndex-1], @"inTime":@(0), @"outTime":@(0)} mutableCopy];
-             [self.recordings addObject:dict];
-             */
-            
-            NSLog(@"Write Ended");
+            NSArray * items = self.videoBank.content;
+            if(self.bankIndex < items.count){
+                VideoBankItem * item = items[self.bankIndex];
+                NSString * path = item.path;
+
+                NSError * error;
+                [[NSFileManager defaultManager] removeItemAtPath:[path stringByExpandingTildeInPath] error:nil];
+                [[NSFileManager defaultManager] moveItemAtPath:[@"~/Movies/_cache.mov" stringByExpandingTildeInPath] toPath:[path stringByExpandingTildeInPath] error:&error];
+                if(error){
+                    NSLog(@"Error moving file %@",error);
+                }
+                
+                [item loadBankFromDrive];
+                
+            }
             
             self.readyToRecord = YES;
             [self didChangeValueForKey:@"recordings"];

@@ -1,0 +1,35 @@
+GMFBridge Change Log
+
+1.0.0.12
+  Support for ConnectionPoint for VB WithEvents in VBPlay demo
+  
+1.0.0.11
+  Minor fixes: always use queue in source output, and fix to Geraint's running flush code
+  
+1.0.0.10
+- Time corrections when bridge is connected after render graph has been 
+  running without bridge input
+- Fix problem with audio allocator in DV cases (audio must use proxy alloc in Suspend mode)
+
+1.0.0.8
+- Improved locking using proxy samples instead of locking in GetBuffer and Receive
+- set minimum audio buffer requirements and report actual allocator properties
+- support multiple controllers in same graph with all clips created from primary controller
+- add GetSegmentOffset to bridge stream
+- support copy to multiple buffers in Sink::Receive
+
+From 1.0.0.4 to 1.0.0.5:
+
+- Support for format changes between clips, including video dimensions, by using ReceiveConnection
+- multiple end-of-stream calls on same pin caused early termination of next segment
+- Support for badly-registered mpeg-2 splitters where Render works but connect doesn't.
+- Possible divide by zero in DecideBufferSize when creating render graph
+- Support for AddClip / CreateSourceGraph when running
+- Loop on/off when running
+- Change seeking proxy to support WMV files correctly
+- Change clip limits
+- Better error handling in demo apps, especially when COM objects not registered.
+
+
+First public release 1.0.0.4
+

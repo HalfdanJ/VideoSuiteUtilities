@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DeckControl", "DeckControl.vcproj", "{444450D9-FFD5-4296-9A18-36FC3B5E2515}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{444450D9-FFD5-4296-9A18-36FC3B5E2515}.Debug|Win32.ActiveCfg = Debug|Win32
+		{444450D9-FFD5-4296-9A18-36FC3B5E2515}.Debug|Win32.Build.0 = Debug|Win32
+		{444450D9-FFD5-4296-9A18-36FC3B5E2515}.Release|Win32.ActiveCfg = Release|Win32
+		{444450D9-FFD5-4296-9A18-36FC3B5E2515}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

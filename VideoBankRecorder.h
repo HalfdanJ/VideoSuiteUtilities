@@ -16,6 +16,7 @@
 @property int deviceIndex;
 @property BOOL record;
 @property BOOL readyToRecord;
+@property NSString * timeString;
 
 @property VideoBank * videoBank;
 

@@ -72,6 +72,10 @@
         
         
         // Set the video input mode
+        CFStringRef			modeName;
+        modeList[2]->GetName(&modeName);
+        self.modeDescription = (__bridge NSString*)modeName;
+        
         if (self.deckLinkInput->EnableVideoInput(modeList[2]->GetDisplayMode(), bmdFormat8BitYUV, videoInputFlags) != S_OK)
         {
             /*  [uiDelegate showErrorMessage:@"This application was unable to select the chosen video mode. Perhaps, the selected device is currently in-use." title:@"Error starting the capture"];
@@ -143,7 +147,7 @@ static dispatch_once_t onceToken;
          
          */
         
-        unsigned t0=clock(),t1;
+//         unsigned t0=clock(),t1;
 
         
         dispatch_group_t group = dispatch_group_create();
@@ -162,8 +166,8 @@ static dispatch_once_t onceToken;
         
         dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
         
-        t1=clock()-t0;
-        printf("%i\n",t1);
+     //   t1=clock()-t0;
+       // printf("%i\n",t1);
         
         if(!image){
             NSLog(@"No image");
@@ -280,6 +284,14 @@ static dispatch_once_t onceToken;
         //        NSLog(@"New frame out %i",callback);
         
     });
+}
+
+-(NSString *)name{
+    return [NSString stringWithFormat:@"%i - %@",self.index, self.modeDescription];
+}
+
++(NSSet *)keyPathsForValuesAffectingName{
+    return [NSSet setWithObjects:@"modeDescription",@"index", nil];
 }
 
 

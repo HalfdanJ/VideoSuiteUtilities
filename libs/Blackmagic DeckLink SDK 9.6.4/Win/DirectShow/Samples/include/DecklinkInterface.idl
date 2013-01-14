@@ -1,0 +1,1164 @@
+//------------------------------------------------------------------------------
+// DecklinkInterface.idl
+//
+// Desc: Defines interfaces that can be implemented by any of the filters
+//		 such that the public can access underlying hardware features.
+//
+//		 The IDecklinkKeyer interface is defined here so the
+//		 resultant .h and _i.c can be publicly distributed without including
+//		 details of the other Blackmagic interfaces.
+//
+// Copyright (c) 2004 Blackmagic Design Pty Ltd.  All rights reserved.
+//------------------------------------------------------------------------------
+import "unknwn.idl";
+import "strmif.idl";
+
+//-----------------------------------------------------------------------------
+// Decklink Public Library
+[
+	uuid(1469D378-8829-4ff0-9B3B-07DD5B16F3CB),
+    version(1.0),
+	helpstring("Blackmagic Design DirectShow Type Library")
+]
+library DecklinkPublicLib
+{
+    importlib("stdole32.tlb");
+    importlib("stdole2.tlb");
+
+	[
+		uuid(44A8B5C7-13B6-4211-BD40-35B629D9E6DF)
+	]
+	coclass DecklinkVideoCaptureFilter
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(50D29FCF-70ED-4155-9B2A-91F2CE9A86BA)
+	]
+	coclass DecklinkVideoCaptureProperties
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(6296A3EB-08FF-421e-B5AC-6BC834CF4DB6)
+	]
+	coclass DecklinkVideoCaptureProperties2
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(AAA22F7E-5AA0-49d9-8C8D-B52B1AA92EB7)
+	]
+	coclass DecklinkAudioCaptureFilter
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(ED4418E7-582D-4759-AE07-8CA7F771427F)
+	]
+	coclass DecklinkAudioCaptureProperties
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(8869832C-FDE3-468e-B0D2-53BF2D59C17A)
+	]
+	coclass DecklinkAudioCaptureProperties2
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(CEB13CC8-3591-45a5-BA0F-20E9A1D72F76)
+	]
+	coclass DecklinkVideoRenderFilter
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(98C36C7C-5985-46c4-909C-0EB7BD0C60F7)
+	]
+	coclass DecklinkVideoRenderProperties
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(19FA8CC3-56CE-46ab-825D-5CE1A39B137A)
+	]
+	coclass DecklinkAudioRenderFilter
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(222A4295-E98B-4af2-9063-340E91BE7E68)
+	]
+	coclass DecklinkAudioRenderProperties
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(472BB322-7639-412e-AF90-F86F1AD6A22F)
+	]
+	coclass DecklinkCaptureFilter
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(189B7800-82A0-4e92-A2E9-2C8E4A15C3E3)
+	]
+	coclass DecklinkRenderFilter
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(CE3FF814-04C1-4827-9F18-426203E9B1B3)
+	]
+	coclass DecklinkVideoCaptureFilter2
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(20722FC4-9EBC-47b9-80B4-6A2ED4D27ECF)
+	]
+	coclass DecklinkVideoCaptureFilter3
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(B3980D18-10D4-4045-9AF7-91EF330AEBF2)
+	]
+	coclass DecklinkVideoCaptureFilter4
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(929CE8E6-96DB-4fe0-980A-83DAB2D2AF31)
+	]
+	coclass DecklinkVideoCaptureFilter5
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(681439FF-EB76-45dd-BF51-80D7C60F5727)
+	]
+	coclass DecklinkVideoCaptureFilter6
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(DE5D8755-421A-43f2-8847-E5A9ACB44D04)
+	]
+	coclass DecklinkVideoCaptureFilter7
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(976AC924-E89A-4a20-B692-482346E24C71)
+	]
+	coclass DecklinkVideoCaptureFilter8
+	{
+		[default] interface IUnknown;
+	};
+	[
+		uuid(43D9805A-5EA9-4f81-97B1-C71889154A75)
+	]
+	coclass DecklinkVideoCaptureFilter9
+	{
+		[default] interface IUnknown;
+	};
+	[
+		uuid(651A64B6-4675-4220-9DC2-9E5F84832036)
+	]
+	coclass DecklinkVideoCaptureFilter10
+	{
+		[default] interface IUnknown;
+	};
+	[
+		uuid(6AF011C1-6576-40b6-8070-F6B65C42E291)
+	]
+	coclass DecklinkVideoCaptureFilter11
+	{
+		[default] interface IUnknown;
+	};
+	[
+		uuid(8A599218-FBF6-40b5-909D-5D14F70E88E3)
+	]
+	coclass DecklinkVideoCaptureFilter12
+	{
+		[default] interface IUnknown;
+	};
+	[
+		uuid(8AE58702-3ADF-430d-8AB3-C978B2327722)
+	]
+	coclass DecklinkVideoCaptureFilter13
+	{
+		[default] interface IUnknown;
+	};
+	[
+		uuid(9AE1A80D-7265-47f7-A31C-791CBA439CD4)
+	]
+	coclass DecklinkVideoCaptureFilter14
+	{
+		[default] interface IUnknown;
+	};
+	[
+		uuid(A8A62D5F-9CEA-484a-8E8D-46F8499D65BF)
+	]
+	coclass DecklinkVideoCaptureFilter15
+	{
+		[default] interface IUnknown;
+	};
+	[
+		uuid(B47B720F-6F80-404f-A029-F31F16D92466)
+	]
+	coclass DecklinkVideoCaptureFilter16
+	{
+		[default] interface IUnknown;
+    };
+
+	[
+		uuid(1BCC3EF4-724F-4a45-B61D-8D4BBF32C5BF)
+	]
+	coclass DecklinkAudioCaptureFilter2
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(BC90EE8C-F8DC-4776-8DCF-24929C13F9D2)
+	]
+	coclass DecklinkAudioCaptureFilter3
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(1EF51542-B849-4337-B7AE-C980C13F86BF)
+	]
+	coclass DecklinkAudioCaptureFilter4
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(DE6DB48D-66EE-477a-BE4B-522B2253CD95)
+	]
+	coclass DecklinkAudioCaptureFilter5
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(B8E0C8A1-777D-4727-A542-6DF0DF1E1D1C)
+	]
+	coclass DecklinkAudioCaptureFilter6
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(ED1441F5-A132-44e7-9027-14DB5674149B)
+	]
+	coclass DecklinkAudioCaptureFilter7
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(37BD18AA-F5BD-434c-B0C5-7AE570C377A5)
+	]
+	coclass DecklinkAudioCaptureFilter8
+	{
+		[default] interface IUnknown;
+	};
+	[
+		uuid(04D8F1C7-96B5-4991-A9E1-1F07D8E8BE6F)
+	]
+	coclass DecklinkAudioCaptureFilter9
+	{
+		[default] interface IUnknown;
+	};
+	[
+		uuid(12BA1627-B2CF-47b4-BA5F-04F2900A849C)
+	]
+	coclass DecklinkAudioCaptureFilter10
+	{
+		[default] interface IUnknown;
+	};
+	[
+		uuid(CB71FDBC-6304-463d-8B7F-96F8BEDA6F7A)
+	]
+	coclass DecklinkAudioCaptureFilter11
+	{
+		[default] interface IUnknown;
+	};
+	[
+		uuid(D092C151-A35A-4995-9741-CA3E0B06A0B2)
+	]
+	coclass DecklinkAudioCaptureFilter12
+	{
+		[default] interface IUnknown;
+	};
+	[
+		uuid(D8034EE1-6A0D-4bed-9AA9-2EEF2713823E)
+	]
+	coclass DecklinkAudioCaptureFilter13
+	{
+		[default] interface IUnknown;
+	};
+	[
+		uuid(EECE0424-B1E1-4037-81C4-ADCD9C36A10A)
+	]
+	coclass DecklinkAudioCaptureFilter14
+	{
+		[default] interface IUnknown;
+	};
+	[
+		uuid(F2C0ECE2-96CA-49d5-A723-CDA8003A7327)
+	]
+	coclass DecklinkAudioCaptureFilter15
+	{
+		[default] interface IUnknown;
+	};
+	[
+		uuid(F5FFFBDC-BFC7-4fc9-9E0D-8363286DA900)
+	]
+	coclass DecklinkAudioCaptureFilter16
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(16A2E3A5-0C3E-4484-9E78-3ABF2FBE3ACE)
+	]
+	coclass DecklinkVideoRenderFilter2
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(4354ED19-BDE1-4083-9BE7-991AF1F0B527)
+	]
+	coclass DecklinkVideoRenderFilter3
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(4546201B-E2B2-4e78-9B1C-DE6406C3BEFA)
+	]
+	coclass DecklinkVideoRenderFilter4
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(4A5FCAED-CAA7-456e-B8EA-608F35A68A0D)
+	]
+	coclass DecklinkVideoRenderFilter5
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(8128230E-8FC1-4af6-BBF1-6C6B6E7C1F16)
+	]
+	coclass DecklinkVideoRenderFilter6
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(6919722B-7329-4c5f-9F68-BA2FE3CF1C77)
+	]
+	coclass DecklinkVideoRenderFilter7
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(4C17A259-854D-433f-B087-9AC89238180A)
+	]
+	coclass DecklinkVideoRenderFilter8
+	{
+		[default] interface IUnknown;
+	};
+	[
+		uuid(43B49DF4-3DF5-444c-86B6-13C2960A259C)
+	]
+	coclass DecklinkVideoRenderFilter9
+	{
+		[default] interface IUnknown;
+	};
+	[
+		uuid(4A47FF79-276D-4fa4-B119-14BE2710F684)
+	]
+	coclass DecklinkVideoRenderFilter10
+	{
+		[default] interface IUnknown;
+	};
+	[
+		uuid(5399AC37-821C-4cd6-982F-D9BE96A33EBE)
+	]
+	coclass DecklinkVideoRenderFilter11
+	{
+		[default] interface IUnknown;
+	};
+	[
+		uuid(9886854D-6852-4f72-8119-A01CEE144C06)
+	]
+	coclass DecklinkVideoRenderFilter12
+	{
+		[default] interface IUnknown;
+	};
+	[
+		uuid(B539D383-16C4-4bb8-880D-38D1FAA338FD)
+	]
+	coclass DecklinkVideoRenderFilter13
+	{
+		[default] interface IUnknown;
+	};
+	[
+		uuid(B7C90277-1BB7-4f1d-BDD6-3351EBA80D2A)
+	]
+	coclass DecklinkVideoRenderFilter14
+	{
+		[default] interface IUnknown;
+	};
+	[
+		uuid(BF2E4F80-982B-4ea2-8779-5D0B5CDD86A3)
+	]
+	coclass DecklinkVideoRenderFilter15
+	{
+		[default] interface IUnknown;
+	};
+	[
+		uuid(C6047434-6C0B-45b6-A7AD-085349C544A2)
+	]
+	coclass DecklinkVideoRenderFilter16
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(8D09D460-D361-40bd-A2D0-7E094B4D56FA)
+	]
+	coclass DecklinkAudioRenderFilter2
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(F34B54D3-15B2-4779-8913-64D6E6C67873)
+	]
+	coclass DecklinkAudioRenderFilter3
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(98FC338D-9524-457c-916A-14016AC483A8)
+	]
+	coclass DecklinkAudioRenderFilter4
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(1A06C310-DCD3-4bc3-8BA3-47F8273A509C)
+	]
+	coclass DecklinkAudioRenderFilter5
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(2C7D2EF4-2054-485b-8310-5EE8305955C9)
+	]
+	coclass DecklinkAudioRenderFilter6
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(EF87B072-BCD3-4f4e-A17C-234C73592631)
+	]
+	coclass DecklinkAudioRenderFilter7
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(F8CFB51B-ADE0-4fae-B9A6-38E9F0BB2919)
+	]
+	coclass DecklinkAudioRenderFilter8
+	{
+		[default] interface IUnknown;
+	};
+	[
+		uuid(0986D25A-92A3-4f82-9843-FB344046DA81)
+	]
+	coclass DecklinkAudioRenderFilter9
+	{
+		[default] interface IUnknown;
+	};
+	[
+		uuid(4E00C0A7-E5E8-4770-A6CC-BEC9AAFE22DE)
+	]
+	coclass DecklinkAudioRenderFilter10
+	{
+		[default] interface IUnknown;
+	};
+	[
+		uuid(5B988FAA-FD10-4c8b-B491-7E13CD42B64E)
+	]
+	coclass DecklinkAudioRenderFilter11
+	{
+		[default] interface IUnknown;
+	};
+	[
+		uuid(62B20A82-7F0B-4e82-914D-74DC229C1936)
+	]
+	coclass DecklinkAudioRenderFilter12
+	{
+		[default] interface IUnknown;
+	};
+	[
+		uuid(B102C29D-8A9B-43e6-B92D-BA52473DD211)
+	]
+	coclass DecklinkAudioRenderFilter13
+	{
+		[default] interface IUnknown;
+	};
+	[
+		uuid(BBBFE701-FE8A-4e6c-B6E0-3CD1F31B62BD)
+	]
+	coclass DecklinkAudioRenderFilter14
+	{
+		[default] interface IUnknown;
+	};
+	[
+		uuid(D3E541A5-0929-418b-8053-A16467ADD9DB)
+	]
+	coclass DecklinkAudioRenderFilter15
+	{
+		[default] interface IUnknown;
+	};
+	[
+		uuid(D7305937-FC9B-409e-8510-92968DEA8F14)
+	]
+	coclass DecklinkAudioRenderFilter16
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(F5C45F6D-E4DD-469d-B397-7341D602C403)
+	]
+	coclass DecklinkUpsampleFilter
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(BFA26F43-FB18-40d9-BD58-5A6CE0F42469)
+	]
+	coclass DecklinkEffectsFilter
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(EA131320-64CC-4f3f-B79D-41A383A65EDE)
+	]
+	coclass DecklinkEffectsProperties
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(1E003B41-B606-4ae4-B2BB-C35E133575A5)
+	]
+	coclass DecklinkMJPEGEncoderFilter
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(B21009AE-27A7-4e32-B6B8-39723FD5D35D)
+	]
+	coclass DecklinkMJPEGEncoderProperties
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(979520BE-4C52-4ba7-A534-B145EDCFDF21)
+	]
+	coclass DecklinkMJPEGDecoderFilter
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(EFAD70C1-0CA9-4754-A36B-FE2EC634E140)
+	]
+	coclass DecklinkMJPEGDecoderProperties
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(C3BF8648-C4F7-4CE2-AA00-C3F54984086A)
+	]
+	coclass DecklinkStillSequenceSourceFilter
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(D72825C3-2221-4ec8-9EBF-D3F678079EEE)
+	]
+	coclass DecklinkStillSequenceSinkFilter
+	{
+		[default] interface IUnknown;
+	};
+
+	//-----------------------------------------------------------------------------
+	// New media type GUID's
+	[
+		uuid(30313276-B0B0-4dd3-8E8C-572692D526F6),
+		version(1.0)
+	]
+	interface MEDIASUBTYPE_V210
+	{
+	};
+
+	[
+		uuid(30313276-0000-0010-8000-00AA00389B71),
+		version(1.0)
+	]
+	interface MEDIASUBTYPE_v210a
+	{
+	};
+
+	[
+		uuid(30313272-0000-0010-8000-00AA00389B71),
+		version(1.0)
+	]
+	interface MEDIASUBTYPE_r210
+	{
+	};
+
+	[
+		uuid(43594448-0000-0010-8000-00AA00389B71),
+		version(1.0)
+	]
+	interface MEDIASUBTYPE_HDYC
+	{
+	};
+
+	//-----------------------------------------------------------------------------
+	// Decklink Public Interface
+	//-----------------------------------------------------------------------------
+	//-----------------------------------------------------------------------------
+	// Keying interface (deprecated)
+	[
+		object,
+		uuid(9D63ADFC-8D1A-451D-958E-12FA4B1EFD2F),
+		helpstring("Decklink Keying Interface")
+	]
+	interface IDecklinkKeyer : IUnknown
+	{
+		[helpstring("Enable internal or external keying")]
+		HRESULT set_AlphaBlendModeOn([in] UINT isExternalKey);
+
+		[helpstring("Disable internal or external keying")]
+		HRESULT set_AlphaBlendModeOff();
+
+		[helpstring("Set the opacity level of the key")]
+		HRESULT set_AlphaLevel([in] UINT alphaLevel);
+
+		[helpstring("Configure auto blending")]
+		HRESULT set_AlphaAutoBlendSettings([in] UINT rampFrames, [in] UINT onFrames, [in] UINT offFrames, [in] UINT blendProcessRepeats);
+
+		[helpstring("Enables auto blending")]
+		HRESULT do_AlphaRampOn([in] UINT framesDuration);
+
+		[helpstring("Disables auto blending")]
+		HRESULT do_AlphaRampOff([in] UINT framesDuration);
+
+		[helpstring("Indicates whether the DeckLink device supports internal keying")]
+		HRESULT get_DeviceSupportsKeying();
+
+		[helpstring("Indicates whether the DeckLink device supports external keying")]
+		HRESULT get_DeviceSupportsExternalKeying();
+
+		[helpstring("Set the timebase of the still source")]
+		HRESULT set_DefaultTimebase([in] long Timebase);
+	}
+
+	//-----------------------------------------------------------------------------
+	// Automation Keying interface (preferred)
+	[
+		object,
+		uuid(4DB4A578-7353-46e3-A607-75F2E3B5E539),
+		dual,
+		helpstring("Decklink Keying Automation Interface"),
+		pointer_default(unique)
+	]
+	interface IADecklinkKeyer : IDispatch
+	{
+		[id(1), helpstring("Enable internal or external keying")]
+		HRESULT set_AlphaBlendModeOn([in] UINT isExternalKey);
+
+		[id(2), helpstring("Disable internal or external keying")]
+		HRESULT set_AlphaBlendModeOff();
+
+		[id(3), helpstring("Set the opacity level of the key")]
+		HRESULT set_AlphaLevel([in] UINT alphaLevel);
+
+		[id(4), helpstring("Configure auto blending")]
+		HRESULT set_AlphaAutoBlendSettings([in] UINT rampFrames, [in] UINT onFrames, [in] UINT offFrames, [in] UINT blendProcessRepeats);
+
+		[id(5), helpstring("Enables auto blending")]
+		HRESULT do_AlphaRampOn([in] UINT framesDuration);
+
+		[id(6), helpstring("Disables auto blending")]
+		HRESULT do_AlphaRampOff([in] UINT framesDuration);
+
+		[id(7), helpstring("Indicates whether the DeckLink device supports internal keying")]
+		HRESULT get_DeviceSupportsKeying();
+
+		[id(8), helpstring("Indicates whether the DeckLink device supports external keying")]
+		HRESULT get_DeviceSupportsExternalKeying();
+
+		[id(9), helpstring("Set the timebase of the still source")]
+		HRESULT set_DefaultTimebase([in] long Timebase);
+	}
+
+	//-----------------------------------------------------------------------------
+	// Argument block for async raw commands
+	struct DecklinkRawCommandAsync
+	{
+		byte*	command;
+		UINT	lenCommand;
+		long	asyncResult;
+		byte*	response;
+		UINT	lenResponse;
+		// This is actually a handle to an event that we duplicate and then signal when
+		// the command has been completed and response information filled.
+		long	commandComplete;
+	};
+
+	//-----------------------------------------------------------------------------
+	// Raw command device control (deprecated)
+	[
+		object,
+		uuid(72D62DE6-010F-48e6-A251-78CA285BDFE0),
+		helpstring("Decklink Raw Device Control Interface")
+	]
+	interface IDecklinkRawDeviceControl : IUnknown
+	{
+		[helpstring("Send a raw RS422 command synchronously")]
+		HRESULT SendRawCommandSync([in]const byte* command, [in] UINT lenCommand, [in, out]byte* response, [in, out] UINT* lenResponse);
+
+		[helpstring("Send a raw RS422 command asynchronously")]
+		HRESULT SendRawCommandAsync([in, out]struct DecklinkRawCommandAsync* args);
+	}
+
+	//-----------------------------------------------------------------------------
+	// Automation raw command device control (preferred)
+	[
+		object,
+		uuid(AF2662C6-3ABE-498e-ADE9-2540B6E30608),
+		dual,
+		helpstring("Decklink Raw Device Control Automation Interface"),
+		pointer_default(unique)
+	]
+	interface IADecklinkRawDeviceControl : IDispatch
+	{
+		[id(1), helpstring("Send a raw RS422 command synchronously")]
+		HRESULT SendRawCommandSync([in]const byte* command, [in] UINT lenCommand, [in, out]byte* response, [in, out] UINT* lenResponse);
+
+		[id(2), helpstring("Send a raw RS422 command asynchronously")]
+		HRESULT SendRawCommandAsync2([in, out]VARIANT* rawCommand, [in] UINT cRawCommand);
+	}
+
+	//-----------------------------------------------------------------------------
+	// Video status
+	typedef [v1_enum] enum
+	{
+		DECKLINK_INPUT_NONE,
+		DECKLINK_INPUT_PRESENT,
+		DECKLINK_INPUT_MAX
+	} DECKLINK_INPUT;
+
+	typedef [v1_enum] enum
+	{
+		DECKLINK_GENLOCK_NOTSUPPORTED,
+		DECKLINK_GENLOCK_NOTCONNECTED,
+		DECKLINK_GENLOCK_LOCKED,
+		DECKLINK_GENLOCK_NOTLOCKED,
+		DECKLINK_GENLOCK_MAX
+	} DECKLINK_GENLOCK;
+
+	//-----------------------------------------------------------------------------
+	// Video status interface (deprecated)
+	[
+		object,
+		uuid(15BE165D-BFF5-47f8-8E71-DE4657ABEBE5),
+		helpstring("Decklink Status Interface")
+	]
+	interface IDecklinkStatus : IUnknown
+	{
+		[helpstring("Provides the status of the video input and genlock")]
+		HRESULT GetVideoInputStatus([out] int* videoStatus, [out] int* genlockStatus);
+
+		[helpstring("Registers an event which is signalled on change of the video input")]
+		HRESULT RegisterVideoStatusChangeEvent([in] unsigned long event);
+	}
+
+	//-----------------------------------------------------------------------------
+	// Automation video status interface (preferred)
+	[
+		object,
+		uuid(8E530B1C-8276-4bfa-B8BA-4BD360C79FA7),
+		dual,
+		helpstring("Decklink Status Automation Interface"),
+		pointer_default(unique)
+	]
+	interface IADecklinkStatus : IDispatch
+	{
+		[id(1), helpstring("Provides the status of the video input and genlock")]
+		HRESULT GetVideoInputStatus([out] int* videoStatus, [out] int* genlockStatus);
+
+		[id(2), helpstring("Registers an event which is signalled on change of the video input")]
+		HRESULT RegisterVideoStatusChangeEvent([in] unsigned long event);
+	}
+
+	//-----------------------------------------------------------------------------
+	// Capture 'No Input' banner control interface (deprecated)
+	[
+		object,
+		uuid(26D02C91-B25F-40ff-9B39-63B3FABCC518),
+		helpstring("Decklink Capture Banner Interface")
+	]
+	interface IDecklinkCaptureBanner : IUnknown
+	{
+		[helpstring("Retrieve a pointer to the 'No Input' banner")]
+		HRESULT GetNoInputFrame([out] byte** frame);
+
+		[helpstring("Create a frame of black video")]
+		HRESULT BlackVideo([in] byte* bmih, [in] byte* frame);
+	}
+
+	//-----------------------------------------------------------------------------
+	// Automation Capture 'No Input' banner control interface (preferred)
+	[
+		object,
+		uuid(9B434A6C-768E-4f55-8EB2-D219EBA85193),
+		dual,
+		helpstring("Decklink Capture Banner Automation Interface"),
+		pointer_default(unique)
+	]
+	interface IADecklinkCaptureBanner : IDispatch
+	{
+		[id(1), helpstring("Retrieve a pointer to the 'No Input' banner")]
+		HRESULT GetNoInputFrame([out] byte** frame);
+
+		[id(2), helpstring("Create a frame of black video")]
+		HRESULT BlackVideo([in] byte* bmih, [in] byte* frame);
+	}
+
+	//-----------------------------------------------------------------------------
+	// Decklink I/O control enumerations
+	typedef [v1_enum] enum
+	{
+		DECKLINK_BLACKINCAPTURE_NONE,
+		DECKLINK_BLACKINCAPTURE_DIGITAL,
+		DECKLINK_BLACKINCAPTURE_ANALOGUE,
+		DECKLINK_BLACKINCAPTURE_MAX
+	} DECKLINK_BLACKINCAPTURE;
+
+	typedef [v1_enum] enum
+	{
+		DECKLINK_HDDOWNCONVERSION_OFF,
+		DECKLINK_HDDOWNCONVERSION_LB16X9,
+		DECKLINK_HDDOWNCONVERSION_ANA,
+		DECKLINK_HDDOWNCONVERSION_CENTER,
+		DECKLINK_HDCROSSCONVERSION_720P1080P,
+		DECKLINK_HDUPCONVERSION_ANA720P,
+		DECKLINK_HDUPCONVERSION_ANA1080I,
+		DECKLINK_HDUPCONVERSION_PB720P,
+		DECKLINK_HDUPCONVERSION_PB1080I,
+		DECKLINK_HDUPCONVERSION_ANA149_720P,
+		DECKLINK_HDUPCONVERSION_ANA149_1080I,
+		DECKLINK_HDDOWNCONVERSION_MAX
+	} DECKLINK_HDDOWNCONVERSION;
+
+	typedef [v1_enum] enum
+	{
+		DECKLINK_VIDEOOUTPUTCONVERSIONONANALOG = 1 << 0,
+		DECKLINK_VIDEOOUTPUTCONVERSIONONHDMI = 1 << 1,
+	} DECKLINK_VIDEOOUTPUTCONVERSION_OUTPUTS;
+
+	typedef [v1_enum] enum
+	{
+		DECKLINK_AUDIOINPUTSOURCE_EMBEDDED,
+		DECKLINK_AUDIOINPUTSOURCE_AESEBU,
+		DECKLINK_AUDIOINPUTSOURCE_ANALOGUE,
+		DECKLINK_AUDIOINPUTSOURCE_MAX,
+		// Synonyms
+		DECKLINK_AUDIOINPUTSOURCE_SDI = DECKLINK_AUDIOINPUTSOURCE_EMBEDDED
+	} DECKLINK_AUDIOINPUTSOURCE;
+
+	typedef [v1_enum] enum
+	{
+		DECKLINK_IOFEATURES_SUPPORTSRGB10BITCAPTURE = 1 << 0,
+		DECKLINK_IOFEATURES_SUPPORTSRGB10BITPLAYBACK = 1 << 1,
+		DECKLINK_IOFEATURES_SUPPORTSINTERNALKEY = 1 << 4,
+		DECKLINK_IOFEATURES_SUPPORTSEXTERNALKEY = 1 << 5,
+		DECKLINK_IOFEATURES_HASCOMPONENTVIDEOOUTPUT = 1 << 6,
+		DECKLINK_IOFEATURES_HASCOMPOSITEVIDEOOUTPUT = 1 << 7,
+		DECKLINK_IOFEATURES_HASDIGITALVIDEOOUTPUT = 1 << 8, // HASSDIOUTPUT
+		DECKLINK_IOFEATURES_HASDVIVIDEOOUTPUT = 1 << 9,
+		DECKLINK_IOFEATURES_HASCOMPONENTVIDEOINPUT = 1 << 10,
+		DECKLINK_IOFEATURES_HASCOMPOSITEVIDEOINPUT = 1 << 11,
+		DECKLINK_IOFEATURES_HASDIGITALVIDEOINPUT = 1 << 12, // HASSDIINPUT
+		DECKLINK_IOFEATURES_HASDUALLINKOUTPUT = 1 << 13,
+		DECKLINK_IOFEATURES_HASDUALLINKINPUT = 1 << 14,
+		DECKLINK_IOFEATURES_SUPPORTSHD = 1 << 15,
+		DECKLINK_IOFEATURES_SUPPORTS2KOUTPUT = 1 << 16,
+		DECKLINK_IOFEATURES_SUPPORTSHDDOWNCONVERSION = 1 << 17,
+		DECKLINK_IOFEATURES_HASAESAUDIOINPUT = 1 << 18,
+		DECKLINK_IOFEATURES_HASANALOGUEAUDIOINPUT = 1 << 19,
+		DECKLINK_IOFEATURES_HASSVIDEOINPUT = 1 << 20,
+		DECKLINK_IOFEATURES_HASSVIDEOOUTPUT = 1 << 21,
+		DECKLINK_IOFEATURES_SUPPORTSMULTICAMERAINPUT = 1 << 22,
+		DECKLINK_IOFEATURES_HASRS422SERIALPORT = 1 << 23,
+		DECKLINK_IOFEATURES_HASHDMIINPUT = 1 << 24,
+		DECKLINK_IOFEATURES_HASHDMIOUTPUT = 1 << 25,
+		DECKLINK_IOFEATURES_HASOPTICALSDIINPUT = 1 << 26,
+		DECKLINK_IOFEATURES_HASOPTICALSDIOUTPUT = 1 << 27,
+		DECKLINK_IOFEATURES_MAX
+	} DECKLINK_IOFEATURES;
+
+	typedef [v1_enum] enum
+	{
+		DECKLINK_TIMECODESOURCE_VITC,
+		DECKLINK_TIMECODESOURCE_HANC,
+		DECKLINK_TIMECODESOURCE_MAX,
+	}  DECKLINK_TIMECODESOURCE;
+
+	typedef [v1_enum] enum
+	{
+		DECKLINK_VIDEOINPUT_SDI,
+		DECKLINK_VIDEOINPUT_COMPONENT,
+		DECKLINK_VIDEOINPUT_COMPOSITE,
+		DECKLINK_VIDEOINPUT_SVIDEO,
+		DECKLINK_VIDEOINPUT_HDMI,
+		DECKLINK_VIDEOINPUT_OPTICALSDI,
+		DECKLINK_VIDEOINPUT_MAX,
+	}  DECKLINK_VIDEOINPUT;
+
+	typedef [v1_enum] enum
+	{
+		DECKLINK_VIDEOOUTPUT_COMPONENT,
+		DECKLINK_VIDEOOUTPUT_COMPOSITE,
+		DECKLINK_VIDEOOUTPUT_SVIDEO,
+		DECKLINK_VIDEOOUTPUT_MAX,
+	}  DECKLINK_VIDEOOUTPUT;
+
+	//-----------------------------------------------------------------------------
+	// Decklink I/O control interface (deprecated)
+	[
+		object,
+		uuid(60F58A81-A387-4922-AAAC-998BD9FBE1AA),
+		helpstring("Decklink IO Control Interface")
+	]
+	interface IDecklinkIOControl : IUnknown
+	{
+		[helpstring("Returns the supported I/O features")]
+		HRESULT GetIOFeatures([out] unsigned long* features);
+
+		[helpstring("Set the analogue video output")]
+		HRESULT SetAnalogueOutput([in] BOOL isComponent, [in] BOOL setupIs75);
+
+		[helpstring("Set the video input")]
+		HRESULT SetVideoInput([in] BOOL inputIsDigital, [in] BOOL isComponent, [in] BOOL setupIs75);
+
+		[helpstring("Set the dual link output")]
+		HRESULT SetDualLinkOutput([in] BOOL enableDualLinkOutput);
+
+		[helpstring("Sets single field on output when not playing back")]
+		HRESULT SetSingleFieldOutputForSynchronousFrames([in] BOOL singleFieldOutput);
+
+		[helpstring("Enables 3:2 pulldown for HD23.976 to HD29.97 conversion")]
+		HRESULT SetHDTVPulldownOnOutput([in] BOOL enableHDTV32PulldownOnOutput);
+
+		[helpstring("Sets black video on outputs during capture")]
+		HRESULT SetBlackToDeckInCapture([in] unsigned long blackToDeckSetting);
+
+		[helpstring("Sets the A-Frame reference for 3:2 pulldown removal")]
+		HRESULT SetAFrameReference([in] unsigned long aFrameReference);
+
+		[helpstring("Specifies the VANC lines to capture")]
+		HRESULT SetCaptureVANCLines([in] unsigned long vancLine1, [in] unsigned long vancLine2, [in] unsigned long vancLine3);
+
+		[helpstring("Sets the HD downconversion mode on the output")]
+		HRESULT SetVideoOutputDownconversionMode([in] unsigned long downconversionMode);
+
+		[helpstring("Sets the analogue audio input")]
+		HRESULT SetAudioInputSource([in] unsigned long audioInputSource);
+
+		[helpstring("Specifies the timing offset for genlock")]
+		HRESULT SetGenlockTiming([in] int timingOffset);
+
+		[helpstring("An enhanced version of SetVideoOutputDownconversionMode")]
+		HRESULT SetVideoOutputDownconversionMode2([in] unsigned long downconversionMode, [in] unsigned long selectVideoOutputConversionOutputs);
+
+		[helpstring("Specifies the source of timecode during capture")]
+		HRESULT SetCaptureTimecodeSource([in] unsigned long timecodeSource);
+
+		[helpstring("An enhanced version of SetVideoInput")]
+		HRESULT SetVideoInput2([in] unsigned long videoSource, [in] BOOL setupIs75, [in] BOOL componentLevelsSMPTE);
+
+		[helpstring("An enhanced version of SetAnalogueOutput")]
+		HRESULT SetAnalogueOutput2([in] unsigned long videoOutput, [in] BOOL setupIs75, [in] BOOL componentLevelsSMPTE);
+	}
+
+	//-----------------------------------------------------------------------------
+	// Automation Decklink I/O control interface (preferred)
+	[
+		object,
+		uuid(EF0EE278-DFC0-432f-AD84-E780835B45B3),
+		dual,
+		helpstring("Decklink IO Control Automation Interface"),
+		pointer_default(unique)
+	]
+	interface IADecklinkIOControl : IDispatch
+	{
+		[id(1), helpstring("Returns the supported I/O features")]
+		HRESULT GetIOFeatures([out] unsigned long* features);
+
+		[id(2), helpstring("Set the analogue video output")]
+		HRESULT SetAnalogueOutput([in] BOOL isComponent, [in] BOOL setupIs75);
+
+		[id(3), helpstring("Set the video input")]
+		HRESULT SetVideoInput([in] BOOL inputIsDigital, [in] BOOL isComponent, [in] BOOL setupIs75);
+
+		[id(4), helpstring("Set the dual link output")]
+		HRESULT SetDualLinkOutput([in] BOOL enableDualLinkOutput);
+
+		[id(5), helpstring("Sets single field on output when not playing back")]
+		HRESULT SetSingleFieldOutputForSynchronousFrames([in] BOOL singleFieldOutput);
+
+		[id(6), helpstring("Enables 3:2 pulldown for HD23.976 to HD29.97 conversion")]
+		HRESULT SetHDTVPulldownOnOutput([in] BOOL enableHDTV32PulldownOnOutput);
+
+		[id(7), helpstring("Sets black video on outputs during capture")]
+		HRESULT SetBlackToDeckInCapture([in] unsigned long blackToDeckSetting);
+
+		[id(8), helpstring("Sets the A-Frame reference for 3:2 pulldown removal")]
+		HRESULT SetAFrameReference([in] unsigned long aFrameReference);
+
+		[id(9), helpstring("Specifies the VANC lines to capture")]
+		HRESULT SetCaptureVANCLines([in] unsigned long vancLine1, [in] unsigned long vancLine2, [in] unsigned long vancLine3);
+
+		[id(10), helpstring("Sets the HD downconversion mode on the output")]
+		HRESULT SetVideoOutputDownconversionMode([in] unsigned long downconversionMode);
+
+		[id(11), helpstring("Sets the analogue audio input")]
+		HRESULT SetAudioInputSource([in] unsigned long audioInputSource);
+
+		[id(12), helpstring("Specifies the timing offset for genlock")]
+		HRESULT SetGenlockTiming([in] int timingOffset);
+
+		[id(13), helpstring("An enhanced version of SetVideoOutputDownconversionMode")]
+		HRESULT SetVideoOutputDownconversionMode2([in] unsigned long downconversionMode, [in] unsigned long selectVideoOutputConversionOutputs);
+
+		[id(14), helpstring("Specifies the source of timecode during capture")]
+		HRESULT SetCaptureTimecodeSource([in] unsigned long timecodeSource);
+
+		[id(15), helpstring("An enhanced version of SetVideoInput")]
+		HRESULT SetVideoInput2([in] unsigned long videoSource, [in] BOOL setupIs75, [in] BOOL componentLevelsSMPTE);
+
+		[id(16), helpstring("An enhanced version of SetAnalogueOutput")]
+		HRESULT SetAnalogueOutput2([in] unsigned long videoOutput, [in] BOOL setupIs75, [in] BOOL componentLevelsSMPTE);
+	}
+
+	//-----------------------------------------------------------------------------
+	// Decklink media sample interface (deprecated)
+	[
+		object,
+		uuid(4CAEF6E0-714A-4b4c-902D-BC53AAB2C423),
+		helpstring("Decklink Media Sample Interface")
+	]
+	interface IDecklinkMediaSample : IUnknown
+	{
+		[helpstring("Retrieve the VANC buffer attached to the sample")]
+		HRESULT GetVANCBuffer([out] byte** ppBuffer);
+	}
+
+	//-----------------------------------------------------------------------------
+	// Automation Decklink media sample interface (preferred)
+	[
+		object,
+		uuid(5BD0A576-D366-4dfa-96AE-5292971A4999),
+		dual,
+		helpstring("Decklink Media Sample Automation Interface"),
+		pointer_default(unique)
+	]
+	interface IADecklinkMediaSample : IDispatch
+	{
+		[id(1), helpstring("Retrieve the VANC buffer attached to the sample")]
+		HRESULT GetVANCBuffer([out] byte** ppBuffer);
+	}
+
+	//-----------------------------------------------------------------------------
+	// Decklink sample grabber interface
+	[
+		object,
+		uuid(C23F9F44-2BC3-425a-8F56-CDADA8FCC9E9),
+		helpstring("Decklink Sample Grabber CallBack Interface")
+	]
+	interface IDecklinkSampleGrabberCB : IUnknown
+	{
+		HRESULT SampleCB([in] double SampleTime, [in] IMediaSample* pSample);
+		HRESULT BufferCB([in] double SampleTime, [in] BYTE* pBuffer, [in] long BufferLen);
+	};
+
+	[
+		object,
+		uuid(CAFA3E5A-16E0-42ce-B064-78DE6C3068F8),
+		helpstring("Decklink Sample Grabber Interface")
+	]
+	interface IDecklinkSampleGrabber : IUnknown
+	{
+		HRESULT SetOneShot([in] BOOL OneShot);
+		HRESULT SetMediaType([in] const AM_MEDIA_TYPE* pamt);
+		HRESULT GetConnectedMediaType([out] AM_MEDIA_TYPE* pamt);
+		HRESULT SetBufferSamples([in] BOOL BufferThem);
+		HRESULT GetCurrentBuffer([out] long* pBufferSize, [out] long* pBuffer);
+		HRESULT GetCurrentSample([out] IMediaSample** ppSample);
+		HRESULT SetCallback([in] IDecklinkSampleGrabberCB* pCallback, [in] long WhichMethodToCallback);
+	};
+};

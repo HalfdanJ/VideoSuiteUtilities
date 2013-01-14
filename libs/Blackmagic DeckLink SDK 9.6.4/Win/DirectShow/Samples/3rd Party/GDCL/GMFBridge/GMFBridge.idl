@@ -1,0 +1,125 @@
+import "oaidl.idl";
+import "ocidl.idl";
+
+#if (_MSC_VER < 1300)
+#include "basetsd.h"
+#endif
+
+// options to control what inputs are allowed at end of source graph
+// segments
+typedef enum
+{
+	eUncompressed,
+	eMuxInputs,
+	eAny,
+} eFormatType;
+
+[
+	object,
+	uuid(8C4D8054-FCBA-4783-865A-7E8B3C814011),
+	dual,
+	helpstring("IGMFBridgeController Interface"),
+	pointer_default(unique)
+]
+interface IGMFBridgeController : IDispatch
+{
+	[id(1), helpstring("Create a stream to be bridged")]
+	HRESULT AddStream(BOOL bVideo, eFormatType AllowedTypes, BOOL bDiscardUnconnected);
+
+	[id(2), helpstring("Add sink filter to graph")]
+	HRESULT InsertSinkFilter(
+				[in] IUnknown* pGraph, 
+				[out, retval] IUnknown** ppFilter);
+	
+	[id(3), helpstring("Add source filter to render graph")]
+	HRESULT InsertSourceFilter(
+				[in] IUnknown* pUnkSourceGraphSinkFilter,
+				[in] IUnknown* pRenderGraph,
+				[out, retval] IUnknown** ppFilter);
+
+	[id(4), helpstring("Create a source graph for a file or URL")]
+	HRESULT CreateSourceGraph(
+				[in] BSTR strFile, 
+				[in] IUnknown* pGraph,
+				[out, retval] IUnknown **pSinkFilter);
+
+	[id(5), helpstring("Create render filters in empty render graph")]
+	HRESULT CreateRenderGraph(
+				[in] IUnknown* pSourceGraphSinkFilter,
+				[in] IUnknown* pRenderGraph,
+				[out, retval] IUnknown** pRenderGraphSourceFilter);
+
+    // equivalent to BridgeAtDiscont(pS, pR, FALSE)
+	[id(6), helpstring("Connect two graphs")]
+	HRESULT BridgeGraphs(
+				[in] IUnknown* pSourceGraphSinkFilter,
+				[in] IUnknown* pRenderGraphSourceFilter);
+
+	[id(7), helpstring("Specify end-of-segment notification")]
+	HRESULT SetNotify(
+				[in] LONG_PTR hwnd,
+				[in] long msg);
+
+	[id(8), helpstring("Set minimum buffering in milliseconds")]
+	HRESULT SetBufferMinimum([in] long nMillisecs);
+
+	[id(9), helpstring("Current Segment Stream time (seconds)")]
+	HRESULT GetSegmentTime([out, retval]double* pdSeconds);
+
+	[id(10), helpstring("Pass EndofStream to render graph")]
+	HRESULT NoMoreSegments();
+
+    [id(11), helpstring("Render graph offset to start of this segment (seconds)")]
+    HRESULT GetSegmentOffset([out, retval]double* pdOffset);
+};
+
+[
+	object,
+    uuid(1CD80D64-817E-4beb-A711-A705F7CDFADB),
+	dual,
+	helpstring("IGMFBridgeController2 Interface"),
+	pointer_default(unique)
+]
+interface IGMFBridgeController2 : IGMFBridgeController
+{
+    // using this method allows the app to indicate that
+    // this clip is not contiguous with previous clips.
+    [id(12), helpstring("Bridge at discontinuity")]
+    HRESULT BridgeAtDiscont(
+                [in] IUnknown* pSourceGraphSinkFilter,
+                [in] IUnknown* pRenderGraphSourceFilter,
+                [in] BOOL bIsDiscontinuity);
+};
+
+
+[
+	uuid(5CE27AC5-940C-4199-8746-01FE1F12A12E),
+	version(1.0),
+	helpstring("GMFBridge 1.0 Type Library")
+]
+library GMFBridgeLib
+{
+	importlib("stdole32.tlb");
+	importlib("stdole2.tlb");
+
+	[
+		uuid(0732D4D6-96F5-46f6-B687-1DB7CD36D413),
+		helpstring("Outgoing events from controller")
+	]
+	dispinterface _IGMFBridgeEvents
+	{
+	properties:
+	methods:
+		[id(1), helpstring("End of segment")] HRESULT OnEndOfSegment();
+	};
+
+	[
+		uuid(08E3287F-3A5C-47e9-8179-A9E9221A5CDE),
+		helpstring("BridgeController Class")
+	]
+	coclass GMFBridgeController
+	{
+		[default] interface IGMFBridgeController2;
+		[default, source] dispinterface _IGMFBridgeEvents;
+	};
+};

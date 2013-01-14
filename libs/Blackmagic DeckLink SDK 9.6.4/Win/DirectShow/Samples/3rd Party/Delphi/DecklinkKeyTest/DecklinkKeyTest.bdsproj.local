@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2007/04/28 14:50:07.562.pas,F:\Documents and Settings\Ian\My Documents\Borland Studio Projects\Unit4.pas=F:\ProjectsNotBackedUp\TfrmMainUnit.pas</Transaction>
+    <Transaction>2007/04/28 14:50:07.578.dfm,F:\Documents and Settings\Ian\My Documents\Borland Studio Projects\Unit4.dfm=F:\ProjectsNotBackedUp\TfrmMainUnit.dfm</Transaction>
+    <Transaction>2007/04/28 14:50:44.609.bdsproj,F:\Documents and Settings\Ian\My Documents\Borland Studio Projects\Project2.bdsproj=F:\ProjectsNotBackedUp\DecklinkKeyTest\DecklinkKeyTest.bdsproj</Transaction>
+    <Transaction>2007/04/28 17:47:29.921.pas,F:\ProjectsNotBackedUp\DecklinkKeyTest\Unit4.pas=F:\ProjectsNotBackedUp\DecklinkKeyTest\TfrmMainRawUnit.pas</Transaction>
+    <Transaction>2007/04/28 17:47:29.921.dfm,F:\ProjectsNotBackedUp\DecklinkKeyTest\Unit4.dfm=F:\ProjectsNotBackedUp\DecklinkKeyTest\TfrmMainRawUnit.dfm</Transaction>
+    <Transaction>2007/05/05 11:48:32.671.pas,F:\Projects\Pr4\Src\DecklinkKeyTest\TfrmMainUnit.pas=</Transaction>
+    <Transaction>2007/05/05 11:48:32.671.dfm,F:\Projects\Pr4\Src\DecklinkKeyTest\TfrmMainUnit.dfm=</Transaction>
+  </Transactions>
+</BorlandProject>

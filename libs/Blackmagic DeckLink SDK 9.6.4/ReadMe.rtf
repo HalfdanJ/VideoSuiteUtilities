@@ -1,0 +1,1212 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1138\cocoasubrtf470
+{\fonttbl\f0\fnil\fcharset0 LucidaGrande;\f1\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\paperw11900\paperh16840\vieww18140\viewh16280\viewkind0
+\deftab720
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardeftab720
+
+\f0\b\fs28 \cf0 Blackmagic Design DeckLink SDK 9.6.4\
+\
+
+\b0 Please refer to the Blackmagic Design DeckLink SDK documentation for a detailed explanation of the available functionality.\
+\pard\pardeftab720
+
+\b\fs24 \cf0 \
+Changes in Blackmagic DeckLink SDK 9.6.4\
+\
+
+\b0 	- 
+\b Added Interfaces\
+\pard\pardeftab720
+
+\f1\b0 \cf0 \
+\pard\pardeftab720
+
+\f0 \cf0 		- 
+\b IDeckLinkDX9ScreenPreviewHelper
+\b0 \
+\
+			- new interface for DirectX screen previews\
+\
+
+\b 	- Updated Interfaces
+\b0\fs28 \
+\
+
+\b\fs24 		- IDeckLinkVideoConversion
+\b0 \
+\
+			- updated
+\b  ConvertFrame 
+\b0 method\
+\
+				- can now convert between all supported pixel formats\
+\
+
+\b 		- IDeckLinkOutput
+\b0 \
+\
+			- updated
+\b  QueryInterface 
+\b0 method\
+\
+				- an IDeckLinkOutput object will not be returned for capture-only devices \
+\
+	- 
+\b Deprecated Methods\
+
+\b0 \
+		- 
+\b IBMDStreamingH264NALPacket\
+			\
+			- 
+\b0 deprecated
+\b  IBMDStreamingH264NALPacket::GetPacketIndex 
+\b0 method
+\b  \
+\
+		- IBMDStreamingAudioPacket\
+\
+			- 
+\b0 deprecated
+\b  IBMDStreamingAudioPacket::GetPacketIndex 
+\b0 method
+\b  
+\b0 \
+
+\b \
+Changes in Blackmagic DeckLink SDK 9.6.1\
+\
+
+\b0 	- 
+\b Updated Samples\
+
+\b0 \
+		- 
+\b LoopThroughWithOpenGLCompositing\
+
+\b0 \
+			- added support for fast frame transfers using NVIDIA GPUDirect API\
+
+\b \
+Changes in Blackmagic DeckLink SDK 9.5\
+
+\b0 \
+	- 
+\f1 Custom allocators for both capture and playback now allow full control over all video frame memory allocations
+\f0 \
+\
+	- 
+\b Updated interfaces\
+
+\b0 \
+		- 
+\b IDeckLinkInput\
+
+\b0 \
+			- added 
+\b SetVideoInputFrameMemoryAllocator
+\b0  method\
+\
+		- 
+\b IDeckLinkOutput\
+
+\b0 \
+			- improved 
+\b SetVideoOutputFrameMemoryAllocator
+\b0  so custom allocator is used for all playback frame allocations\
+\
+	- 
+\b New Samples\
+
+\b0 \
+		- 
+\b LoopThroughWithOpenGLCompositing\
+
+\b0 \
+			- uses custom memory allocator for capture and playback and GL_AMD_pinned_memory extension for efficient frame transfers\
+
+\b \
+Changes in Blackmagic DeckLink SDK 9.1\
+\
+
+\b0 	- Updated documentation for the streaming interfaces
+\fs28 \
+
+\b\fs24 \
+Changes in Blackmagic DeckLink SDK 8.5\
+\
+
+\b0 	- Added streaming interfaces & samples for h264 Pro Recorder
+\fs28 \
+\
+
+\b\fs24 Changes in Blackmagic DeckLink SDK 8.1.1
+\b0\fs28 \
+\
+
+\fs24 	- 
+\b Updated Types
+\b0 \
+\pard\pardeftab720
+
+\fs28 \cf0 \
+\pard\pardeftab720
+
+\fs24 \cf0 		- 
+\b BMDTimecodeFormat\
+\pard\pardeftab720
+
+\b0\fs28 \cf0 	\
+\pard\pardeftab720
+
+\fs24 \cf0 			- enumeration now uses fourCC values
+\b . 
+\b0 \
+\
+\pard\tx480\pardeftab480\pardirnatural
+\cf0 \CocoaLigature0 						- 
+\b bmdTimecodeRP188VITC1
+\b0 \
+						- 
+\b bmdTimecodeRP188VITC2
+\b0 \
+						- 
+\b bmdTimecodeRP188LTC
+\b0 \
+						- 
+\b bmdTimecodeRP188Any
+\b0 \
+
+\b 					
+\b0 	- 
+\b bmdTimecodeVITC
+\b0 \
+
+\b 					
+\b0 	- 
+\b bmdTimecodeVITCField2
+\b0 \
+
+\b 					
+\b0 	- 
+\b bmdTimecodeSerial
+\b0 \CocoaLigature1 \
+\pard\pardeftab720
+\cf0 \
+		- 
+\b BMDDeckControlVTRControlState\
+
+\b0 \
+			- removed 
+\b bmdDeckControlVTRControlSeeking
+\b0 			\
+			- added 
+\b \CocoaLigature0 bmdDeckControlVTRControlShuttleForward
+\b0 \
+\CocoaLigature1 			- added 
+\b \CocoaLigature0 bmdDeckControlVTRControlShuttleReverse
+\b0 \
+\CocoaLigature1 			- added 
+\b \CocoaLigature0 bmdDeckControlVTRControlJogForward
+\b0 \
+\CocoaLigature1 			- added 
+\b \CocoaLigature0 bmdDeckControlVTRControlJogReverse
+\b0 \CocoaLigature1 \
+\pard\pardeftab720
+
+\fs28 \cf0 \
+\pard\pardeftab720
+
+\b\fs24 \cf0 Changes in Blackmagic DeckLink SDK 8.1
+\b0\fs28 \
+\
+
+\b\fs24 	- New Types
+\b0 \
+\
+
+\b 		-\'a0BMDDeviceBusyState
+\b0 \
+\
+			- new enumeration of\'a0possible busy states for a BMD device.\
+\pard\pardeftab720
+
+\fs28 \cf0 \
+\pard\pardeftab720
+
+\fs24 \cf0 	- 
+\b Updated Types
+\b0 \
+\pard\pardeftab720
+
+\fs28 \cf0 \
+\pard\pardeftab720
+
+\fs24 \cf0 		- 
+\b BMDDeckLinkAttributeID\
+\pard\pardeftab720
+
+\b0\fs28 \cf0 	\
+\pard\pardeftab720
+
+\fs24 \cf0 			- added
+\b  BMDDeckLinkDeviceBusyState
+\b0 \
+\
+				- the current state of the BMD device.
+\fs28 \
+\
+
+\b\fs24 	- Updated interfaces
+\b0\fs28 \
+\
+
+\b\fs24 		- IDeckLink
+\b0 \
+\
+			- added
+\b  GetDisplayName 
+\b0 method\
+\
+				- returns a string suitable for display in a user interface
+\fs28 \
+\
+\
+
+\b\fs24 Changes in Blackmagic DeckLink SDK 8.0
+\b0\fs28 \
+
+\fs24 \
+	- 
+\b Types
+\b0 \
+\
+		- 
+\b BMDDisplayMode\
+\
+
+\b0 			- added 
+\b bmdModeNTSCp
+\b0 \
+			- added 
+\b bmdModePALp\
+\
+
+\b0 				- progressive SD modes\
+\
+		- 
+\b BMDTimecodeFormat
+\b0 \
+\
+			- added 
+\b bmdTimecodeRP188Field2
+\b0 \
+\pard\pardeftab720
+
+\fs28 \cf0 			
+\fs24 - added 
+\b bmdTimecodeVITCField2\
+\pard\pardeftab720
+
+\b0 \cf0 \
+				- the second field of timecode data\
+\
+		- 
+\b BMDDeckLinkConfigurationID\
+
+\b0 \
+			- added 
+\b bmdDeckLinkConfigSwapSerialRxTx\
+\
+
+\b0 				- swap the tx and rx lines of the RS422 serial port
+\b \
+
+\b0 \
+			- added 
+\b bmdDeckLinkConfigBypass\
+\
+				- 
+\b0 configure the operation of the video bypass feature
+\b \
+
+\b0 \
+			- added 
+\b bmdDeckLinkConfigVideoOutputIdleOperation\
+\
+				
+\b0 - video output operation when not playing video\
+\
+			- added 
+\b bmdDeckLinkConfigVideoOutputComponentLumaGain
+\b0 \
+			- added 
+\b bmdDeckLinkConfigVideoOutputComponentChromaBlueGain
+\b0 \
+			- added 
+\b bmdDeckLinkConfigVideoOutputComponentChromaRedGain
+\b0 \
+			- added 
+\b bmdDeckLinkConfigVideoOutputCompositeLumaGain
+\b0 \
+			- added 
+\b bmdDeckLinkConfigVideoOutputCompositeChromaGain
+\b0 \
+			- added 
+\b bmdDeckLinkConfigVideoOutputSVideoLumaGain
+\b0 \
+			- added 
+\b bmdDeckLinkConfigVideoOutputSVideoChromaGain
+\b0 \
+ \
+				- video output gain control\
+\
+			- added 
+\b bmdDeckLinkConfigVideoInputComponentLumaGain
+\b0 \
+			- added 
+\b bmdDeckLinkConfigVideoInputComponentChromaBlueGain
+\b0 \
+			- added 
+\b bmdDeckLinkConfigVideoInputComponentChromaRedGain
+\b0 \
+			- added 
+\b bmdDeckLinkConfigVideoInputCompositeLumaGain
+\b0 \
+			- added 
+\b bmdDeckLinkConfigVideoInputCompositeChromaGain
+\b0 \
+			- added 
+\b bmdDeckLinkConfigVideoInputSVideoLumaGain
+\b0 \
+			- added 
+\b bmdDeckLinkConfigVideoInputSVideoChromaGain
+\b0 \
+\
+				- video input gain control\
+\
+\pard\tx480\pardeftab480\pardirnatural
+\cf0 \CocoaLigature0 			- 
+\b BMDDeckLinkAttributeID
+\b0 \CocoaLigature1 \
+\pard\pardeftab720
+\cf0 \
+			- added 
+\b BMDDeckLinkHasAnalogVideoOutputGain\
+\
+
+\b0 				- determine whether video output gain adjustment is supported
+\b \
+
+\b0 \
+			- added 
+\b BMDDeckLinkCanOnlyAdjustOverallVideoOutputGain\
+\
+
+\b0 				- determine if only the overall video output gain can be adjusted
+\b \
+
+\b0 \
+			- added 
+\b BMDDeckLinkHasVideoInputAntiAliasingFilter\
+
+\b0 \
+				- determine whether the DeckLink device has an anti aliasing filter on its analog video input\
+\
+			- added 
+\b BMDDeckLinkHasBypass
+\b0 \
+				\
+				- determine whether the DeckLink device has a bypass feature\
+\
+			- added 
+\b BMDDeckLinkVideoInputGainMinimum
+\b0 \
+			- added 
+\b BMDDeckLinkVideoInputGainMaximum\
+\
+				- 
+\b0 determine the video input gain limits in dB.
+\b \
+
+\b0 \
+			- added 
+\b BMDDeckLinkVideoOutputGainMinimum
+\b0 \
+			- added 
+\b BMDDeckLinkVideoOutputGainMaximum\
+\
+	
+\b0 			- determine the video output gain limits in dB. \
+\
+			- removed 
+\b BMDDeckLinkNegotiatedLowBandwidthUSB
+\b0 \
+\
+				- removed the query of whether USB 3.0 is using a low bandwidth isochronous interface \
+\
+		- 
+\b BMDDeckControlError
+\b0 \
+\
+			- added 
+\b bmdDeckControlBufferTooSmallError\
+\
+
+\b0 				- the provided buffer is too small to handle the custom command\
+\
+			- added 
+\b bmdDeckControlBadChecksumError
+\b0 \
+\
+				- invalid checksum in response to custom command\
+\
+		- 
+\b BMDIdleVideoOutputOperation
+\b0 \
+\
+			- added 
+\b bmdIdleVideoOutputBlack
+\b0 \
+			- added 
+\b bmdIdleVideoOutputLastFrame
+\b0 \
+\pard\pardeftab720
+
+\fs28 \cf0 \
+\pard\pardeftab720
+
+\fs24 \cf0 				- the video output when not playing video\
+\pard\pardeftab720
+
+\fs28 \cf0 \
+\pard\pardeftab720
+
+\b\fs24 \cf0 	- Updated interfaces
+\b0\fs28 \
+\
+
+\b\fs24 		- IDeckLinkDeckControl
+\b0 \
+\
+			- added
+\b  SendCommand 
+\b0 method\
+\
+				- send custom commands conforming to the Sony 9 pin protocol to the deck\
+\pard\pardeftab720
+
+\fs28 \cf0 \
+\pard\pardeftab720
+
+\b\fs24 \cf0 Changes in Blackmagic DeckLink SDK 7.9.3
+\b0\fs28 \
+
+\fs24 \
+	-\'a0
+\b Updated Types\
+
+\b0 \
+
+\b 		-\'a0BMDVideo3DPackingFormat
+\b0 \
+
+\b \
+
+\b0 			- added 
+\b bmdVideo3DPackingFramePacking\
+
+\b0 \
+				- frame packing is only supported on HDMI 1.4a
+\f1 \
+
+\f0 \
+
+\b Changes in Blackmagic DeckLink SDK 7.8
+\b0 \
+\
+	- 
+\b New Configuration interface\
+\
+		
+\b0 The existing configuration interface has been reworked. Newly available configuration parameters include:
+\b \
+		
+\b0 \
+        		- 
+\b bmdDeckLinkConfigHDMI3DPackingFormat\
+
+\b0 \
+			- controls HDMI 3D packing format on 3D capable cards\
+\
+        		- 
+\b bmdDeckLinkConfigLowLatencyVideoOutput\
+\
+			
+\b0 - switch to reduce latency in video capture and playback - this feature should be considered "experimental"
+\b \
+
+\b0 \
+       		- 
+\b bmdDeckLinkConfigReferenceInputTimingOffset\
+\
+			
+\b0 - configure genlock reference timing
+\b \
+
+\b0 \
+        		- 
+\b bmdDeckLinkConfigAnalogAudioInputScaleChannel1
+\b0 \
+        		- 
+\b bmdDeckLinkConfigAnalogAudioInputScaleChannel2
+\b0 \
+        		- 
+\b bmdDeckLinkConfigAnalogAudioInputScaleChannel3
+\b0 \
+        		- 
+\b bmdDeckLinkConfigAnalogAudioInputScaleChannel4
+\b0 \
+      		- 
+\b bmdDeckLinkConfigDigitalAudioInputScale
+\b0 \
+       		- 
+\b bmdDeckLinkConfigAnalogAudioOutputScaleChannel1
+\b0 \
+        		- 
+\b bmdDeckLinkConfigAnalogAudioOutputScaleChannel2
+\b0 \
+        		- 
+\b bmdDeckLinkConfigAnalogAudioOutputScaleChannel3
+\b0 \
+        		- 
+\b bmdDeckLinkConfigAnalogAudioOutputScaleChannel4
+\b0 \
+        		- 
+\b bmdDeckLinkConfigDigitalAudioOutputScale
+\b0 \
+\
+			- audio scaling parameters\
+\
+        		- 
+\b bmdDeckLinkConfigAudioOutputAESAnalogSwitch\
+
+\b0 \
+			- control switchable Analog/AES channels\
+\
+	-\'a0
+\b New Interfaces
+\b0 \
+\
+
+\b 		-\'a0IDeckLinkVideoFrame3DExtensions
+\b0 \
+\
+
+\b 			
+\b0 - new interface for 3D video frame support.\
+\
+	-\'a0
+\b Updated Interfaces
+\b0 \
+\
+		- 
+\b IDeckLinkOutput
+\b0 \
+\
+			-\'a0added 
+\b GetReferenceStatus
+\b0  method\
+\
+		-\'a0
+\b IDeckLinkGLScreenPreviewHelper
+\b0 \
+\
+			-\'a0added\'a0
+\b Set3DPreviewFormat
+\b0 \'a0method
+\fs28 \
+
+\b\fs24 	- New Types
+\b0 \
+\
+
+\b 		-\'a0BMDDeckLinkConfigurationID
+\b0 \
+\
+			- new enumeration of\'a0configuration settings for a DeckLink device which may be queried or set.\
+\
+
+\b 		-\'a0BMDDisplayModeFlags
+\b0 \
+\
+			- new\'a0enumeration of the possible characteristics of an 
+\b IDeckLinkDisplayMode
+\b0  object.\
+\
+
+\b 		-\'a0BMDReferenceStatus
+\b0 \
+\
+			- new\'a0enumeration of the\'a0genlock reference statuses of the DeckLink device.\
+
+\b \
+		-\'a0BMD3DPreviewFormat
+\b0 \
+
+\b \
+
+\b0 			- new\'a0enumeration of the\'a0dual preview formats available for the DeckLink GL screen preview helper.\'a0
+\f1 \
+
+\f0 \
+
+\b 		-\'a0BMDVideo3DPackingFormat
+\b0 \
+
+\b \
+
+\b0 			- new\'a0enumeration\'a0of the standard modes where two frames are packed into one
+\f1 \
+
+\f0\b \
+		-\'a0BMDAudioOutputAnalogAES
+\b0 \
+\pard\pardeftab720
+
+\b\fs28 \cf0 \
+\pard\pardeftab720
+
+\b0\fs24 \cf0 			- new\'a0enumeration of\'a0the settings of the audio output Analog / AES switch.\
+\
+	-\'a0
+\b Updated Types
+\b0 \
+\
+
+\b 		-
+\b0\fs28 \'a0
+\b\fs24 BMDVideoInputFlags\
+
+\b0 \
+\'a0\'a0 \'a0			- added 
+\b bmdVideoInputDualStream3D
+\b0 \
+\pard\pardeftab720
+
+\b\fs28 \cf0 \
+\pard\pardeftab720
+
+\fs24 \cf0 		-
+\b0\fs28 \'a0
+\b\fs24 BMDVideoOutputFlags\
+
+\b0 \
+\'a0\'a0 \'a0			- added\'a0
+\b bmdVideoOutputDualStream3D
+\b0 \
+\pard\pardeftab720
+
+\b\fs28 \cf0 \
+\pard\pardeftab720
+
+\b0\fs24 \cf0 		-\'a0
+\b BMDVideoOutputConversionMode\
+
+\b0 \
+\'a0 \'a0\'a0			- added\'a0
+\b bmdVideoOutputHardwareCenterCutDownconversion
+\b0 \
+\
+		-\'a0
+\b BMDVideoOutputConversionMode\
+\pard\pardeftab720
+
+\b0\fs28 \cf0 \
+\pard\pardeftab720
+
+\fs24 \cf0 			-\'a0added\'a0
+\b bmdVideoOutputHardwareAnamorphic149To720pUpconversion
+\b0\fs28 \
+
+\fs24 			- added\'a0
+\b bmdVideoOutputHardwareAnamorphic149To1080iUpconversion\
+\
+		- BMDDeckLinkAttributeID\
+\
+			- 
+\b0 added
+\b \'a0BMDDeckLinkHasReferenceInput\
+			- 
+\b0 added
+\b \'a0BMDDeckLinkVideoOutputConnections\
+			- 
+\b0 added
+\b \'a0BMDDeckLinkVideoInputConnections
+\b0\fs28 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardeftab720
+\cf0 \
+\pard\pardeftab720
+
+\b\fs24 \cf0 Changes in Blackmagic DeckLink SDK 7.7.2\
+\
+	- Types
+\b0 \
+\
+		- 
+\b BMDDeckLinkAttributeID\
+
+\b0 \
+\'a0 \'a0 			- added 
+\b BMDDeckLinkNumberOfSubDevices
+\b0 \
+\'a0 \'a0 			- added 
+\b BMDDeckLinkSubDeviceIndex\
+
+\b0 \
+
+\b Changes in Blackmagic DeckLink SDK 7.6
+\b0 \
+\
+	- 
+\b New Interfaces
+\b0 \
+\
+
+\b 		- IDeckLinkVideoConversion
+\b0 \
+\
+
+\b 			
+\b0 - new interface which copies an image from one format to another format converting as required.\
+\
+
+\b 		- IDeckLinkDeckControl
+\b0 \
+\
+
+\b 			
+\b0 - new interface which provides the capability to control a deck via RS422.\
+\
+
+\b 		- IDeckLinkDeckControlStatusCallback
+\b0 \
+\
+
+\b 			
+\b0 - new interface which provides the callback capability for Deck control events\
+\
+
+\b 	- Updated interfaces\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720
+
+\b0 \cf0 \
+\pard\pardeftab720
+\cf0 		
+\b - IDeckLinkOutput\
+\
+			
+\b0 - 
+\b IDeckLinkOutput::CreateAncillaryData
+\b0  is now supported
+\b \
+
+\b0 \
+
+\b 		- IDeckLinkVideoFrame\
+
+\b0 \
+			- 
+\b IDeckLinkVideoFrame::GetTimecode
+\b0  now supports 
+\b bmdTimecodeSerial
+\b0 .\
+\
+
+\b 	- Types
+\b0 \
+\
+
+\b 		- BMDDeckControlMode
+\b0 \
+	\
+			- new enumeration of deck control modes for the 
+\b IDeckLinkDeckControl
+\b0  interface\
+\
+
+\b 		- BMDDeckControlEvent
+\b0 \
+	\
+			- new enumeration of deck events for the 
+\b IDeckLinkDeckControl
+\b0  interface.\
+\
+
+\b 		- BMDDeckControlVTRControlState
+\b0 \
+	\
+			- new enumeration of deck control states.\
+\
+
+\b 		- BMDDeckControlStatusFlags
+\b0 \
+	\
+			- new enumeration of deck status flags.\
+\
+
+\b 		- BMDDeckControlExportModeOpsFlags
+\b0 \
+	\
+			- new enumeration of edit-to-tape and export mode operations.\
+\
+
+\b 		- BMDDeckControlError
+\b0 \
+	\
+			- new enumeration of deck control errors.\
+\
+		- 
+\b BMDVideoOutputConversionMode\
+
+\b0 \
+\'a0 \'a0 			- added 
+\b bmdVideoOutputHardwareCenterCutDownconversion
+\b0 \
+\'a0 \'a0 			- added 
+\b bmdVideoOutputHardware720p1080pCrossconversion
+\b0 \
+\'a0 \'a0 			- added 
+\b bmdVideoOutputHardwareAnamorphic720pUpconversion
+\b0 \
+\'a0 \'a0 			- added 
+\b bmdVideoOutputHardwareAnamorphic1080iUpconversion
+\b0 \
+\'a0\'a0 \'a0 \'a0\'a0			- added 
+\b bmdVideoOutputHardwarePillarbox720pUpconversion
+\b0 \
+\'a0 \'a0 			- added 
+\b bmdVideoOutputHardwarePillarbox1080iUpconversion
+\b0\fs28 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardeftab720
+\cf0 \
+\pard\pardeftab720
+
+\b\fs24 \cf0 Changes in Blackmagic DeckLink SDK 7.3.2\
+\
+
+\b0 	- 
+\b New Interfaces\
+\
+		- IDeckLinkAPIInformation\
+\
+			
+\b0 - new interface for accessing global information\
+
+\b \
+	- Updated Interfaces\
+\
+
+\b0 		
+\b - IDeckLinkInput\
+\
+
+\b0 			- added 
+\b GetHardwareReferenceClock\
+\
+		- IDeckLinkOutput\
+\
+			
+\b0 - renamed 
+\b GetHardwareReferenceClock
+\b0  to 
+\b GetScheduledStreamTime
+\b0 \
+
+\b 			
+\b0 - added 
+\b GetHardwareReferenceClock\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardeftab720
+
+\b0 \cf0 \
+		
+\b - IDeckLinkVideoInputFrame
+\b0 \
+\
+			- added 
+\b GetHardwareReferenceTimestamp\
+\
+	- Types\
+\
+		- BMDDeckLinkAPIInformationID
+\b0 \
+	\
+\pard\pardeftab720
+\cf0 			- new enumeration of IDs for 
+\b IDeckLinkAPIInformation
+\b0  interface\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardeftab720
+\cf0 \
+\pard\pardeftab720
+
+\b \cf0 Changes in Blackmagic DeckLink SDK 7.3\
+
+\b0 \
+	- 
+\b New Interfaces
+\b0 \
+\
+		- 
+\b IDeckLinkMutableVideoFrame\
+\
+			
+\b0 - new interface representing a video frame that may be modified by the user\
+\
+		- 
+\b IDeckLinkVideoFrameAncillary
+\b0 \
+\
+			- new interface to access video frame ancillary data\
+\
+		- 
+\b IDeckLinkTimecode
+\b0 \
+\
+			- new interface to access timecode data\
+\
+		- 
+\b IDeckLinkScreenPreviewCallback
+\b0 \
+\
+			- new interface for on-screen preview for playback or capture\
+\
+		- 
+\b IDeckLinkGLScreenPreviewHelper
+\b0 \
+\
+			- new interface for OpenGL screen previews\
+\
+		- 
+\b IDeckLinkCocoaScreenPreviewHelper
+\b0 \
+\
+			- new interface for Cocoa screen previews\
+\
+		- 
+\b IDeckLinkAttributes\
+\
+			
+\b0 - new interface for querying device attributes\
+\
+		- 
+\b IDeckLinkKeyer\
+\
+			
+\b0 - new interface to configure keying\
+\
+	- 
+\b Updated Interfaces
+\b0 \
+\
+		- 
+\b IDeckLinkVideoFrame
+\b0 \
+\
+			- added 
+\b GetTimeCode 
+\b0 method\
+			- added 
+\b GetAncillaryData
+\b0  method
+\b \
+
+\b0 			\
+		- 
+\b IDeckLinkInput
+\b0 \
+\
+			- added 
+\b SetScreenPreviewCallback
+\b0  method\
+			- added 
+\b GetAvailableVideoFrameCount
+\b0  method\
+			- renamed 
+\b GetBufferedAudioSampleFrameCount
+\b0  to 
+\b GetAvailableAudioSampleFrameCount
+\b0 			\
+			- Added FlushStreams\
+\
+		- 
+\b IDeckLinkInputCallback
+\b0 \
+\
+			- Added 
+\b VideoInputFormatChanged
+\b0  callback method\
+\
+		- 
+\b IDeckLinkAudioInputPacket
+\b0 \
+\
+			- renamed 
+\b GetSampleCount
+\b0  to 
+\b GetSampleFrameCount
+\b0 \
+			- renamed 
+\b GetAudioPacketTime
+\b0  to 
+\b GetPacketTime
+\b0 \
+\
+		- 
+\b IDeckLinkVideoInputFrame
+\b0 \
+\
+			- renamed 
+\b GetFrameTime
+\b0  to 
+\b GetStreamTime\
+
+\b0 \
+		- 
+\b IDeckLinkOutput
+\b0 \
+\
+			- added 
+\b SetScreenPreviewCallback
+\b0  method\
+			- removed 
+\b CreateVideoFrameFromBuffer
+\b0 \
+				removed functionality can be implemented by subclassing 
+\b IDeckLinkVideoFrame
+\b0 \
+\
+			- added 
+\b GetBufferedVideoFrameCount
+\b0  method\
+			- added 
+\b streamType
+\b0  parameter to 
+\b EnableAudioOuptut
+\b0  method \
+				previous behaviour can be obtained using 
+\b bmdAudioOutputStreamContinuous
+\b0  \
+\
+			- 
+\b CreateVideoFrame 
+\b0 method now returns an 
+\b IDeckLinkMutableVideoFrame\
+\
+			- 
+\b0 added 
+\b CreateAncillaryData
+\b0  method for obtaining a buffer to link onto a 
+\b IDeckLinkMutableVideoFrame
+\b0 \
+\
+	- 
+\b Types
+\b0 \
+\
+		- 
+\b Boolean types
+\b0 \
+\
+			- The BMDBool typedef has been removed. Interface descriptions now use the appropriate system type.\
+\
+		- 
+\b String types\
+\
+			
+\b0 - All API methods returning a string return a newly allocated string which must be freed by the caller.\
+\
+		- 
+\b BMDAudioOutputStreamType
+\b0 \
+\
+			- new enumeration to specify audio output stream types\
+\
+		- renamed 
+\b BMDVideoInputFlags
+\b0  enumeration to 
+\b BMDFrameFlags
+\b0 \
+\
+			- added 
+\b bmdVideoInputEnableFormatDetection
+\b0  flag\
+\
+		- 
+\b BMDTimecodeBCD
+\b0 \
+\
+			- new type for a BCD encoded timecode\
+\
+		- 
+\b BMDTimecodeFormat
+\b0 \
+\
+			- new enumeration of timecode encoding types\
+\
+		- 
+\b BMDTimecodeFlags
+\b0 \
+\
+			- new enumeration for timecode flags\
+\
+		- 
+\b BMDVideoConnection
+\b0 \
+\
+			- new enumeration value 
+\b bmdVideoConnectionOpticalSDI
+\b0 \
+\
+		- 
+\b BMDDeckLinkAttributeID\
+\
+
+\b0 			- new enumeration of IDs for 
+\b IDeckLinkAttributes
+\b0  interface\
+\
+		- 
+\b BMDDIsplayMode\
+\
+			- "
+\b0 PsF" modes have been renamed to "p". P vs PsF transport is controlled via the control panel.\
+			- added 
+\b bmdModeHD1080i6000
+\b0 \
+			- added 
+\b bmdModeHD1080p50\
+			- 
+\b0 added
+\b  bmdModeHD1080p5994\
+			- 
+\b0 added
+\b  bmdModeHD1080p6000
+\b0 \
+			- nb: not all modes are supported on all hardware\
+\
+		- 
+\b BMDFieldDominance\
+\
+			
+\b0 - new enumeration describing a display mode's field dominance\
+\
+		- 
+\b BMDVideoOutputFlags
+\b0 \
+\
+			- new enumeration for video output flags\
+\
+\pard\pardeftab720\sl276\slmult1\sa200
+\cf0 Updated September 07, 2012.\
+}

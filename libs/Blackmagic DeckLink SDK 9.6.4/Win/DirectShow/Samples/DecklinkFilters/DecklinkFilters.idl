@@ -1,0 +1,141 @@
+import "unknwn.idl";
+import "strmif.idl";
+
+//-----------------------------------------------------------------------------
+// Decklink Samples Public Library
+[
+	uuid(42F829FD-B743-4bbc-B412-580A10385433),
+    version(1.0),
+	helpstring("Blackmagic Design DeckLink Samples Type Library")
+]
+library DecklinkSamplesLib
+{
+    importlib("stdole32.tlb");
+    importlib("stdole2.tlb");
+
+	[
+		uuid(7188158d-52d9-473e-bfaf-07f502d2b29f)
+	]
+	coclass DecklinkPushSource
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(03d64d10-1ca5-4cce-a3cf-2ed87350bfd8)
+	]
+	coclass DecklinkVideoSource
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(7d49f8ae-8aae-442b-ad0d-93394cd08aa5)
+	]
+	coclass DecklinkAudioSource
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(260ae29a-30ea-470d-910e-08a47d4eb58a)
+	]
+	coclass CustomMemAllocator
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(a64cfd94-940b-4165-9d45-cb2e1127a864)
+	]
+	coclass DecklinkFieldSwap
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(175e188f-80d3-4ea9-aa65-80a2194520d9)
+	]
+	coclass DecklinkStillSource
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(6b255b74-7d85-40af-97b0-73b4de64bdca)
+	]
+	coclass DecklinkComposite
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(437fb073-062e-454a-a8c8-bfa7a2f63964)
+	]
+	coclass DecklinkCompositeProperties
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(3c78b8e2-6c4d-11d1-ade2-0000f8754b99)
+	]
+	coclass WavDest
+	{
+		[default] interface IUnknown;
+	};
+
+	[
+		uuid(3E2CE551-8699-47fe-B94D-BB275E663473)
+	]
+	coclass DecklinkToneSource
+	{
+		[default] interface IUnknown;
+	};
+
+	//-----------------------------------------------------------------------------
+	// Decklink push source custom interface
+	[
+		object,
+		uuid(BC13BB43-B681-451b-82C8-8B66A9FF3848),
+		helpstring("Decklink Push Source Interface")
+	]
+	interface IDecklinkPushSource : IUnknown
+	{
+		[helpstring("Retrieve a free frame buffer")]
+		HRESULT GetFrameBuffer([out] unsigned char** ppBuffer, [out] unsigned long* pSize);
+
+		[helpstring("Deliver a frame buffer")]
+		HRESULT Deliver([in] unsigned char* pBuffer);
+	}
+
+	[
+		object,
+		uuid(1C109963-8DA9-4eef-9F2E-D935559103CE),
+		helpstring("Decklink Push Source 2 Interface")
+	]
+	interface IDecklinkPushSource2 : IUnknown
+	{
+		[helpstring("Retrieve a free media sample")]
+		HRESULT GetFrameBuffer([out] IMediaSample** ppSample);
+
+		[helpstring("Deliver a media sample")]
+		HRESULT Deliver([in] IMediaSample* pSample);
+	}
+
+	[
+		object,
+		uuid(FA94DA67-AF74-4389-9E64-33239BA9A1D6),
+		dual,
+		helpstring("Decklink Push Source 3 Automation Interface"),
+		pointer_default(unique)
+	]
+	interface IDecklinkPushSource3 : IDispatch
+	{
+		[id(1), helpstring("Retrieve a free media sample")]
+		HRESULT GetFrameBuffer([out] IUnknown** ppSample);
+
+		[id(2), helpstring("Deliver a media sample")]
+		HRESULT Deliver([in] IUnknown* pSample);
+	}
+};

@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'InputLoopThrough' target in the 'InputLoopThrough' project
+//
+
+#ifdef __OBJC__
+    #import <Cocoa/Cocoa.h>
+#endif

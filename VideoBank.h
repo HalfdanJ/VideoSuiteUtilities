@@ -14,6 +14,7 @@
 @interface VideoBank : NSArrayController
 
 @property VideoPlayerView * videoPreviewView;
+@property (readonly) int numberBanks;
 
 - (id)initWithNumberBanks:(int)banks;
 

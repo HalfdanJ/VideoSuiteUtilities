@@ -1,0 +1,32 @@
+//------------------------------------------------------------------------------
+// Desc: This IDL defines a backdoor interface to access 
+// DeckLink DirectShow filter as standard COM object.
+// It may be used from within applications where the 
+// DeckLink DirectShow filters have been disabled, such as Adobe Premiere.
+//
+// Copyright (c) 2008 Blackmagic Design Pty Ltd.  All rights reserved.
+//------------------------------------------------------------------------------
+import "unknwn.idl";
+import "strmif.idl";
+
+//-----------------------------------------------------------------------------
+// Decklink Public Library COM
+[
+	uuid(3B91ABE3-0211-4ac7-9894-B5833B2BF55C),
+    version(1.0),
+	helpstring("Blackmagic Design DeckLinkCOM Type Library")
+]
+library DecklinkPublicLibCOM
+{
+    importlib("stdole32.tlb");
+    importlib("stdole2.tlb");
+
+	[
+		uuid(C3A35E25-0A29-4f58-B1A9-991B07061A09),
+		helpstring("DecklinkVideoRenderFilter Unregistered Class")
+	]
+	coclass DecklinkVideoRenderFilterCOM
+	{
+		[default] interface IUnknown;
+	};
+};

@@ -31,6 +31,11 @@
 
 @property CIImage * inputImage;
 
+
+@property (readonly) NSString * name;
+@property NSString * modeDescription;
+@property int index;
+
 @property id<BlackMagicItemDelegate> delegate;
 
 

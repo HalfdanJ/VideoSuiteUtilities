@@ -29,23 +29,10 @@ static void *SelectionContext = &SelectionContext;
         for(int i=0;i<banks;i++){
             VideoBankItem * newItem = [[VideoBankItem alloc] init];
             
-            newItem.name = [NSString stringWithFormat:@"Bank %i",i];
-         //   newItem.crossfadeTime = @(2);
-            //[newItem loadBankFromDrive];
-            if(i==0){
-                [newItem loadBankFromPath:@"~/Movies/VideoSuite/Bif.mp4"];
-                newItem.outTime = @(5);
+            newItem.name = [NSString stringWithFormat:@"Bank %02i",i];
+            [newItem loadBankFromDrive];
+
             
-            } /*else if(i==2){
-                [newItem loadBankFromPath:@"/Users/jonas/Dropbox/Public/LEDDragt.MOV"];
-
-                
-            }*/ else {
-                newItem.outTime = @(4);
-
-                [newItem loadBankFromPath:@"~/Movies/VideoSuite/Bif2.mov"];
-
-            }
             [self addObject:newItem];
         }
         
@@ -73,5 +60,13 @@ static void *SelectionContext = &SelectionContext;
             }
         }
     }
+}
+
+-(int)numberBanks{
+    return (int) [self.content count];
+}
+
++(NSSet *)keyPathsForValuesAffectingNumberBanks{
+    return [NSSet setWithObjects:@"content", nil];
 }
 @end

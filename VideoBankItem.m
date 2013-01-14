@@ -34,7 +34,8 @@ static void *AssetContext = &AssetContext;
 }
 
 -(void)loadBankFromDrive{
-    [self loadBankFromPath:@"~/Movies/VideoSuite/Bif.mp4" ];
+    [self loadBankFromPath:self.path ];
+    NSLog(@"Load %@",self.path);
 }
 
 -(void) loadBankFromPath:(NSString*)path{
@@ -55,8 +56,11 @@ static void *AssetContext = &AssetContext;
     if([self.inTime doubleValue] > 0 || self.outTime){
         AVMutableComposition * composition = [AVMutableComposition composition];
         
-        CMTime start = CMTimeMakeWithSeconds([self.inTime doubleValue], 100);
+        CMTime start = CMTimeMakeWithSeconds(MIN([self.inTime doubleValue], self.durationOriginal), 100);
         CMTime end = CMTimeMakeWithSeconds([self.outTime doubleValue], 100);
+        if(!self.outTime)
+            end = CMTimeMakeWithSeconds(self.durationOriginal, 100);
+        
         NSError * error;
         [composition insertTimeRange:CMTimeRangeFromTimeToTime(start, end) ofAsset:self.avPlayerItemOriginal.asset atTime:CMTimeMakeWithSeconds(0, 100) error:&error];
         
@@ -145,6 +149,18 @@ static void *AssetContext = &AssetContext;
 
 +(NSSet *)keyPathsForValuesAffectingOutTimeString{
     return [NSSet setWithObject:@"outTime"];
+}
+
+-(NSString *)path{
+    if(_manualPath){
+        return _manualPath;
+    } else {
+        return [[NSString stringWithFormat:@"~/Movies/%@.mov",self.name] stringByExpandingTildeInPath];
+    }
+}
+
+-(void)setPath:(NSString *)path{
+    _manualPath = path;
 }
 
 @end
