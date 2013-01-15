@@ -40,7 +40,6 @@ static void *RecordContext = &RecordContext;
         [self addObserver:self forKeyPath:@"deviceIndex" options:0 context:DeviceIndexContext];
         [self addObserver:self forKeyPath:@"record" options:0 context:RecordContext];
         
-        
         self.deviceIndex = 0;
         
         self.lock = [[NSRecursiveLock alloc] init];
@@ -214,4 +213,19 @@ static void *RecordContext = &RecordContext;
         [self prepareRecording];
     }
 }
+
+-(BOOL)canRecord{
+    
+    NSArray * items = self.videoBank.content;
+    if(self.bankIndex < items.count){
+        VideoBankItem * item = items[self.bankIndex];
+        return !item.locked;
+    }
+    return NO;
+}
+
++(NSSet *)keyPathsForValuesAffectingCanRecord{
+    return [NSSet setWithObjects:@"bankIndex",@"readyToRecord",nil];
+}
+
 @end
