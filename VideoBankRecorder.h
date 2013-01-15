@@ -22,7 +22,7 @@
 @property VideoBank * videoBank;
 @property NSSize size;
 
--(id)initWithBlackmagicItems:(NSArray*)items;
+-(id)initWithBlackmagicItems:(NSArray*)items bank:(VideoBank*)bank;
 -(void)newFrameWithBufer:(CVPixelBufferRef)buffer image:(CIImage *)image item:(BlackMagicItem*)bmItem;
 
 @end

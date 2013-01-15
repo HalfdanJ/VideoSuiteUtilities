@@ -41,6 +41,9 @@
 @property double playHeadPosition;
 @property BOOL queued;
 @property BOOL playing;
+@property int standardPlayerLabel;
+@property int compositePlayerLabel;
+@property int recordLabel;
 
 @property NSImage * thumbnail;
 @property (readonly) NSSize  size;

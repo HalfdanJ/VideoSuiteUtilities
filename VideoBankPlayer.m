@@ -30,13 +30,21 @@ static void *AVSPPlayerLayerReadyForDisplay0 = &AVSPPlayerLayerReadyForDisplay0;
 static void *AVSPPlayerLayerReadyForDisplay1 = &AVSPPlayerLayerReadyForDisplay1;
 static void *AVPlayerRateContext = &AVPlayerRateContext;
 static void *AvPlayerCurrentItemContext = &AvPlayerCurrentItemContext;
+
+static void *LabelContext = &LabelContext;
 //static void *OpacityContext = &OpacityContext;
 
 
-- (id)init
-{
-    self = [super init];
+-(id)initWithBank:(VideoBank*)bank{
+    
+    self = [self init];
     if (self) {
+        self.videoBank = bank;
+        
+        [self addObserver:self forKeyPath:@"bankSelection" options:0 context:LabelContext];
+        [self addObserver:self forKeyPath:@"numberOfBanksToPlay" options:0 context:LabelContext];
+
+        
         self.layer = [CALayer layer];
         [self.layer setAutoresizingMask: kCALayerWidthSizable | kCALayerHeightSizable];
         self.layer.hidden = YES;
@@ -47,6 +55,7 @@ static void *AvPlayerCurrentItemContext = &AvPlayerCurrentItemContext;
         
         [self.layer bind:@"opacity" toObject:self withKeyPath:@"opacity" options:nil];
         self.opacity = 1.0;
+        
         // [self addObserver:self forKeyPath:@"opdacity" options:0 context:OpacityContext];
         //self.simultaneousPlayback = NO;
         
@@ -58,10 +67,25 @@ static void *AvPlayerCurrentItemContext = &AvPlayerCurrentItemContext;
     //    if(context == OpacityContext){
     //        self.layer.opacity = self.opacity;
     //    }
+    
+    if(context == LabelContext){
+        for(VideoBankItem * item in self.videoBank.content){
+            item.standardPlayerLabel = 0;
+        }
+        
+        int count =0;
+        for(int i=self.bankSelection;i<self.bankSelection + self.numberOfBanksToPlay;i++){
+            if([self.videoBank.content count] > i){
+                VideoBankItem * bankItem = [self.videoBank content][i];
+                bankItem.standardPlayerLabel = ++count;
+
+            }
+        }
+    }
     if (context == AVSPPlayerLayerReadyForDisplay0)
-	{
-		if ([[change objectForKey:NSKeyValueChangeNewKey] boolValue] == YES)
-		{
+    {
+        if ([[change objectForKey:NSKeyValueChangeNewKey] boolValue] == YES)
+        {
             [avPlayer[0] play];
 		}
 	}

@@ -15,6 +15,7 @@
 
 @property int bankSelection;
 @property int numberOfBanksToPlay;
+@property int mask;
 
 @property CALayer * layer;
 
@@ -22,5 +23,8 @@
 @property float opacity;
 
 @property NSString * currentTimeString;
+
+-(id)initWithBank:(VideoBank*)bank;
+
 
 @end

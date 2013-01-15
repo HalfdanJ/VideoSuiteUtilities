@@ -29,17 +29,25 @@
 @implementation VideoBankRecorder
 static void *DeviceIndexContext = &DeviceIndexContext;
 static void *RecordContext = &RecordContext;
-- (id)initWithBlackmagicItems:(NSArray *)items
+static void *LabelContext = &LabelContext;
+
+
+-(id)initWithBlackmagicItems:(NSArray*)items bank:(VideoBank*)bank
 {
     self = [self init];
     if (self) {
         self.blackmagicItems = items;
+        self.videoBank = bank;
         self.deviceIndex = -1;
         self.readyToRecord = YES;
         
         [self addObserver:self forKeyPath:@"deviceIndex" options:0 context:DeviceIndexContext];
         [self addObserver:self forKeyPath:@"record" options:0 context:RecordContext];
         
+        [self addObserver:self forKeyPath:@"bankIndex" options:0 context:LabelContext];
+        [self addObserver:self forKeyPath:@"record" options:0 context:LabelContext];
+        
+        self.bankIndex = 0;
         self.deviceIndex = 0;
         
         self.lock = [[NSRecursiveLock alloc] init];
@@ -129,10 +137,15 @@ static void *RecordContext = &RecordContext;
                                                     error:&error];
     NSParameterAssert(self.videoWriter);
     
+    NSSize size = self.deviceItem.size;
+    if(size.width == 0){
+        size = NSMakeSize(720, 576);
+    }
+    
     NSDictionary *videoSettings = [NSDictionary dictionaryWithObjectsAndKeys:
                                    AVVideoCodecH264, AVVideoCodecKey,
-                                   [NSNumber numberWithInt:self.deviceItem.size.width], AVVideoWidthKey,
-                                   [NSNumber numberWithInt:self.deviceItem.size.height], AVVideoHeightKey,
+                                   [NSNumber numberWithInt:size.width], AVVideoWidthKey,
+                                   [NSNumber numberWithInt:size.height], AVVideoHeightKey,
                                    nil];
     
     self.videoWriterInput = [AVAssetWriterInput
@@ -159,10 +172,28 @@ static void *RecordContext = &RecordContext;
     dispatch_async(dispatch_queue_create("waiter", 0), ^{
         [NSThread sleepForTimeInterval:0.2];
         self.readyToRecord = YES;
+        NSLog(@"Ready to record");
     });
 }
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
+    
+    if(context == LabelContext){
+        for(VideoBankItem * item in self.videoBank.content){
+            item.recordLabel = 0;
+        }
+        
+        NSArray * items = self.videoBank.content;
+        if(self.bankIndex < items.count){
+            VideoBankItem * item = items[self.bankIndex];
+            if(self.record){
+                item.recordLabel = 2;
+            } else {
+                item.recordLabel = 1;
+            }
+            
+        }
+    }
     if(context == RecordContext){
         self.startRecordTime = nil;
         

@@ -24,7 +24,11 @@ static void *RedrawContext = &RedrawContext;
         [self addObserver:self forKeyPath:@"objectValue.playing" options:0 context:RedrawContext];
         [self addObserver:self forKeyPath:@"objectValue.queued" options:0 context:RedrawContext];
         [self addObserver:self forKeyPath:@"objectValue.playHeadPosition" options:0 context:RedrawContext];
-
+        
+        [self addObserver:self forKeyPath:@"objectValue.standardPlayerLabel" options:0 context:RedrawContext];
+        [self addObserver:self forKeyPath:@"objectValue.compositePlayerLabel" options:0 context:RedrawContext];
+        [self addObserver:self forKeyPath:@"objectValue.recordLabel" options:0 context:RedrawContext];
+        
     }
     return self;
 }
@@ -47,7 +51,7 @@ static void *RedrawContext = &RedrawContext;
     [[NSColor colorWithDeviceWhite:0.3 alpha:1.0] set];
     NSRectFill(rect);
     
-
+    
     VideoBankItem * item = self.objectValue;
     
     
@@ -73,7 +77,7 @@ static void *RedrawContext = &RedrawContext;
     
     if(item.queued){
         [[NSColor colorWithDeviceRed:0.4 green:0.4 blue:0.2 alpha:1.0] set];
-
+        
     } else {
         [[NSColor colorWithDeviceWhite:0.4 alpha:1.0] set];
     }
@@ -86,14 +90,111 @@ static void *RedrawContext = &RedrawContext;
         double playhead = item.playHeadPosition  / duration;
         
         NSRect playingRect = rect;
-	
+        
         playingRect.origin.x += MAX(inTime, playhead) * rect.size.width;
         playingRect.size.width -= MAX(inTime, playhead) * rect.size.width;
         
         playingRect.size.width -= outTime* rect.size.width;
-
+        
         NSRectFill(playingRect);
-    } 
+    }
+    
+    NSRect labelRect = NSMakeRect(120, 7, 25, 25);
+    if(item.standardPlayerLabel){
+        NSRect label = labelRect;
+        [[NSColor colorWithCalibratedWhite:0.6 alpha:1.0] set];
+        
+        NSBezierPath * path = [NSBezierPath bezierPathWithRoundedRect:label xRadius:4 yRadius:4];
+        [path setLineWidth:1.0];
+        [path stroke];
+        
+        /*  [[NSColor colorWithDeviceRed:1.0 green:1.0 blue:1.0 alpha:1.0] set];
+         NSRectFill(label);*/
+        {
+            NSMutableParagraphStyle *style = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
+            [style setAlignment:NSCenterTextAlignment];
+            NSDictionary *attr = @{
+        NSFontAttributeName:[NSFont systemFontOfSize:15],
+        NSParagraphStyleAttributeName:style,
+        NSForegroundColorAttributeName:[NSColor colorWithCalibratedWhite:0.6 alpha:1.0]
+            };
+            
+            [@"S" drawInRect:label withAttributes:attr];
+        }
+    
+    
 }
+if(item.compositePlayerLabel != -1){
+    NSRect label = labelRect;
+    label.origin.x += 30;
+    
+    [[NSColor colorWithCalibratedWhite:0.6 alpha:1.0] set];
+    
+    NSBezierPath * path = [NSBezierPath bezierPathWithRoundedRect:label xRadius:4 yRadius:4];
+    [path setLineWidth:1.0];
+    [path stroke];
+    
+    /*  [[NSColor colorWithDeviceRed:1.0 green:1.0 blue:1.0 alpha:1.0] set];
+     NSRectFill(label);*/
+    {
+        NSMutableParagraphStyle *style = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
+        [style setAlignment:NSCenterTextAlignment];
+        NSDictionary *attr = @{
+    NSFontAttributeName:[NSFont systemFontOfSize:15],
+    NSParagraphStyleAttributeName:style,
+    NSForegroundColorAttributeName:[NSColor colorWithCalibratedWhite:0.6 alpha:1.0]
+        };
+        
+        [@"C" drawInRect:label withAttributes:attr];
+    }
+    
+    {
+        NSMutableParagraphStyle *style = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
+        [style setAlignment:NSCenterTextAlignment];
+        NSDictionary *attr = @{
+    NSFontAttributeName:[NSFont systemFontOfSize:8],
+    NSParagraphStyleAttributeName:style,
+    NSForegroundColorAttributeName:[NSColor colorWithCalibratedWhite:0.6 alpha:1.0]
+        };
+        NSRect _rect = label;
+        _rect.size.height -= 14;
+        [[NSString stringWithFormat:@"M%i",item.compositePlayerLabel] drawInRect:_rect withAttributes:attr];
+    }
+    
+    if(item.recordLabel){
+        NSRect label = labelRect;
+        label.origin.x += 60;
+        
+        [[NSColor colorWithCalibratedWhite:0.6 alpha:1.0] set];
+        if(item.recordLabel == 2){
+            [[NSColor colorWithCalibratedRed:0.6 green:0.1 blue:0.1 alpha:1.0] set];
+        }
+        
+        NSBezierPath * path = [NSBezierPath bezierPathWithRoundedRect:label xRadius:4 yRadius:4];
+        [path setLineWidth:1.0];
+        [path stroke];
+        
+        if(item.recordLabel == 2)
+            [path fill];
+        
+        /*  [[NSColor colorWithDeviceRed:1.0 green:1.0 blue:1.0 alpha:1.0] set];
+         NSRectFill(label);*/
+        {
+            NSMutableParagraphStyle *style = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
+            [style setAlignment:NSCenterTextAlignment];
+            NSDictionary *attr = @{
+        NSFontAttributeName:[NSFont systemFontOfSize:15],
+        NSParagraphStyleAttributeName:style,
+        NSForegroundColorAttributeName:[NSColor colorWithCalibratedWhite:0.6 alpha:1.0]
+            };
+            
+            [@"R" drawInRect:label withAttributes:attr];
+        }
+        
+        
+    }
+}
+}
+
 
 @end

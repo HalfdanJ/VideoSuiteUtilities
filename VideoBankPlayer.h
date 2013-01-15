@@ -40,6 +40,7 @@
 
 @property NSString * currentTimeString;
 
+-(id)initWithBank:(VideoBank*)bank;
 
 
 @end

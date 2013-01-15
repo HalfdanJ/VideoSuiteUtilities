@@ -23,11 +23,17 @@
 
 @implementation VideoBankSimPlayer
 static void *PlayingContext = &PlayingContext;
+static void *LabelContext = &LabelContext;
 
-- (id)init
-{
-    self = [super init];
+-(id)initWithBank:(VideoBank*)bank{
+    self = [self init];
     if (self) {
+        self.videoBank = bank;
+        
+        [self addObserver:self forKeyPath:@"bankSelection" options:0 context:LabelContext];
+        [self addObserver:self forKeyPath:@"numberOfBanksToPlay" options:0 context:LabelContext];
+        [self addObserver:self forKeyPath:@"mask" options:0 context:LabelContext];
+
         self.layer = [CALayer layer];
         [self.layer setAutoresizingMask: kCALayerWidthSizable | kCALayerHeightSizable];
         self.layer.hidden = YES;
@@ -72,6 +78,7 @@ static void *PlayingContext = &PlayingContext;
     NSMutableArray * players = [NSMutableArray arrayWithCapacity:self.numberOfBanksToPlay];
     NSMutableArray * layers = [NSMutableArray arrayWithCapacity:self.numberOfBanksToPlay];
     
+    int count = 0;
     for(int i=self.bankSelection;i<self.bankSelection + self.numberOfBanksToPlay;i++){
         if([self.videoBank.content count] > i){
             VideoBankItem * bankItem = [self.videoBank content][i];
@@ -124,7 +131,7 @@ static void *PlayingContext = &PlayingContext;
                 
                 
                 
-                CALayer * mask = [self loadMask:i];
+                CALayer * mask = [self loadMask:count+self.mask];
                 [mask setFrame:self.layer.frame];
                 [mask setAutoresizingMask:kCALayerWidthSizable | kCALayerHeightSizable];
                 
@@ -142,8 +149,8 @@ static void *PlayingContext = &PlayingContext;
                 
 
             }
-            
         }
+        count++;
     }
     
     
@@ -178,6 +185,21 @@ static void *PlayingContext = &PlayingContext;
 
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
+    if(context == LabelContext){
+        for(VideoBankItem * item in self.videoBank.content){
+            item.compositePlayerLabel = -1;
+        }
+        
+        int count =0;
+        for(int i=self.bankSelection;i<self.bankSelection + self.numberOfBanksToPlay;i++){
+            if([self.videoBank.content count] > i){
+                VideoBankItem * bankItem = [self.videoBank content][i];
+                bankItem.compositePlayerLabel = self.mask+count;
+                
+                count++;
+            }
+        }
+    }
 
     if(context == PlayingContext){
         if(self.playing){
