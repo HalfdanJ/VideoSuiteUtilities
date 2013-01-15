@@ -308,6 +308,9 @@ void MyPixelBufferReleaseCallback(void *releaseRefCon, const void *baseAddress){
 -(CVPixelBufferRef) createCVImageBufferFromCallback:(DecklinkCallback*)callback{
     int w = callback->w;
     int h = callback->h;
+    
+    if(self.size.width != w || self.size.height != h)
+        self.size = NSMakeSize(w, h);
     //  unsigned char * bytes = callback->bytes;
     
     dispatch_once(&onceMallocToken, ^{

@@ -19,6 +19,7 @@
 @property NSString * timeString;
 
 @property VideoBank * videoBank;
+@property NSSize size;
 
 -(id)initWithBlackmagicItems:(NSArray*)items;
 -(void)newFrameWithBufer:(CVPixelBufferRef)buffer image:(CIImage *)image item:(BlackMagicItem*)bmItem;

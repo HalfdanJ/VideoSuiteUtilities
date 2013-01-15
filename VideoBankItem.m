@@ -54,7 +54,6 @@ static void *LockedContext = &LockedContext;
     [self.avPlayerItemOriginal addObserver:self forKeyPath:@"status" options:0 context:VideoStatusContext];
     
     
-    
     self.avPreviewPlayer = [AVPlayer playerWithPlayerItem:self.avPlayerItemOriginal];
     self.loaded = NO;
     
@@ -109,8 +108,6 @@ static void *LockedContext = &LockedContext;
         [defaults setValue:@(self.locked) forKey:[NSString stringWithFormat:@"%@Locked", self.name]];
     }
     if(context == AssetContext){
-        NSLog(@"New asset");
-        
         if ([[self.avPlayerItemTrim.asset tracksWithMediaType:AVMediaTypeVideo] count] > 0) {
             AVAssetImageGenerator *imageGenerator = [AVAssetImageGenerator assetImageGeneratorWithAsset:self.avPlayerItemTrim.asset];
             imageGenerator.maximumSize = CGSizeMake(48, 48);
@@ -185,6 +182,14 @@ static void *LockedContext = &LockedContext;
 
 -(void)setPath:(NSString *)path{
     _manualPath = path;
+}
+
+-(NSSize)size{
+    return self.avPlayerItemOriginal.presentationSize;
+}
+
++(NSSet *)keyPathsForValuesAffectingSize{
+    return [NSSet setWithObject:@"avPlayerItemTrim.asset"];
 }
 
 @end

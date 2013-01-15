@@ -43,6 +43,7 @@
 @property BOOL playing;
 
 @property NSImage * thumbnail;
+@property (readonly) NSSize  size;
 
 - (id)initWithName:(NSString*)name;
 

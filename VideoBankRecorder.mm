@@ -23,6 +23,7 @@
 
 @property NSRecursiveLock * lock;
 
+
 @end
 
 @implementation VideoBankRecorder
@@ -35,18 +36,18 @@ static void *RecordContext = &RecordContext;
         self.blackmagicItems = items;
         self.deviceIndex = -1;
         self.readyToRecord = YES;
-               
+        
         [self addObserver:self forKeyPath:@"deviceIndex" options:0 context:DeviceIndexContext];
         [self addObserver:self forKeyPath:@"record" options:0 context:RecordContext];
-
-
+        
+        
         self.deviceIndex = 0;
         
         self.lock = [[NSRecursiveLock alloc] init];
         
         self.assetWriterQueue = dispatch_queue_create("AssetWriterQueue", DISPATCH_QUEUE_SERIAL);
         [self prepareRecording];
-
+        
     }
     return self;
 }
@@ -59,7 +60,7 @@ static void *RecordContext = &RecordContext;
             self.startRecordTime = [NSDate timeIntervalSinceReferenceDate];
         }
         NSTimeInterval time = [NSDate timeIntervalSinceReferenceDate];
-
+        
         //  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul), ^{
         NSTimeInterval diffTime = time - self.startRecordTime;
         
@@ -69,25 +70,25 @@ static void *RecordContext = &RecordContext;
         
         __block BOOL append_ok = NO;
         int j = 0;
-       // self.adaptor.assetWriterInput
-//        NSLog(@"%ld",self.videoWriter.status);
+        // self.adaptor.assetWriterInput
+        //        NSLog(@"%ld",self.videoWriter.status);
         if (self.videoWriterInput.readyForMoreMediaData)
         {
             //                    printf("appending %d attemp %d\n", frameCount, j);
             CMTime frameTime = CMTimeMake(frameCount,(int32_t) 250.0);
             
             
-         //   dispatch_sync(self.assetWriterQueue, ^{
+            //   dispatch_sync(self.assetWriterQueue, ^{
             //   [self.lock lock];
-             //   while(!self.adaptor.assetWriterInput.readyForMoreMediaData) {}
+            //   while(!self.adaptor.assetWriterInput.readyForMoreMediaData) {}
             //CVPixelBufferPoolCreatePixelBuffer (NULL, self.adaptor.pixelBufferPool, &buffer);
-
-                append_ok = [self.adaptor appendPixelBuffer:buffer withPresentationTime:frameTime];
-           
-             //   while(!self.adaptor.assetWriterInput.readyForMoreMediaData) {}
-                
+            
+            append_ok = [self.adaptor appendPixelBuffer:buffer withPresentationTime:frameTime];
+            
+            //   while(!self.adaptor.assetWriterInput.readyForMoreMediaData) {}
+            
             //    [self.lock unlock];
-         //   });
+            //   });
             
             
             //if(buffer)
@@ -107,8 +108,8 @@ static void *RecordContext = &RecordContext;
         }
         
         // });
-
-    }    
+        
+    }
 }
 
 
@@ -131,8 +132,8 @@ static void *RecordContext = &RecordContext;
     
     NSDictionary *videoSettings = [NSDictionary dictionaryWithObjectsAndKeys:
                                    AVVideoCodecH264, AVVideoCodecKey,
-                                   [NSNumber numberWithInt:720], AVVideoWidthKey,
-                                   [NSNumber numberWithInt:576], AVVideoHeightKey,
+                                   [NSNumber numberWithInt:self.deviceItem.size.width], AVVideoWidthKey,
+                                   [NSNumber numberWithInt:self.deviceItem.size.height], AVVideoHeightKey,
                                    nil];
     
     self.videoWriterInput = [AVAssetWriterInput
@@ -163,7 +164,6 @@ static void *RecordContext = &RecordContext;
 }
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
-    NSLog(@"Observe");
     if(context == RecordContext){
         self.startRecordTime = nil;
         
@@ -177,7 +177,7 @@ static void *RecordContext = &RecordContext;
             if(self.bankIndex < items.count){
                 VideoBankItem * item = items[self.bankIndex];
                 NSString * path = item.path;
-
+                
                 NSError * error;
                 [[NSFileManager defaultManager] removeItemAtPath:[path stringByExpandingTildeInPath] error:nil];
                 [[NSFileManager defaultManager] moveItemAtPath:[@"~/Movies/_cache.mov" stringByExpandingTildeInPath] toPath:[path stringByExpandingTildeInPath] error:&error];
@@ -198,9 +198,9 @@ static void *RecordContext = &RecordContext;
             
             
         }
-}
-
-if(context == DeviceIndexContext){
+    }
+    
+    if(context == DeviceIndexContext){
         if(self.deviceItem){
             self.deviceItem.delegate = nil;
         }
@@ -209,6 +209,9 @@ if(context == DeviceIndexContext){
             self.deviceItem = self.blackmagicItems[self.deviceIndex];
             self.deviceItem.delegate = self;
         }
+        
+        
+        [self prepareRecording];
     }
 }
 @end

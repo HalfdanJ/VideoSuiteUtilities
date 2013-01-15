@@ -37,6 +37,7 @@
 @property (readonly) NSString * name;
 @property NSString * modeDescription;
 @property int index;
+@property NSSize size;
 
 @property id<BlackMagicItemDelegate> delegate;
 
