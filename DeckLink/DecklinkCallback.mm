@@ -84,7 +84,7 @@ void DecklinkCallback::CreateLookupTables(){
 
 void DecklinkCallback::YuvToRgbChunk(unsigned char *yuv, unsigned char * rgb, unsigned int offset, unsigned int chunk_size)
 {
-
+    
     // convert 4 YUV macropixels to 6 RGB pixels
 	unsigned int i, j;
     unsigned int boundry = offset + chunk_size;
@@ -153,7 +153,7 @@ unsigned char * DecklinkCallback::YuvToRgb(IDeckLinkVideoInputFrame* pArrivedFra
     int num_workers = 8;
     
     int a;
-  // unsigned t0=clock(),t1;
+    // unsigned t0=clock(),t1;
     
     // split up the image into memory-aligned chunks so they take advantage of
     // the CPU cache
@@ -170,7 +170,7 @@ unsigned char * DecklinkCallback::YuvToRgb(IDeckLinkVideoInputFrame* pArrivedFra
     }
     dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
     
-   // t1=clock()-t0;
+    // t1=clock()-t0;
     //printf("%i\n",t1);
     
     return rgb;
@@ -248,60 +248,57 @@ HRESULT		DecklinkCallback::VideoInputFormatChanged (/* in */ BMDVideoInputFormat
 
 HRESULT 	DecklinkCallback::VideoInputFrameArrived (/* in */ IDeckLinkVideoInputFrame* videoFrame, /* in */ IDeckLinkAudioInputPacket* audioPacket)
 {
-    
+    //NSLog(@"-Frame arrived start");
+
     @autoreleasepool {
         if(!delegateBusy){
-          //  NSLog(@"Frame in %i",this);
-            [lock lock];
-            //        BMDPixelFormat pixelFormat = videoFrame->GetPixelFormat();
-            BMDTimeValue		frameTime, frameDuration;
-  //          int					hours, minutes, seconds, frames;
-//            HRESULT				theResult;
-            
-            videoFrame->GetStreamTime(&frameTime, &frameDuration, 600);
-            decklinkOutput->ScheduleVideoFrame(videoFrame, frameTime, frameDuration, 600);
-            //if (theResult != S_OK)
-            //	printf("Scheduling failed with error = %08x\n", (unsigned int)theResult);
-            
-            
-            
-            w = (int)videoFrame->GetWidth();
-            h = (int)videoFrame->GetHeight();
-            size = w * h * 4;
-            
-            
-            /* if(bytes){
-             delete bytes;
-             }*/
-            bytes = YuvToRgb(videoFrame);
-            
-            if(buffer){
-                CVPixelBufferRelease(buffer);
-            }
-            buffer = [delegate createCVImageBufferFromCallback:this];
 
-            /*imageRep = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:&bytes
-             pixelsWide:w pixelsHigh:h
-             bitsPerSample:8 samplesPerPixel:3
-             hasAlpha:NO isPlanar:NO
-             colorSpaceName:NSDeviceRGBColorSpace
-             bitmapFormat:0
-             bytesPerRow:3*w bitsPerPixel:8*3];        // bwFrames(bytes,w*h);
-             
-             */
-            newFrame = true;
-            
-            dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
-            dispatch_sync(queue, ^{
-                [delegate newFrame:this];
-            });
-            
-            [lock unlock];
-         //   NSLog(@"Frame out %i",this);
+            if(!_videoFrame && [lock tryLock]){
+              
+                _videoFrame = videoFrame;
+                _videoFrame->AddRef();
+               
+                //dispatch_queue_t queue = dispatch_get_main_queue();                
+                dispatch_queue_t queue = dispatch_queue_create("com.halfdanj.newFrame", 0);
+                dispatch_async(queue, ^{
+                    [lock lock];
+
+                    BMDTimeValue		frameTime, frameDuration;
+                    _videoFrame->GetStreamTime(&frameTime, &frameDuration, 600);
+                    decklinkOutput->ScheduleVideoFrame(_videoFrame, frameTime, frameDuration, 600);
+                    
+                    w = (int)_videoFrame->GetWidth();
+                    h = (int)_videoFrame->GetHeight();
+                    size = w * h * 4;
+                    
+                    bytes = YuvToRgb(videoFrame);
+                    
+                    if(buffer){
+                        CVPixelBufferRelease(buffer);
+                    }
+                    buffer = [delegate createCVImageBufferFromCallback:this];
+                    
+                    newFrame = true;
+                                       
+                    delegateBusy = YES;
+                    [delegate newFrame:this];
+                    
+                    _videoFrame->Release();
+                    _videoFrame = nil;
+                    [lock unlock];
+                });
+                
+                [lock unlock];
+            } else {
+             //   NSLog(@"Could not arqquire lock");
+            }
+            //   NSLog(@"Frame out %i",this);
         } else {
-       //     NSLog(@"busy delegate");
+           // NSLog(@"###########busy delegate");
         }
     }
+    
+  //  NSLog(@"-Frame arrived stop");
     //  videoFrame->get
     
     /*	BOOL					hasValidInputSource = (videoFrame->GetFlags() & bmdFrameHasNoInputSource) != 0 ? NO : YES;

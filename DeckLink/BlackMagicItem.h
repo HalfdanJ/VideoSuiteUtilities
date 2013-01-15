@@ -22,6 +22,8 @@
 
 @interface BlackMagicItem : NSObject{
     unsigned char * bytes;
+    dispatch_once_t onceMallocToken;
+    int counter;
 }
 
 @property IDeckLinkInput  *  deckLinkInput;
@@ -39,7 +41,7 @@
 @property id<BlackMagicItemDelegate> delegate;
 
 
--(id) initWithDecklink:(IDeckLink*)deckLink;
+-(id) initWithDecklink:(IDeckLink*)deckLink mode:(int)mode;
 -(void) newFrame:(DecklinkCallback*)callback;
 
 -(CVPixelBufferRef) createCVImageBufferFromCallback:(DecklinkCallback*)callback;

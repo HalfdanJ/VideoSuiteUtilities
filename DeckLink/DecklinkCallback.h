@@ -53,6 +53,10 @@ public:
     bool delegateBusy;
     
         CVPixelBufferRef buffer;
+    
+    int counter;
+    
+    IDeckLinkVideoInputFrame* _videoFrame;
 
 };
 
