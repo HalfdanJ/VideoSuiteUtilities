@@ -18,9 +18,19 @@ static void *CIImageContext = &CIImageContext;
     if (self) {
         self.ciImage = nil;
         [self addObserver:self forKeyPath:@"ciImage" options:0 context:CIImageContext];
+        [self addObserver:self forKeyPath:@"highlight" options:0 context:CIImageContext];
+        
     }
     
     return self;
+}
+
+-(void)mouseUp:(NSEvent *)theEvent{
+    if(self.delegate){
+        if([self.delegate respondsToSelector:@selector(imageViewMouseDown:)]){
+            [self.delegate performSelector:@selector(imageViewMouseDown:) withObject:self];
+        }
+    }
 }
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
@@ -38,14 +48,21 @@ static void *CIImageContext = &CIImageContext;
         [[NSColor blackColor] set];
         NSRectFill(dirtyRect);
     } else {
-    @autoreleasepool {
-        if(ciContext == nil){
-            ciContext = [CIContext contextWithCGContext:
-                         [[NSGraphicsContext currentContext] graphicsPort] options: nil];
+        @autoreleasepool {
+            if(ciContext == nil){
+                ciContext = [CIContext contextWithCGContext:
+                             [[NSGraphicsContext currentContext] graphicsPort] options: nil];
+            }
+            
+            [ciContext drawImage:self.ciImage inRect:NSRectToCGRect(dirtyRect) fromRect:NSMakeRect(0, 0, 720, 576)];
+            
+            if(self.highlight){
+                [[NSColor colorWithDeviceRed:1.0 green:0.0 blue:0.0 alpha:1.0] set];
+                NSBezierPath * path = [NSBezierPath bezierPathWithRect:dirtyRect];
+                [path setLineWidth:5.0];
+                [path stroke];
+            }
         }
-        
-        [ciContext drawImage:self.ciImage inRect:NSRectToCGRect(dirtyRect) fromRect:NSMakeRect(0, 0, 720, 576)];
-    }
     }
 }
 

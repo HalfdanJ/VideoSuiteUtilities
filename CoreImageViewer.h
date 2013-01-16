@@ -16,4 +16,8 @@
 @property (strong) CIImage * ciImage;
 @property CALayer * activeLayer;
 
+@property id delegate;
+@property id customData;
+@property BOOL highlight;
+
 @end

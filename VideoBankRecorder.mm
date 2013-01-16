@@ -8,6 +8,7 @@
 
 #import "VideoBankRecorder.h"
 #import "NSString+Timecode.h"
+#import "QLabController.h"
 
 @interface VideoBankRecorder ()
 
@@ -32,6 +33,10 @@ static void *RecordContext = &RecordContext;
 static void *LabelContext = &LabelContext;
 
 
+-(NSString*)name{
+    return @"Recorder";
+}
+
 -(id)initWithBlackmagicItems:(NSArray*)items bank:(VideoBank*)bank
 {
     self = [self init];
@@ -54,6 +59,13 @@ static void *LabelContext = &LabelContext;
         
         self.assetWriterQueue = dispatch_queue_create("AssetWriterQueue", DISPATCH_QUEUE_SERIAL);
         [self prepareRecording];
+        
+        
+        int num = 20;
+        [globalMidi addBindingTo:self path:@"bankIndex" channel:1 number:num++ range:NSMakeRange(0, 127)];
+        [globalMidi addBindingTo:self path:@"deviceIndex" channel:1 number:num++ range:NSMakeRange(0, 127)];
+        [globalMidi addBindingTo:self path:@"record" channel:1 number:num++ range:NSMakeRange(0, 127)];
+
         
     }
     return self;
@@ -257,6 +269,27 @@ static void *LabelContext = &LabelContext;
 
 +(NSSet *)keyPathsForValuesAffectingCanRecord{
     return [NSSet setWithObjects:@"bankIndex",@"readyToRecord",nil];
+}
+
+-(void)qlabStart{
+    NSArray * cues = @[
+    @{QName : [NSString stringWithFormat:@"Bank Selection: %02i",self.bankIndex], QPath: @"bankIndex"},
+    @{QName : [NSString stringWithFormat:@"Device Selection: %zi",self.deviceIndex], QPath: @"deviceIndex"},
+    @{QName : [NSString stringWithFormat:@"Record: Yes"], QPath: @"record", QValue: @(1)},
+    ];
+    
+    NSString * title = [NSString stringWithFormat:@"Start Record bank %02i cam %i",self.bankIndex, self.deviceIndex];
+
+    [QLabController createCues:cues groupTitle:title sender:self];
+}
+-(void)qlabStop{
+    NSArray * cues = @[
+    @{QName : [NSString stringWithFormat:@"Record: No"], QPath: @"record", QValue: @(0)},
+    ];
+    
+    NSString * title = @"Stop Record";
+    [QLabController createCues:cues groupTitle:title sender:self];
+    
 }
 
 @end

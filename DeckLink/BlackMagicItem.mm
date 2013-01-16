@@ -168,9 +168,9 @@ static dispatch_once_t onceToken;
         if(!image){
             NSLog(@"No image");
         } else {
-            //dispatch_async(dispatch_get_main_queue(), ^{
-            self.inputImage  = image;
-            // });
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                self.inputImage  = image;
+             });
         }
     }
     

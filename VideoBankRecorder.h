@@ -10,6 +10,9 @@
 #import "BlackMagicItem.h"
 #import "VideoBank.h"
 
+#import "MIDIReceiver.h"
+extern MIDIReceiver * globalMidi;
+
 @interface VideoBankRecorder : NSObject<BlackMagicItemDelegate>
 
 @property int bankIndex;
