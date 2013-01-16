@@ -30,7 +30,7 @@
     if (self) {
         self.selectedInput = 1;
         self.transitionTime = -1;
-        self.opacity = 0;
+        self.opacity = 1;
         
         
         

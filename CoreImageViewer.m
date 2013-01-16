@@ -42,11 +42,12 @@ static void *CIImageContext = &CIImageContext;
 - (void)drawRect:(NSRect)dirtyRect
 {
     [super drawRect:dirtyRect];
+    [[NSColor blackColor] set];
+    NSRectFill(dirtyRect);
     
     if(!self.ciImage){
         NSLog(@"No ciimage");
-        [[NSColor blackColor] set];
-        NSRectFill(dirtyRect);
+
     } else {
         @autoreleasepool {
             if(ciContext == nil){
@@ -54,7 +55,15 @@ static void *CIImageContext = &CIImageContext;
                              [[NSGraphicsContext currentContext] graphicsPort] options: nil];
             }
             
-            [ciContext drawImage:self.ciImage inRect:NSRectToCGRect(dirtyRect) fromRect:NSMakeRect(0, 0, 720, 576)];
+            CIImage * image = self.ciImage;
+            if(self.filters){
+                for(CIFilter * filter in self.filters){
+                    [filter setValue:image forKey:@"inputImage"];
+                    image = [filter valueForKey:@"outputImage"];
+                }
+            }
+            
+            [ciContext drawImage:image inRect:NSRectToCGRect(dirtyRect) fromRect:NSMakeRect(0, 0, 720, 576)];
             
             if(self.highlight){
                 [[NSColor colorWithDeviceRed:1.0 green:0.0 blue:0.0 alpha:1.0] set];

@@ -15,6 +15,7 @@
 
 @property (strong) CIImage * ciImage;
 @property CALayer * activeLayer;
+@property NSArray *filters;
 
 @property id delegate;
 @property id customData;

@@ -11,10 +11,13 @@
 
 @interface OutputWindow : NSWindow{
   //  BOOL _fullscreen;
+    
 }
 //@property BOOL fullscreen;
 
 @property CoreImageViewer * imageViewer;
 @property CALayer * layer;
+
+@property NSArray * filters;
 
 @end

@@ -54,6 +54,20 @@
         return (NSEvent*)nil;
     }];*/
 }
+
+-(void)setFilters:(NSArray *)filters{
+    for(CALayer * layer in [self.layer sublayers]){
+        layer.filters = nil;
+        layer.filters = filters;
+    }
+    
+    self.imageViewer.filters = filters;
+}
+
+-(CIFilter *)filters{
+    return nil;
+}
+
 /*
 -(void) toggleFullScreen:(id)sender{
     
