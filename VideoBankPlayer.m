@@ -9,6 +9,9 @@
 #import "VideoBankPlayer.h"
 #import <AVFoundation/AVFoundation.h>
 #import "NSString+Timecode.h"
+#import "QLabController.h"
+
+
 
 @interface VideoBankPlayer ()
 
@@ -34,6 +37,9 @@ static void *AvPlayerCurrentItemContext = &AvPlayerCurrentItemContext;
 static void *LabelContext = &LabelContext;
 //static void *OpacityContext = &OpacityContext;
 
+-(NSString*)name{
+    return @"Standard Player";
+}
 
 -(id)initWithBank:(VideoBank*)bank{
     
@@ -58,6 +64,13 @@ static void *LabelContext = &LabelContext;
         
         // [self addObserver:self forKeyPath:@"opdacity" options:0 context:OpacityContext];
         //self.simultaneousPlayback = NO;
+        
+        
+        int num = 0;
+        [globalMidi addBindingTo:self path:@"bankSelection" channel:1 number:num++ range:NSMakeRange(0, 127)];
+        [globalMidi addBindingTo:self path:@"numberOfBanksToPlay" channel:1 number:num++ range:NSMakeRange(0, 127)];
+        [globalMidi addBindingTo:self path:@"opacity" channel:1 number:num++ range:NSMakeRange(0, 1)];
+        [globalMidi addBindingTo:self path:@"playing" channel:1 number:num++ range:NSMakeRange(0, 127)];
         
     }
     return self;
@@ -519,6 +532,31 @@ static void *LabelContext = &LabelContext;
 
 -(BOOL)playing{
     return _playing;
+}
+
+-(void)qlabPlay{
+    NSArray * cues = @[
+    @{QName : [NSString stringWithFormat:@"Bank Selection: %02i",self.bankSelection], QPath: @"bankSelection"},
+    @{QName : [NSString stringWithFormat:@"Banks to play: %i",self.numberOfBanksToPlay], QPath: @"numberOfBanksToPlay"},
+    @{QName : [NSString stringWithFormat:@"Opacity: %.2f",self.opacity], QPath: @"opacity"},
+    @{QName : [NSString stringWithFormat:@"Play: Yes"], QPath: @"playing", QValue: @(1)},
+    ];
+    
+    NSString * title = [NSString stringWithFormat:@"Play bank %02i - %02i (Standard Player)",self.bankSelection,self.bankSelection+self.numberOfBanksToPlay-1];
+    if(self.numberOfBanksToPlay == 1){
+        title = [NSString stringWithFormat:@"Play bank %02i (Standard Player)",self.bankSelection];
+    }
+
+    [QLabController createCues:cues groupTitle:title sender:self];
+}
+-(void)qlabStop{
+    NSArray * cues = @[
+    @{QName : [NSString stringWithFormat:@"Play: No"], QPath: @"playing", QValue: @(0)},
+    ];
+    
+    NSString * title = @"Stop (Standard Player)";
+    [QLabController createCues:cues groupTitle:title sender:self];
+
 }
 
 @end

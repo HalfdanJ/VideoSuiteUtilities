@@ -21,5 +21,6 @@
 
 -(DecklinkCallback*)callbacks:(int)num;
 
+-(id)initWithNumItems:(int)numItems;
 
 @end

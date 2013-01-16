@@ -8,6 +8,7 @@
 
 #import "VideoBankItem.h"
 #import "NSString+Timecode.h"
+#import "QLabController.h"
 
 @interface VideoBankItem ()
 
@@ -22,6 +23,9 @@ static void *VideoStatusContext = &VideoStatusContext;
 static void *TrimContext = &TrimContext;
 static void *AssetContext = &AssetContext;
 static void *LockedContext = &LockedContext;
+
+
+
 
 - (id)initWithName:(NSString*)name
 {
@@ -38,6 +42,8 @@ static void *LockedContext = &LockedContext;
         [self addObserver:self forKeyPath:@"outTime" options:0 context:TrimContext];
         [self addObserver:self forKeyPath:@"avPlayerItemTrim.asset" options:0 context:AssetContext];
         [self addObserver:self forKeyPath:@"locked" options:0 context:LockedContext];
+        
+
     }
     return self;
 }

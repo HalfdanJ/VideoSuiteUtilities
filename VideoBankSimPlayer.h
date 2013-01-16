@@ -9,6 +9,9 @@
 #import <Foundation/Foundation.h>
 #import "VideoBank.h"
 
+#import "MIDIReceiver.h"
+extern MIDIReceiver * globalMidi;
+
 @interface VideoBankSimPlayer : NSObject
 
 @property VideoBank * videoBank;

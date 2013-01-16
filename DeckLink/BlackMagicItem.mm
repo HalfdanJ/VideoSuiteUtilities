@@ -19,6 +19,7 @@
     self = [self init];
     
     if(self){
+        self.mode = mode;
         IDeckLinkDisplayModeIterator*	displayModeIterator = NULL;
         
         IDeckLinkDisplayMode*			displayMode = NULL;
@@ -73,7 +74,7 @@
         
         // Set the video input mode
         CFStringRef			modeName;
-        modeList[2]->GetName(&modeName);
+        modeList[self.mode]->GetName(&modeName);
         self.modeDescription = (__bridge NSString*)modeName;
         
         if (self.deckLinkInput->EnableVideoInput(modeList[mode]->GetDisplayMode(), bmdFormat8BitYUV, videoInputFlags) != S_OK)

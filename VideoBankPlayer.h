@@ -9,6 +9,9 @@
 #import <Foundation/Foundation.h>
 #import "VideoBank.h"
 
+#import "MIDIReceiver.h"
+extern MIDIReceiver * globalMidi;
+
 @interface VideoBankPlayer : NSObject
 {
     BOOL _playing;
@@ -32,15 +35,16 @@
 
 @property int bankSelection;
 @property int numberOfBanksToPlay;
-
-@property CALayer * layer;
-
 @property BOOL playing;
 @property float opacity;
+
+@property CALayer * layer;
 
 @property NSString * currentTimeString;
 
 -(id)initWithBank:(VideoBank*)bank;
+-(void) qlabPlay;
+-(void) qlabStop;
 
 
 @end

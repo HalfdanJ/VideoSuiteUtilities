@@ -10,46 +10,42 @@
 
 @implementation BlackMagicController
 
-- (id)init
-{
-    self = [super init];
+
+-(id)initWithNumItems:(int)numItems{
+    self = [self init];
     if (self) {
+        
         self.items = [NSMutableArray array];
         
-        [self initItems];
+        IDeckLinkIterator*          deckLinkIterator = NULL;
+        IDeckLink*                  deckLink = NULL;
+        
+        // Create an iterator
+        deckLinkIterator = CreateDeckLinkIteratorInstance();
+        
+        if(deckLinkIterator){
+            // List all DeckLink devices
+            while (deckLinkIterator->Next(&deckLink) == S_OK)
+            {
+                deviceList.push_back(deckLink);
+            }
+        }
+        
+        for(int index=0;index<numItems;index++){
+            //    for(int index=0;index<deviceList.size();index++){
+            int mode = 2;
+            if(index == 1){
+                mode = 13;
+            }
+            BlackMagicItem * newItem = [[BlackMagicItem alloc] initWithDecklink:deviceList[index] mode:mode];
+            if(newItem){
+                newItem.index = index;
+                [self.items addObject:newItem];
+            }
+        }
+        
     }
     return self;
-}
-
--(void)initItems{
-    IDeckLinkIterator*          deckLinkIterator = NULL;
-    IDeckLink*                  deckLink = NULL;
-    
-	// Create an iterator
-	deckLinkIterator = CreateDeckLinkIteratorInstance();
-    
-    if(deckLinkIterator){
-        // List all DeckLink devices
-        while (deckLinkIterator->Next(&deckLink) == S_OK)
-        {
-            deviceList.push_back(deckLink);
-        }
-    }
-
-    for(int index=0;index<2;index++){
-//    for(int index=0;index<deviceList.size();index++){
-        int mode = 2;
-        if(index == 1){
-            mode = 13;
-        }
-        BlackMagicItem * newItem = [[BlackMagicItem alloc] initWithDecklink:deviceList[index] mode:mode];
-        if(newItem){
-            newItem.index = index;
-            [self.items addObject:newItem];
-        }
-    }
-    
-    
     
 }
 
@@ -78,8 +74,8 @@
 	return nameList;
 }
 /*
--(DecklinkCallback *)callbacks:(int)num{
-    return callbacks[num];
-}*/
+ -(DecklinkCallback *)callbacks:(int)num{
+ return callbacks[num];
+ }*/
 
 @end

@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
 
+
 @interface VideoBankItem : NSObject
 {
     NSString * _manualPath;
@@ -53,5 +54,8 @@
 -(void) clear;
 -(void) loadBankFromDrive;
 -(void) loadBankFromPath:(NSString*)path;
+
+-(void) qlabPlay;
+-(void) qlabStop;
 
 @end
