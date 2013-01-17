@@ -10,11 +10,12 @@
 
 #import "VideoBankItem.h"
 #import "VideoPlayerView.h"
+#import "VDKQueue.h"
 
 #import "MIDIReceiver.h"
 extern MIDIReceiver * globalMidi;
 
-@interface VideoBank : NSArrayController
+@interface VideoBank : NSArrayController<VDKQueueDelegate>
 
 @property VideoPlayerView * videoPreviewView;
 @property (readonly) int numberBanks;
@@ -22,6 +23,9 @@ extern MIDIReceiver * globalMidi;
 @property (readonly) VideoBankItem * selectedBank;
 
 @property int copyToBankIndex;
+
+@property VDKQueue * fileWatcher;
+
 
 - (id)initWithNumberBanks:(int)banks;
 

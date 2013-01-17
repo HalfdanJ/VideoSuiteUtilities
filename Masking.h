@@ -8,16 +8,18 @@
 
 #import <Foundation/Foundation.h>
 #import <QuartzCore/QuartzCore.h>
+#import "VDKQueue.h"
 
 #import "MIDIReceiver.h"
 extern MIDIReceiver * globalMidi;
 
-@interface Masking : NSObject
+@interface Masking : NSObject<VDKQueueDelegate>
 
 @property CALayer * maskingLayer;
 @property NSArray * masks;
 @property int selectedMask;
 @property float opacity;
+@property VDKQueue * queue;
 
 
 @end

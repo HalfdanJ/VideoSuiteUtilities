@@ -43,10 +43,12 @@ static void *LockedContext = &LockedContext;
         [self addObserver:self forKeyPath:@"avPlayerItemTrim.asset" options:0 context:AssetContext];
         [self addObserver:self forKeyPath:@"locked" options:0 context:LockedContext];
         
+        
 
     }
     return self;
 }
+
 
 -(void)loadBankFromDrive{
     [self loadBankFromPath:self.path ];

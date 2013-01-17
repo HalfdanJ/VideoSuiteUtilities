@@ -33,9 +33,23 @@ static void *SelectionContext = &SelectionContext;
         [globalMidi addBindingTo:self selector:@"defaultsAll" channel:1 number:num++];
         [globalMidi addBindingTo:self selector:@"copyBank" channel:1 number:num++];
 
+     /*   self.fileWatcher = [[VDKQueue alloc]init];
+        [self.fileWatcher addPath:[@"~/Movies/Bank 13.mov" stringByExpandingTildeInPath]];
+        self.fileWatcher.delegate = self;*/
     }
     return self;
 }
+
+-(void)VDKQueue:(VDKQueue *)queue receivedNotification:(NSString *)noteName forPath:(NSString *)fpath{
+    NSLog(@"Path %@",noteName);
+}
+/*
+-(void)watcher:(id<UKFileWatcher>)kq receivedNotification:(NSString *)nm forPath:(NSString *)fpath{
+    for(VideoBankItem * item in self.content){
+        [item loadBankFromDrive];
+    }
+ //   [self loadBankFromDrive];
+}*/
 
 - (id)initWithNumberBanks:(int)banks
 {

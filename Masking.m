@@ -52,10 +52,20 @@ static void *SelectedMaskContext = &SelectedMaskContext;
         [globalMidi addBindingTo:self path:@"opacity" channel:1 number:num++ rangeMin:0 rangeLength:1];
         [globalMidi addBindingTo:self path:@"selectedMask" channel:1 number:num++ rangeMin:0 rangeLength:127];
 
+        self.queue = [[VDKQueue alloc]init];
+        [self.queue addPath:self.path];
+        self.queue.delegate = self;
         
     }
     return self;
 }
+
+
+-(void)VDKQueue:(VDKQueue *)queue receivedNotification:(NSString *)noteName forPath:(NSString *)fpath{
+    NSLog(@"Watcher");
+    [self loadFolder];
+}
+
 
 - (id <CAAction>)actionForLayer:(CALayer *)layer forKey:(NSString *)event {
     CABasicAnimation *ani = [CABasicAnimation animationWithKeyPath:event];
