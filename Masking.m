@@ -8,6 +8,7 @@
 
 #import "Masking.h"
 #import <AVFoundation/AVFoundation.h>
+#import "QLabController.h"
 
 @interface Masking ()
 
@@ -19,6 +20,10 @@
 @implementation Masking
 static void *SelectedMaskContext = &SelectedMaskContext;
 
+
+-(NSString*)name {
+    return @"Masking";
+}
 
 - (id)init
 {
@@ -42,6 +47,11 @@ static void *SelectedMaskContext = &SelectedMaskContext;
         [self addObserver:self forKeyPath:@"selectedMask" options:0 context:SelectedMaskContext];
         
         [self loadFolder];
+        
+        int num = 50;
+        [globalMidi addBindingTo:self path:@"opacity" channel:1 number:num++ rangeMin:0 rangeLength:1];
+        [globalMidi addBindingTo:self path:@"selectedMask" channel:1 number:num++ rangeMin:0 rangeLength:127];
+
         
     }
     return self;
@@ -158,6 +168,19 @@ static void *SelectedMaskContext = &SelectedMaskContext;
 
 -(NSArray *)filters{
     return @[];
+}
+
+-(void)qlab{
+    NSArray * cues = @[
+    @{QName : [NSString stringWithFormat:@"Selected Mask: %i",self.selectedMask], QPath: @"selectedMask"},
+    @{QName : [NSString stringWithFormat:@"Opacity: %.2f",self.opacity], QPath: @"opacity"},
+    ];
+    
+    NSString * title = [NSString stringWithFormat:@"Set Mask %i",self.selectedMask];
+    
+    [QLabController createCues:cues groupTitle:title sender:self];
+    
+
 }
 
 @end

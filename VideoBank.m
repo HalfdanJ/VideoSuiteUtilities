@@ -23,11 +23,11 @@ static void *SelectionContext = &SelectionContext;
         [self addObserver:self forKeyPath:@"selectionIndex" options:0 context:SelectionContext];
         
         int num = 40;
-        [globalMidi addBindingTo:self path:@"selectionIndex" channel:1 number:num++ range:NSMakeRange(0, 127)];
-        [globalMidi addBindingTo:self path:@"selectedBank.inTime" channel:1 number:num++ range:NSMakeRange(0, 127)];
-        [globalMidi addBindingTo:self path:@"selectedBank.outTime" channel:1 number:num++ range:NSMakeRange(0, 127)];
-        [globalMidi addBindingTo:self path:@"selectedBank.crossfadeTime" channel:1 number:num++ range:NSMakeRange(0, 127)];
-        [globalMidi addBindingTo:self path:@"copyToBankIndex" channel:1 number:num++ range:NSMakeRange(0, 127)];
+        [globalMidi addBindingTo:self path:@"selectionIndex" channel:1 number:num++ rangeMin:0 rangeLength:127];
+        [globalMidi addBindingTo:self path:@"selectedBank.inTime" channel:1 number:num++ rangeMin:0 rangeLength:127];
+        [globalMidi addBindingTo:self path:@"selectedBank.outTime" channel:1 number:num++ rangeMin:0 rangeLength:127];
+        [globalMidi addBindingTo:self path:@"selectedBank.crossfadeTime" channel:1 number:num++ rangeMin:0 rangeLength:127];
+        [globalMidi addBindingTo:self path:@"copyToBankIndex" channel:1 number:num++ rangeMin:0 rangeLength:127];
         
         
         [globalMidi addBindingTo:self selector:@"defaultsAll" channel:1 number:num++];

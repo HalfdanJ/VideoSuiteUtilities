@@ -14,6 +14,7 @@ FOUNDATION_EXPORT NSString *const QNumber;
 FOUNDATION_EXPORT NSString *const QValue;
 FOUNDATION_EXPORT NSString *const QPath;
 FOUNDATION_EXPORT NSString *const QSelector;
+FOUNDATION_EXPORT NSString *const QObject;
 
 #import "MIDIReceiver.h"
 extern MIDIReceiver * globalMidi;

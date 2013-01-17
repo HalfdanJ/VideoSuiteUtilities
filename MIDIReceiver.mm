@@ -47,14 +47,15 @@ MIDIReceiver * globalMidi;
     return self;
 }
 
--(void)addBindingTo:(id)object path:(NSString*)path channel:(int)channel number:(int)number range:(NSRange)range{
+-(void)addBindingTo:(id)object path:(NSString*)path channel:(int)channel number:(int)number rangeMin:(float)rangeMin rangeLength:(float)rangeLength{
     [self willChangeValueForKey:@"bindings"];
     NSDictionary * newBinding = @{
     @"path" : path,
     @"object" : object,
     @"channel" : @(channel),
     @"number": @(number),
-    @"range" : [NSValue valueWithRange:range]
+    @"rangeMin" : @(rangeMin),
+    @"rangeLength" : @(rangeLength)
     };
     
     [self.bindings addObject:newBinding];
@@ -109,14 +110,14 @@ static void MyMIDIReadProc(const MIDIPacketList *pklist, void *refCon, void *con
                                 
                             } else {
                                 
-                                NSRange range = [[dict valueForKey:@"range"] rangeValue];
-                                
+                                float rangeMin = [[dict valueForKey:@"rangeMin"] floatValue];
+                                float rangeLength = [[dict valueForKey:@"rangeLength"] floatValue];
                                 
                                 float _val = value;
                                 
-                                float scale = range.length / 127.0;
+                                float scale = rangeLength / 127.0;
                                 _val *= scale;
-                                _val += range.location;
+                                _val += rangeMin;
                                 
                                 [object setValue:@(_val) forKeyPath:[dict valueForKey:@"path"]];
                             }

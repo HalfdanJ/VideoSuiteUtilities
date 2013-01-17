@@ -14,6 +14,8 @@ NSString *const QNumber = @"Number";
 NSString *const QValue = @"Value";
 NSString *const QPath = @"Path";
 NSString *const QSelector = @"Selector";
+NSString *const QObject = @"QObject";
+
 @implementation QLabController
 
 
@@ -34,7 +36,12 @@ NSString *const QSelector = @"Selector";
     for(NSDictionary * dict in cues){
         
         for(NSDictionary * midiDict in [globalMidi bindings]){
-            if([midiDict objectForKey:@"object"] == sender){
+            id object = sender;
+            if([dict valueForKey:QObject] != nil){
+                object = [dict valueForKey:QObject];
+            }
+            
+            if([midiDict objectForKey:@"object"] == object){
                 if([[midiDict objectForKey:@"path"] isEqualToString:[dict valueForKey:QPath]]
                    || [[midiDict objectForKey:@"selector"] isEqualToString:[dict valueForKey:QSelector]]){
                     
@@ -47,14 +54,15 @@ NSString *const QSelector = @"Selector";
                     
                     if([[midiDict objectForKey:@"path"] isEqualToString:[dict valueForKey:QPath]]){
                         if([dict valueForKey:QValue] == nil){
-                            value = [sender valueForKeyPath:[dict valueForKey:QPath]];
+                            value = [object valueForKeyPath:[dict valueForKey:QPath]];
                         } else {
                             value = [dict valueForKey:QValue];
                         }
-                        NSRange range = [[midiDict objectForKey:@"range"] rangeValue];
-                        float scale =   127.0 / range.length;
+                        float rangeMin = [[midiDict objectForKey:@"rangeMin"] floatValue];
+                        float rangeLength = [[midiDict objectForKey:@"rangeLength"] floatValue];
+                        float scale =   127.0 / rangeLength;
                         
-                        _val = ([value floatValue] - range.location) * scale;
+                        _val = ([value floatValue] - rangeMin) * scale;
                     } else {
                         _val = 127;
                     }

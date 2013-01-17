@@ -43,9 +43,9 @@
         
         
         int num = 30;
-        [globalMidi addBindingTo:self path:@"selectedInput" channel:1 number:num++ range:NSMakeRange(0, 127)];
-        [globalMidi addBindingTo:self path:@"opacity" channel:1 number:num++ range:NSMakeRange(0, 1)];
-        [globalMidi addBindingTo:self path:@"crossfade" channel:1 number:num++ range:NSMakeRange(0, 1)];
+        [globalMidi addBindingTo:self path:@"selectedInput" channel:1 number:num++ rangeMin:0 rangeLength:127];
+        [globalMidi addBindingTo:self path:@"opacity" channel:1 number:num++ rangeMin:0 rangeLength:1];
+        [globalMidi addBindingTo:self path:@"crossfade" channel:1 number:num++ rangeMin:0 rangeLength:1];
 
 
     }

@@ -9,6 +9,9 @@
 #import <Foundation/Foundation.h>
 #import <QuartzCore/QuartzCore.h>
 
+#import "MIDIReceiver.h"
+extern MIDIReceiver * globalMidi;
+
 @interface Masking : NSObject
 
 @property CALayer * maskingLayer;

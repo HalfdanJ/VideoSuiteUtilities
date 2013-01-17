@@ -54,11 +54,11 @@ static void *LabelContext = &LabelContext;
         [self addObserver:self forKeyPath:@"playing" options:0 context:PlayingContext];
         
         int num = 10;
-        [globalMidi addBindingTo:self path:@"bankSelection" channel:1 number:num++ range:NSMakeRange(0, 127)];
-        [globalMidi addBindingTo:self path:@"numberOfBanksToPlay" channel:1 number:num++ range:NSMakeRange(0, 127)];
-        [globalMidi addBindingTo:self path:@"opacity" channel:1 number:num++ range:NSMakeRange(0, 1)];
-        [globalMidi addBindingTo:self path:@"mask" channel:1 number:num++ range:NSMakeRange(0, 127)];
-        [globalMidi addBindingTo:self path:@"playing" channel:1 number:num++ range:NSMakeRange(0, 127)];
+        [globalMidi addBindingTo:self path:@"bankSelection" channel:1 number:num++ rangeMin:0 rangeLength:127];
+        [globalMidi addBindingTo:self path:@"numberOfBanksToPlay" channel:1 number:num++ rangeMin:0 rangeLength:127];
+        [globalMidi addBindingTo:self path:@"opacity" channel:1 number:num++ rangeMin:0 rangeLength:1];
+        [globalMidi addBindingTo:self path:@"mask" channel:1 number:num++ rangeMin:0 rangeLength:127];
+        [globalMidi addBindingTo:self path:@"playing" channel:1 number:num++ rangeMin:0 rangeLength:127];
     }
     return self;
 }

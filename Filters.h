@@ -10,8 +10,14 @@
 #import <QuartzCore/QuartzCore.h>
 #import "DeinterlaceFilter.h"
 
-@interface Filters : NSObject
+#import "MIDIReceiver.h"
+extern MIDIReceiver * globalMidi;
 
+@interface Filters : NSObject
+{
+    int num;
+
+}
 @property (readonly) NSArray * filters;
 
 @property CIFilter * colorControlsFilter;

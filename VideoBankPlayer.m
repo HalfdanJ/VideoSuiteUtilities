@@ -67,10 +67,10 @@ static void *LabelContext = &LabelContext;
         
         
         int num = 0;
-        [globalMidi addBindingTo:self path:@"bankSelection" channel:1 number:num++ range:NSMakeRange(0, 127)];
-        [globalMidi addBindingTo:self path:@"numberOfBanksToPlay" channel:1 number:num++ range:NSMakeRange(0, 127)];
-        [globalMidi addBindingTo:self path:@"opacity" channel:1 number:num++ range:NSMakeRange(0, 1)];
-        [globalMidi addBindingTo:self path:@"playing" channel:1 number:num++ range:NSMakeRange(0, 127)];
+        [globalMidi addBindingTo:self path:@"bankSelection" channel:1 number:num++ rangeMin:0 rangeLength:127];
+        [globalMidi addBindingTo:self path:@"numberOfBanksToPlay" channel:1 number:num++ rangeMin:0 rangeLength:127];
+        [globalMidi addBindingTo:self path:@"opacity" channel:1 number:num++ rangeMin:0 rangeLength:1];
+        [globalMidi addBindingTo:self path:@"playing" channel:1 number:num++ rangeMin:0 rangeLength:127];
         
     }
     return self;
