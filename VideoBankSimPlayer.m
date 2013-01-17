@@ -64,7 +64,7 @@ static void *LabelContext = &LabelContext;
 }
 
 -(CALayer*) loadMask:(int)num{
-    NSString * path = [[NSString stringWithFormat:@"~/Movies/Mask %02i.png", num+1] stringByExpandingTildeInPath];
+    NSString * path = [[NSString stringWithFormat:@"~/Movies/Compositing Masks/Mask %02i.png", num+1] stringByExpandingTildeInPath];
 
     NSImage * image = [[NSImage alloc] initWithContentsOfFile:path];
     

@@ -9,6 +9,9 @@
 #import "OutputWindow.h"
 
 @implementation OutputWindow
+
+static void *FiltersContext = &FiltersContext;
+
 -(void)awakeFromNib{
     self.title = @"Output";
     
@@ -34,6 +37,8 @@
     [self.contentView addSubview:view];
     
     
+    [self addObserver:self forKeyPath:@"filters" options:0 context:FiltersContext];
+    
     /*
     //Shortcuts
     [NSEvent addLocalMonitorForEventsMatchingMask:(NSKeyDownMask) handler:^(NSEvent *incomingEvent) {
@@ -55,6 +60,20 @@
     }];*/
 }
 
+
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
+    
+    
+    for(CALayer * layer in [self.layer sublayers]){
+        layer.filters = nil;
+        layer.filters = self.filters;
+    }
+    
+    self.imageViewer.filters = self.filters;
+
+}
+
+/*
 -(void)setFilters:(NSArray *)filters{
     for(CALayer * layer in [self.layer sublayers]){
         layer.filters = nil;
@@ -66,7 +85,7 @@
 
 -(CIFilter *)filters{
     return nil;
-}
+}*/
 
 /*
 -(void) toggleFullScreen:(id)sender{
