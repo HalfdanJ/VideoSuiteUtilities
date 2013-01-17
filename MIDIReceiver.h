@@ -14,4 +14,5 @@
 @property NSMutableArray * bindings;
 
 -(void)addBindingTo:(id)object path:(NSString*)path channel:(int)channel number:(int)number range:(NSRange)range;
+-(void)addBindingTo:(id)object selector:(NSString*)selector channel:(int)channel number:(int)number;
 @end

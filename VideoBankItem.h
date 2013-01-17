@@ -55,7 +55,4 @@
 -(void) loadBankFromDrive;
 -(void) loadBankFromPath:(NSString*)path;
 
--(void) qlabPlay;
--(void) qlabStop;
-
 @end

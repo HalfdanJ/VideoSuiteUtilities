@@ -116,7 +116,7 @@ static void *LockedContext = &LockedContext;
     if(context == AssetContext){
         if ([[self.avPlayerItemTrim.asset tracksWithMediaType:AVMediaTypeVideo] count] > 0) {
             AVAssetImageGenerator *imageGenerator = [AVAssetImageGenerator assetImageGeneratorWithAsset:self.avPlayerItemTrim.asset];
-            imageGenerator.maximumSize = CGSizeMake(48, 48);
+            imageGenerator.maximumSize = CGSizeMake(60, 50);
             NSError * error;
             CGImageRef image = [imageGenerator copyCGImageAtTime:CMTimeMakeWithSeconds(0, 100) actualTime:nil error:&error];
             if(error){

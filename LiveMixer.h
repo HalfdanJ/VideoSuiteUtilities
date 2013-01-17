@@ -8,6 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+#import "MIDIReceiver.h"
+extern MIDIReceiver * globalMidi;
+
 @interface LiveMixer : NSObject{
     int _selectedInput;
 }

@@ -24,6 +24,7 @@ extern MIDIReceiver * globalMidi;
 
 @property VideoBank * videoBank;
 @property NSSize size;
+@property (readonly) VideoBankItem * selectedVideoBankItem;
 
 -(id)initWithBlackmagicItems:(NSArray*)items bank:(VideoBank*)bank;
 -(void)newFrameWithBufer:(CVPixelBufferRef)buffer image:(CIImage *)image item:(BlackMagicItem*)bmItem;

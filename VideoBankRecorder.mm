@@ -258,17 +258,24 @@ static void *LabelContext = &LabelContext;
 }
 
 -(BOOL)canRecord{
-    
-    NSArray * items = self.videoBank.content;
-    if(self.bankIndex < items.count){
-        VideoBankItem * item = items[self.bankIndex];
-        return !item.locked;
-    }
-    return NO;
+    return ![self selectedVideoBankItem].locked;
 }
 
 +(NSSet *)keyPathsForValuesAffectingCanRecord{
-    return [NSSet setWithObjects:@"bankIndex",@"readyToRecord",nil];
+    return [NSSet setWithObjects:@"selectedVideoBankItem",@"readyToRecord",@"selectedVideoBankItem.locked",nil];
+}
+
+-(VideoBankItem *)selectedVideoBankItem{
+    NSArray * items = self.videoBank.content;
+    if(self.bankIndex < items.count){
+        VideoBankItem * item = items[self.bankIndex];
+        return item;
+    }
+    return nil;
+}
+
++(NSSet *)keyPathsForValuesAffectingSelectedVideoBankItem{
+    return [NSSet setWithObjects:@"bankIndex", nil];
 }
 
 -(void)qlabStart{

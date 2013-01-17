@@ -99,7 +99,10 @@ static void *RedrawContext = &RedrawContext;
         NSRectFill(playingRect);
     }
     
-    NSRect labelRect = NSMakeRect(120, 7, 25, 25);
+    
+    
+    
+    NSRect labelRect = NSMakeRect(dirtyRect.size.width-145, 15, 18, 18);
     if(item.standardPlayerLabel){
         NSRect label = labelRect;
         [[NSColor colorWithCalibratedWhite:0.6 alpha:1.0] set];
@@ -114,56 +117,60 @@ static void *RedrawContext = &RedrawContext;
             NSMutableParagraphStyle *style = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
             [style setAlignment:NSCenterTextAlignment];
             NSDictionary *attr = @{
-        NSFontAttributeName:[NSFont systemFontOfSize:15],
+        NSFontAttributeName:[NSFont systemFontOfSize:12],
         NSParagraphStyleAttributeName:style,
         NSForegroundColorAttributeName:[NSColor colorWithCalibratedWhite:0.6 alpha:1.0]
             };
             
             [@"S" drawInRect:label withAttributes:attr];
         }
-    
-    
-}
-if(item.compositePlayerLabel != -1){
-    NSRect label = labelRect;
-    label.origin.x += 30;
-    
-    [[NSColor colorWithCalibratedWhite:0.6 alpha:1.0] set];
-    
-    NSBezierPath * path = [NSBezierPath bezierPathWithRoundedRect:label xRadius:4 yRadius:4];
-    [path setLineWidth:1.0];
-    [path stroke];
-    
-    /*  [[NSColor colorWithDeviceRed:1.0 green:1.0 blue:1.0 alpha:1.0] set];
-     NSRectFill(label);*/
-    {
-        NSMutableParagraphStyle *style = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
-        [style setAlignment:NSCenterTextAlignment];
-        NSDictionary *attr = @{
-    NSFontAttributeName:[NSFont systemFontOfSize:15],
-    NSParagraphStyleAttributeName:style,
-    NSForegroundColorAttributeName:[NSColor colorWithCalibratedWhite:0.6 alpha:1.0]
-        };
         
-        [@"C" drawInRect:label withAttributes:attr];
+        
     }
-    
-    {
-        NSMutableParagraphStyle *style = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
-        [style setAlignment:NSCenterTextAlignment];
-        NSDictionary *attr = @{
-    NSFontAttributeName:[NSFont systemFontOfSize:8],
-    NSParagraphStyleAttributeName:style,
-    NSForegroundColorAttributeName:[NSColor colorWithCalibratedWhite:0.6 alpha:1.0]
-        };
-        NSRect _rect = label;
-        _rect.size.height -= 14;
-        [[NSString stringWithFormat:@"M%i",item.compositePlayerLabel] drawInRect:_rect withAttributes:attr];
+    if(item.compositePlayerLabel != -1){
+        NSRect label = labelRect;
+        label.origin.x += 22;
+        
+        [[NSColor colorWithCalibratedWhite:0.6 alpha:1.0] set];
+        
+        NSBezierPath * path = [NSBezierPath bezierPathWithRoundedRect:label xRadius:4 yRadius:4];
+        [path setLineWidth:1.0];
+        [path stroke];
+        
+        /*  [[NSColor colorWithDeviceRed:1.0 green:1.0 blue:1.0 alpha:1.0] set];
+         NSRectFill(label);*/
+        {
+            NSMutableParagraphStyle *style = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
+            [style setAlignment:NSCenterTextAlignment];
+            NSDictionary *attr = @{
+        NSFontAttributeName:[NSFont systemFontOfSize:12],
+        NSParagraphStyleAttributeName:style,
+        NSForegroundColorAttributeName:[NSColor colorWithCalibratedWhite:0.6 alpha:1.0]
+            };
+            
+            NSRect c = label;
+            c.origin.y += 2;
+            
+            [@"C" drawInRect:c withAttributes:attr];
+        }
+        
+        {
+            NSMutableParagraphStyle *style = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
+            [style setAlignment:NSCenterTextAlignment];
+            NSDictionary *attr = @{
+        NSFontAttributeName:[NSFont systemFontOfSize:7],
+        NSParagraphStyleAttributeName:style,
+        NSForegroundColorAttributeName:[NSColor colorWithCalibratedWhite:0.8 alpha:1.0]
+            };
+            NSRect _rect = label;
+            _rect.size.height -= 10;
+            [[NSString stringWithFormat:@"M%i",item.compositePlayerLabel] drawInRect:_rect withAttributes:attr];
+        }
+        
     }
-    
     if(item.recordLabel){
         NSRect label = labelRect;
-        label.origin.x += 60;
+        label.origin.x += 44;
         
         [[NSColor colorWithCalibratedWhite:0.6 alpha:1.0] set];
         if(item.recordLabel == 2){
@@ -183,7 +190,7 @@ if(item.compositePlayerLabel != -1){
             NSMutableParagraphStyle *style = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
             [style setAlignment:NSCenterTextAlignment];
             NSDictionary *attr = @{
-        NSFontAttributeName:[NSFont systemFontOfSize:15],
+        NSFontAttributeName:[NSFont systemFontOfSize:12],
         NSParagraphStyleAttributeName:style,
         NSForegroundColorAttributeName:[NSColor colorWithCalibratedWhite:0.6 alpha:1.0]
             };
@@ -193,7 +200,7 @@ if(item.compositePlayerLabel != -1){
         
         
     }
-}
+
 }
 
 

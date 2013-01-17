@@ -13,7 +13,7 @@ NSString *const QChannel = @"Channel";
 NSString *const QNumber = @"Number";
 NSString *const QValue = @"Value";
 NSString *const QPath = @"Path";
-
+NSString *const QSelector = @"Selector";
 @implementation QLabController
 
 
@@ -35,24 +35,29 @@ NSString *const QPath = @"Path";
         
         for(NSDictionary * midiDict in [globalMidi bindings]){
             if([midiDict objectForKey:@"object"] == sender){
-                if([[midiDict objectForKey:@"path"] isEqualToString:[dict valueForKey:QPath]]){
+                if([[midiDict objectForKey:@"path"] isEqualToString:[dict valueForKey:QPath]]
+                   || [[midiDict objectForKey:@"selector"] isEqualToString:[dict valueForKey:QSelector]]){
                     
                     
                     int channel = [[midiDict objectForKey:@"channel"] intValue];
                     int number = [[midiDict objectForKey:@"number"] intValue];
                     
                     NSNumber * value;
+                    int _val;
                     
-                    if([dict valueForKey:QValue] == nil){
-                        value = [sender valueForKeyPath:[dict valueForKey:QPath]];
+                    if([[midiDict objectForKey:@"path"] isEqualToString:[dict valueForKey:QPath]]){
+                        if([dict valueForKey:QValue] == nil){
+                            value = [sender valueForKeyPath:[dict valueForKey:QPath]];
+                        } else {
+                            value = [dict valueForKey:QValue];
+                        }
+                        NSRange range = [[midiDict objectForKey:@"range"] rangeValue];
+                        float scale =   127.0 / range.length;
+                        
+                        _val = ([value floatValue] - range.location) * scale;
                     } else {
-                        value = [dict valueForKey:QValue];
+                        _val = 127;
                     }
-                    NSRange range = [[midiDict objectForKey:@"range"] rangeValue];
-                    float scale =   127.0 / range.length;
-                    
-                    int _val = ([value floatValue] - range.location) * scale;
-                    
                     
                     
                     [string appendFormat:@"make type \"midi\"\n\

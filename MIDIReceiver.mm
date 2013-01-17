@@ -42,7 +42,7 @@ MIDIReceiver * globalMidi;
         globalMidi = self;
         
         self.bindings = [NSMutableArray array];
-
+        
     }
     return self;
 }
@@ -59,7 +59,21 @@ MIDIReceiver * globalMidi;
     
     [self.bindings addObject:newBinding];
     
-        [self didChangeValueForKey:@"bindings"];
+    [self didChangeValueForKey:@"bindings"];
+}
+
+-(void)addBindingTo:(id)object selector:(NSString*)selector channel:(int)channel number:(int)number {
+    [self willChangeValueForKey:@"bindings"];
+    NSDictionary * newBinding = @{
+    @"selector" : selector,
+    @"object" : object,
+    @"channel" : @(channel),
+    @"number": @(number),
+    };
+    
+    [self.bindings addObject:newBinding];
+    
+    [self didChangeValueForKey:@"bindings"];
 }
 
 static void MyMIDIReadProc(const MIDIPacketList *pklist, void *refCon, void *connRefCon){
@@ -83,16 +97,29 @@ static void MyMIDIReadProc(const MIDIPacketList *pklist, void *refCon, void *con
                     for(NSDictionary * dict in ad.bindings){
                         if([[dict valueForKey:@"number"] intValue] == number && [[dict valueForKey:@"channel"] intValue] == channel){
                             
-                            NSRange range = [[dict valueForKey:@"range"] rangeValue];
+                            id object = [dict valueForKey:@"object"];
                             
-                            
-                            float _val = value;
-
-                            float scale = range.length / 127.0;
-                            _val *= scale;
-                            _val += range.location;
-                            
-                            [[dict valueForKey:@"object"] setValue:@(_val) forKeyPath:[dict valueForKey:@"path"]];
+                            if([dict valueForKey:@"selector"]){
+                                SEL selector = NSSelectorFromString([dict valueForKey:@"selector"]);
+                                
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+                                [object performSelector:selector];
+#pragma clang diagnostic pop
+                                
+                            } else {
+                                
+                                NSRange range = [[dict valueForKey:@"range"] rangeValue];
+                                
+                                
+                                float _val = value;
+                                
+                                float scale = range.length / 127.0;
+                                _val *= scale;
+                                _val += range.location;
+                                
+                                [object setValue:@(_val) forKeyPath:[dict valueForKey:@"path"]];
+                            }
                         }
                     }
                     

@@ -11,10 +11,17 @@
 #import "VideoBankItem.h"
 #import "VideoPlayerView.h"
 
+#import "MIDIReceiver.h"
+extern MIDIReceiver * globalMidi;
+
 @interface VideoBank : NSArrayController
 
 @property VideoPlayerView * videoPreviewView;
 @property (readonly) int numberBanks;
+
+@property (readonly) VideoBankItem * selectedBank;
+
+@property int copyToBankIndex;
 
 - (id)initWithNumberBanks:(int)banks;
 

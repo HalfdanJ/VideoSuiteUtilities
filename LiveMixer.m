@@ -8,6 +8,7 @@
 
 #import "LiveMixer.h"
 #import "CoreImageViewer.h"
+#import "QLabController.h"
 
 @interface LiveMixer ()
 @property float transitionTime;
@@ -39,6 +40,13 @@
         
         self.constantColorFilter = [CIFilter filterWithName:@"CIConstantColorGenerator"];
         [self.constantColorFilter setValue:[CIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:1.0] forKey:@"inputColor"];
+        
+        
+        int num = 30;
+        [globalMidi addBindingTo:self path:@"selectedInput" channel:1 number:num++ range:NSMakeRange(0, 127)];
+        [globalMidi addBindingTo:self path:@"opacity" channel:1 number:num++ range:NSMakeRange(0, 1)];
+        [globalMidi addBindingTo:self path:@"crossfade" channel:1 number:num++ range:NSMakeRange(0, 1)];
+
 
     }
     return self;
@@ -109,7 +117,7 @@
     self.transitionTime += 0.51-self.crossfade*0.5;
     if(self.transitionTime < 1){
 //        dispatch_async(dispatch_get_main_queue(), ^{
-            [self performSelector:@selector(updateTransitionTime) withObject:nil afterDelay:0.01];
+            [self performSelector:@selector(updateTransitionTime) withObject:nil afterDelay:0.005];
       //  });
     }
     
@@ -156,5 +164,21 @@
 }
 +(NSSet *)keyPathsForValuesAffectingInput3Selected{
     return [NSSet setWithObjects:@"selectedInput", nil];
+}
+
+-(void) qlab{
+    NSArray * cues = @[
+    @{QName : [NSString stringWithFormat:@"Crossfade: %.2f",self.crossfade], QPath: @"crossfade"},
+    @{QName : [NSString stringWithFormat:@"Opacity: %.2f",self.opacity], QPath: @"opacity"},
+    @{QName : [NSString stringWithFormat:@"Select input: %i",self.selectedInput], QPath: @"selectedInput"}
+    ];
+    
+    NSString * title = [NSString stringWithFormat:@"Select Live Input %i",self.selectedInput];
+    if(self.opacity == 0){
+        title = [NSString stringWithFormat:@"Hide Live Input"];
+    }
+    
+    [QLabController createCues:cues groupTitle:title sender:self];
+
 }
 @end
