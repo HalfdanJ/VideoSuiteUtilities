@@ -20,5 +20,6 @@
 @property id delegate;
 @property id customData;
 @property BOOL highlight;
+@property BOOL recordHighlight;
 
 @end

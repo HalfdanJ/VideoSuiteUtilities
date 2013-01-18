@@ -37,6 +37,7 @@ extern MIDIReceiver * globalMidi;
 @property int numberOfBanksToPlay;
 @property BOOL playing;
 @property float opacity;
+@property BOOL loop;
 
 @property CALayer * layer;
 

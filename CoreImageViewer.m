@@ -20,6 +20,10 @@ static void *CIImageContext = &CIImageContext;
         [self addObserver:self forKeyPath:@"ciImage" options:0 context:CIImageContext];
         [self addObserver:self forKeyPath:@"highlight" options:0 context:CIImageContext];
         
+        [self addObserver:self forKeyPath:@"recordHighlight" options:0 context:CIImageContext];
+        
+        
+        
     }
     
     return self;
@@ -70,6 +74,13 @@ static void *CIImageContext = &CIImageContext;
                 NSBezierPath * path = [NSBezierPath bezierPathWithRect:dirtyRect];
                 [path setLineWidth:5.0];
                 [path stroke];
+            }
+            
+            if(self.recordHighlight){
+                [[NSColor colorWithDeviceRed:1.0 green:0.0 blue:0.0 alpha:1.0] set];
+
+                NSBezierPath * path = [NSBezierPath bezierPathWithOvalInRect:NSMakeRect(dirtyRect.size.width-20, dirtyRect.size.height-20, 10, 10)];
+                [path fill];
             }
         }
     }

@@ -56,6 +56,7 @@ static void *LabelContext = &LabelContext;
         
         self.playing = NO;
         self.bankSelection = 0;
+        self.loop = NO;
         self.numberOfBanksToPlay = 1;
         
         [self.layer bind:@"opacity" toObject:self withKeyPath:@"opacity" options:nil];
@@ -70,6 +71,7 @@ static void *LabelContext = &LabelContext;
         [globalMidi addBindingTo:self path:@"numberOfBanksToPlay" channel:1 number:num++ rangeMin:0 rangeLength:127];
         [globalMidi addBindingTo:self path:@"opacity" channel:1 number:num++ rangeMin:0 rangeLength:1];
         [globalMidi addBindingTo:self path:@"playing" channel:1 number:num++ rangeMin:0 rangeLength:127];
+        [globalMidi addBindingTo:self path:@"loop" channel:1 number:num++ rangeMin:0 rangeLength:127];
         
     }
     return self;
@@ -284,6 +286,9 @@ static void *LabelContext = &LabelContext;
         
     } else {
         self.playing = NO;
+        if(self.loop){
+            self.playing = YES;
+        }
     }
 }
 
@@ -545,6 +550,7 @@ static void *LabelContext = &LabelContext;
     @{QName : [NSString stringWithFormat:@"Bank Selection: %02i",self.bankSelection], QPath: @"bankSelection"},
     @{QName : [NSString stringWithFormat:@"Banks to play: %i",self.numberOfBanksToPlay], QPath: @"numberOfBanksToPlay"},
     @{QName : [NSString stringWithFormat:@"Opacity: %.2f",self.opacity], QPath: @"opacity"},
+    @{QName : [NSString stringWithFormat:@"Loop: %i",self.loop], QPath: @"loop"},
     @{QName : [NSString stringWithFormat:@"Play: Yes"], QPath: @"playing", QValue: @(1)},
     ];
     

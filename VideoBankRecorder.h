@@ -17,6 +17,7 @@ extern MIDIReceiver * globalMidi;
 
 @property int bankIndex;
 @property int deviceIndex;
+@property BOOL recordPal;
 @property BOOL record;
 @property BOOL readyToRecord;
 @property (readonly) BOOL canRecord;
@@ -25,6 +26,11 @@ extern MIDIReceiver * globalMidi;
 @property VideoBank * videoBank;
 @property NSSize size;
 @property (readonly) VideoBankItem * selectedVideoBankItem;
+
+@property (readonly) BOOL device1Selected;
+@property (readonly) BOOL device2Selected;
+@property (readonly) BOOL device3Selected;
+
 
 -(id)initWithBlackmagicItems:(NSArray*)items bank:(VideoBank*)bank;
 -(void)newFrameWithBufer:(CVPixelBufferRef)buffer image:(CIImage *)image item:(BlackMagicItem*)bmItem;

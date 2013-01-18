@@ -289,7 +289,7 @@ static dispatch_once_t onceToken;
 }
 
 -(NSString *)name{
-    return [NSString stringWithFormat:@"%i - %@",self.index, self.modeDescription];
+    return [NSString stringWithFormat:@"%i - %@",self.index+1, self.modeDescription];
 }
 
 +(NSSet *)keyPathsForValuesAffectingName{

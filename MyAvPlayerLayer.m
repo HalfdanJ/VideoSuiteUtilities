@@ -69,14 +69,24 @@ static void *CurrentItemContext = &CurrentItemContext;
     } else {
         float aspect1 = 720.0/576.0;
         float aspect2 = naturalSize.width/naturalSize.height;
-
+        
+        float pw = self.preferredFrameSize.width;
+        float ph = self.preferredFrameSize.height;
+        
         NSAffineTransform * transform = [NSAffineTransform transform];
+       // [transform translateXBy:1024*0.5 yBy:0];
+        float scale = aspect2/aspect1;
+
+        [transform translateXBy:-((1024*scale-1024)*0.5) yBy:0];
         [transform scaleXBy:720.0/naturalSize.width
                         yBy:576.0/naturalSize.height];
         
-        [transform scaleXBy:aspect2/aspect1 yBy:1];
         
-        [transform translateXBy:-((naturalSize.width-720)*0.5)*576.0/naturalSize.height yBy:0];
+    //    [transform translateXBy:720*scale yBy:0];
+
+        [transform scaleXBy:scale yBy:1];
+       // [transform translateXBy:-((1024*scale-1024)*0.5) yBy:0];
+        
 
         [self.currentTransformFilter setValue:transform forKey:@"inputTransform"];
     }

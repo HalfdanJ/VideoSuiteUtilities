@@ -67,7 +67,7 @@
         
         NSAffineTransform * transform = [NSAffineTransform transform];
         [transform scaleBy:576.0/h];
-        [transform translateXBy:-((w-720)*0.5)*576.0/h yBy:0];
+        [transform translateXBy:-((w-850)*0.5)*576.0/h yBy:0];
         [self.HDtoSDFilter setValue:transform forKey:@"inputTransform"];
     }
     

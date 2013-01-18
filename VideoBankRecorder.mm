@@ -54,6 +54,7 @@ static void *LabelContext = &LabelContext;
         
         self.bankIndex = 0;
         self.deviceIndex = 0;
+        self.recordPal = YES;
         
         self.lock = [[NSRecursiveLock alloc] init];
         
@@ -65,6 +66,7 @@ static void *LabelContext = &LabelContext;
         [globalMidi addBindingTo:self path:@"bankIndex" channel:1 number:num++ rangeMin:0 rangeLength:127];
         [globalMidi addBindingTo:self path:@"deviceIndex" channel:1 number:num++ rangeMin:0 rangeLength:127];
         [globalMidi addBindingTo:self path:@"record" channel:1 number:num++ rangeMin:0 rangeLength:127];
+        [globalMidi addBindingTo:self path:@"recordPal" channel:1 number:num++ rangeMin:0 rangeLength:127];
 
         
     }
@@ -152,6 +154,12 @@ static void *LabelContext = &LabelContext;
     NSSize size = self.deviceItem.size;
     if(size.width == 0){
         size = NSMakeSize(720, 576);
+    }
+
+    if(self.recordPal && size.width > 720){
+        float aspect = size.width/size.height;
+        size.width = 576*aspect;
+        size.height = 576.0;
     }
     
     NSDictionary *videoSettings = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -281,7 +289,8 @@ static void *LabelContext = &LabelContext;
 -(void)qlabStart{
     NSArray * cues = @[
     @{QName : [NSString stringWithFormat:@"Bank Selection: %02i",self.bankIndex], QPath: @"bankIndex"},
-    @{QName : [NSString stringWithFormat:@"Device Selection: %zi",self.deviceIndex], QPath: @"deviceIndex"},
+    @{QName : [NSString stringWithFormat:@"Device Selection: %i",self.deviceIndex], QPath: @"deviceIndex"},
+    @{QName : [NSString stringWithFormat:@"Record Pal: %i",self.recordPal], QPath: @"recordPal"},
     @{QName : [NSString stringWithFormat:@"Record: Yes"], QPath: @"record", QValue: @(1)},
     ];
     
@@ -299,4 +308,23 @@ static void *LabelContext = &LabelContext;
     
 }
 
+-(BOOL)device1Selected{
+    return self.deviceIndex == 0;
+}
++(NSSet *)keyPathsForValuesAffectingDevice1Selected{
+    return [NSSet setWithObject:@"deviceIndex"];
+}
+
+-(BOOL)device2Selected{
+    return self.deviceIndex == 1;
+}
++(NSSet *)keyPathsForValuesAffectingDevice2Selected{
+    return [NSSet setWithObject:@"deviceIndex"];
+}
+-(BOOL)device3Selected{
+    return self.deviceIndex == 2;
+}
++(NSSet *)keyPathsForValuesAffectingDevice3Selected{
+    return [NSSet setWithObject:@"deviceIndex"];
+}
 @end
