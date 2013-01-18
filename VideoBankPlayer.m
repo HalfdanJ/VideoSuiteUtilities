@@ -557,7 +557,7 @@ static void *LabelContext = &LabelContext;
     @{QName : [NSString stringWithFormat:@"Banks to play: %i",self.numberOfBanksToPlay], QPath: @"numberOfBanksToPlay"},
     @{QName : [NSString stringWithFormat:@"Opacity: %.2f",self.opacity], QPath: @"opacity"},
     @{QName : [NSString stringWithFormat:@"Loop: %i",self.loop], QPath: @"loop"},
-    @{QName : [NSString stringWithFormat:@"Playback Rate: %i",self.playbackRate], QPath: @"playbackRate"},
+    @{QName : [NSString stringWithFormat:@"Playback Rate: %.2f",self.playbackRate], QPath: @"playbackRate"},
     @{QName : [NSString stringWithFormat:@"Play: Yes"], QPath: @"playing", QValue: @(1)},
     ];
     
@@ -565,6 +565,7 @@ static void *LabelContext = &LabelContext;
     if(self.numberOfBanksToPlay == 1){
         title = [NSString stringWithFormat:@"Play bank %02i (Standard Player)",self.bankSelection];
     }
+    
 
     [QLabController createCues:cues groupTitle:title sender:self];
 }
