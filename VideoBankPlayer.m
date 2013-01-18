@@ -58,6 +58,7 @@ static void *LabelContext = &LabelContext;
         self.bankSelection = 0;
         self.loop = NO;
         self.numberOfBanksToPlay = 1;
+        self.playbackRate = 1.0;
         
         [self.layer bind:@"opacity" toObject:self withKeyPath:@"opacity" options:nil];
         self.opacity = 1.0;
@@ -72,6 +73,7 @@ static void *LabelContext = &LabelContext;
         [globalMidi addBindingTo:self path:@"opacity" channel:1 number:num++ rangeMin:0 rangeLength:1];
         [globalMidi addBindingTo:self path:@"playing" channel:1 number:num++ rangeMin:0 rangeLength:127];
         [globalMidi addBindingTo:self path:@"loop" channel:1 number:num++ rangeMin:0 rangeLength:127];
+        [globalMidi addBindingTo:self path:@"playbackRate" channel:1 number:num++ rangeMin:0.5 rangeLength:2];
         
     }
     return self;
@@ -101,6 +103,8 @@ static void *LabelContext = &LabelContext;
         if ([[change objectForKey:NSKeyValueChangeNewKey] boolValue] == YES)
         {
             [avPlayer[0] play];
+            avPlayer[0].rate = self.playbackRate;
+
 		}
 	}
     if (context == AVSPPlayerLayerReadyForDisplay1)
@@ -108,6 +112,8 @@ static void *LabelContext = &LabelContext;
 		if ([[change objectForKey:NSKeyValueChangeNewKey] boolValue] == YES)
 		{
             [avPlayer[1] play];
+            avPlayer[1].rate = self.playbackRate;
+
 		}
 	}
     if(context== AvPlayerCurrentItemContext){
@@ -235,6 +241,7 @@ static void *LabelContext = &LabelContext;
                     }
                     
                     avPlayer[self.pingPong] = [AVQueuePlayer queuePlayerWithItems:[data objectForKey:@"playerItems"]];
+                    avPlayer[self.pingPong].rate = self.playbackRate;
                     
                     //Clear observers
                     timeObserverToken[self.pingPong] = nil;
@@ -334,7 +341,6 @@ static void *LabelContext = &LabelContext;
             
             if([asset isPlayable] && bankItem.loaded){
                 AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:asset];
-                
                 
                 //UI
                 bankItem.queued = YES;
@@ -551,6 +557,7 @@ static void *LabelContext = &LabelContext;
     @{QName : [NSString stringWithFormat:@"Banks to play: %i",self.numberOfBanksToPlay], QPath: @"numberOfBanksToPlay"},
     @{QName : [NSString stringWithFormat:@"Opacity: %.2f",self.opacity], QPath: @"opacity"},
     @{QName : [NSString stringWithFormat:@"Loop: %i",self.loop], QPath: @"loop"},
+    @{QName : [NSString stringWithFormat:@"Playback Rate: %i",self.playbackRate], QPath: @"playbackRate"},
     @{QName : [NSString stringWithFormat:@"Play: Yes"], QPath: @"playing", QValue: @(1)},
     ];
     

@@ -217,35 +217,39 @@ static void *LabelContext = &LabelContext;
     if(context == RecordContext){
         self.startRecordTime = nil;
         
-        if(!self.record){
-            [self willChangeValueForKey:@"recordings"];
-            
-            [self.videoWriterInput markAsFinished];
-            [self.videoWriter finishWriting];
-            
-            NSArray * items = self.videoBank.content;
-            if(self.bankIndex < items.count){
-                VideoBankItem * item = items[self.bankIndex];
-                NSString * path = item.path;
+        if(!self.record && [self canRecord]){
+            dispatch_queue_t queue = dispatch_queue_create("saver", 0);
+            dispatch_async(queue, ^{
+                [self willChangeValueForKey:@"recordings"];
                 
-                NSError * error;
-                [[NSFileManager defaultManager] removeItemAtPath:[path stringByExpandingTildeInPath] error:nil];
-                [[NSFileManager defaultManager] moveItemAtPath:[@"~/Movies/_cache.mov" stringByExpandingTildeInPath] toPath:[path stringByExpandingTildeInPath] error:&error];
-                if(error){
-                    NSLog(@"Error moving file %@",error);
+                [self.videoWriterInput markAsFinished];
+                [self.videoWriter finishWriting];
+                
+                NSArray * items = self.videoBank.content;
+                if(self.bankIndex < items.count){
+                    VideoBankItem * item = items[self.bankIndex];
+                    NSString * path = item.path;
+                    
+                    NSError * error;
+                    [[NSFileManager defaultManager] removeItemAtPath:[path stringByExpandingTildeInPath] error:nil];
+                    [[NSFileManager defaultManager] moveItemAtPath:[@"~/Movies/_cache.mov" stringByExpandingTildeInPath] toPath:[path stringByExpandingTildeInPath] error:&error];
+                    if(error){
+                        NSLog(@"Error moving file %@",error);
+                    }
+                    
+                    [item loadBankFromDrive];
+                    
                 }
                 
-                [item loadBankFromDrive];
+                self.readyToRecord = YES;
+                [self didChangeValueForKey:@"recordings"];
                 
-            }
-            
-            self.readyToRecord = YES;
-            [self didChangeValueForKey:@"recordings"];
-            
-            [self performSelector:@selector(prepareRecording) withObject:nil afterDelay:0.5];
-            
-            //   [self prepareRecording];
-            
+                [self performSelector:@selector(prepareRecording) withObject:nil afterDelay:0.5];
+                
+                //   [self prepareRecording];
+                
+
+            });
             
         }
     }

@@ -38,6 +38,7 @@ extern MIDIReceiver * globalMidi;
 @property BOOL playing;
 @property float opacity;
 @property BOOL loop;
+@property float playbackRate;
 
 @property CALayer * layer;
 

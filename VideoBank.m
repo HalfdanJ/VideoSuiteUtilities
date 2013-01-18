@@ -21,6 +21,7 @@ static void *SelectionContext = &SelectionContext;
     self = [super init];
     if (self) {
         [self addObserver:self forKeyPath:@"selectionIndex" options:0 context:SelectionContext];
+        [self addObserver:self forKeyPath:@"selection.avPlayerItemOriginal" options:0 context:SelectionContext];
         
         int num = 40;
         [globalMidi addBindingTo:self path:@"selectionIndex" channel:1 number:num++ rangeMin:0 rangeLength:127];
@@ -32,6 +33,8 @@ static void *SelectionContext = &SelectionContext;
         
         [globalMidi addBindingTo:self selector:@"defaultsAll" channel:1 number:num++];
         [globalMidi addBindingTo:self selector:@"copyBank" channel:1 number:num++];
+        
+        [self setSelectionIndex:0];
 
      /*   self.fileWatcher = [[VDKQueue alloc]init];
         [self.fileWatcher addPath:[@"~/Movies/Bank 13.mov" stringByExpandingTildeInPath]];
