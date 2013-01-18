@@ -37,8 +37,6 @@ static void *SelectedMaskContext = &SelectedMaskContext;
         [self.maskingLayer setAutoresizingMask: kCALayerWidthSizable | kCALayerHeightSizable];
         
         self.maskingLayer.opacity = 1.0;
-        self.maskingLayer.contents = [NSImage imageNamed:@"qlab"];
-        self.maskingLayer.filters = @[self.invertFilter, self.maskFilter, self.invertFilter];
         [self.maskingLayer bind:@"opacity" toObject:self withKeyPath:@"opacity" options:nil];
         self.maskingLayer.delegate = self;
         
@@ -76,6 +74,9 @@ static void *SelectedMaskContext = &SelectedMaskContext;
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
     if(context == SelectedMaskContext){
+        [CATransaction begin];
+        [CATransaction setAnimationDuration:0];
+
         self.maskingLayer.contents = nil;
         for(CALayer * subLayer in [self.maskingLayer sublayers]){
             [subLayer removeFromSuperlayer];
@@ -89,6 +90,8 @@ static void *SelectedMaskContext = &SelectedMaskContext;
                 
                 if([self pathIsImage:fullpath]){
                     self.maskingLayer.contents = [[NSImage alloc]initWithContentsOfFile:fullpath];
+                    self.maskingLayer.filters = nil;
+
                 }
                 else if([self pathIsMovie:fullpath]){
                     AVPlayer * player = [AVPlayer playerWithURL:[NSURL fileURLWithPath:fullpath]];
@@ -107,9 +110,13 @@ static void *SelectedMaskContext = &SelectedMaskContext;
                     
                     
                     [self.maskingLayer addSublayer:layer];
+                    self.maskingLayer.filters = @[self.invertFilter, self.maskFilter, self.invertFilter];
+
                 }
             }
         }
+        [CATransaction commit];
+
     }
 }
 
