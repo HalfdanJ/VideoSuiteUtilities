@@ -9,6 +9,7 @@
 #import "VideoBankSimPlayer.h"
 #import "NSString+Timecode.h"
 #import "QLabController.h"
+#import "MyAvPlayerLayer.h"
 
 @interface VideoBankSimPlayer ()
 
@@ -64,7 +65,7 @@ static void *LabelContext = &LabelContext;
 }
 
 -(CALayer*) loadMask:(int)num{
-    NSString * path = [[NSString stringWithFormat:@"~/Movies/Compositing Masks/Mask %02i.png", num+1] stringByExpandingTildeInPath];
+    NSString * path = [[NSString stringWithFormat:@"~/Movies/Compositing Masks/Mask %02i.png", num] stringByExpandingTildeInPath];
 
     NSImage * image = [[NSImage alloc] initWithContentsOfFile:path];
     
@@ -148,7 +149,7 @@ static void *LabelContext = &LabelContext;
                 [mask setAutoresizingMask:kCALayerWidthSizable | kCALayerHeightSizable];
                 
                 
-                AVPlayerLayer *newPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:newPlayer];
+                AVPlayerLayer *newPlayerLayer = [MyAvPlayerLayer playerLayerWithPlayer:newPlayer];
                 [newPlayerLayer setFrame:self.layer.frame];
                 newPlayerLayer.videoGravity = AVLayerVideoGravityResize;
                 [newPlayerLayer setAutoresizingMask:kCALayerWidthSizable | kCALayerHeightSizable];

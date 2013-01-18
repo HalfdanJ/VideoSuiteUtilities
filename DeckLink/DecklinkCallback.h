@@ -44,7 +44,7 @@ public:
     
     unsigned char Clamp(int value);
     void CreateLookupTables();
-    void YuvToRgbChunk(unsigned char *yuv, unsigned char * rgb, unsigned int offset, unsigned int chunk_size);
+    void YuvToRgbChunk(unsigned char *yuv, unsigned char * rgb, unsigned int offset, unsigned int chunk_size, unsigned int rowBytes);
     unsigned char * YuvToRgb(IDeckLinkVideoInputFrame* pArrivedFrame);
     
     NSLock * lock;
@@ -57,6 +57,8 @@ public:
     int counter;
     
     IDeckLinkVideoInputFrame* _videoFrame;
+    
+    bool even;
 
 };
 

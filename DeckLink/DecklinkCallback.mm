@@ -43,37 +43,37 @@ void DecklinkCallback::CreateLookupTables(){
     int yy, uu, vv, ug_plus_vg, ub, vr, val;
     
     // Red
-    for (int y = 0; y < 256; y++) {
-        for (int v = 0; v < 256; v++) {
+    for (int v = 0; v < 256; v++) {
+        for (int y = 0; y < 256; y++) {
             yy         = y << 8;
             vv         = v - 128;
             vr         = vv * 359;
             val        = (yy + vr) >>  8;
-            red[y][v]  = Clamp(val);
+            red[v][y]  = Clamp(val);
         }
     }
     
     // Blue
-    for (int y = 0; y < 256; y++) {
-        for (int u = 0; u < 256; u++) {
+    for (int u = 0; u < 256; u++) {
+        for (int y = 0; y < 256; y++) {
             yy          = y << 8;
             uu          = u - 128;
             ub          = uu * 454;
             val         = (yy + ub) >> 8;
-            blue[y][u]  = Clamp(val);
+            blue[u][y]  = Clamp(val);
         }
     }
     
     // Green
-    for (int y = 0; y < 256; y++) {
-        for (int u = 0; u < 256; u++) {
-            for (int v = 0; v < 256; v++) {
+    for (int u = 0; u < 256; u++) {
+        for (int v = 0; v < 256; v++) {
+            for (int y = 0; y < 256; y++) {
                 yy              = y << 8;
                 uu              = u - 128;
                 vv              = v - 128;
                 ug_plus_vg      = uu * 88 + vv * 183;
                 val             = (yy - ug_plus_vg) >> 8;
-                green[y][u][v]  = Clamp(val);
+                green[u][v][y]  = Clamp(val);
             }
         }
     }
@@ -82,28 +82,92 @@ void DecklinkCallback::CreateLookupTables(){
 
 
 
-void DecklinkCallback::YuvToRgbChunk(unsigned char *yuv, unsigned char * rgb, unsigned int offset, unsigned int chunk_size)
+void DecklinkCallback::YuvToRgbChunk(unsigned char *yuv, unsigned char * rgb, unsigned int offset, unsigned int chunk_size, unsigned int rowBytes)
 {
     
     // convert 4 YUV macropixels to 6 RGB pixels
 	unsigned int i, j;
     unsigned int boundry = offset + chunk_size;
-    int y, u, v;
+    unsigned char y, u, v;
     
-    for(i=offset, j=(offset/4)*8; i<boundry; i+=4, j+=8){
+    int yy, uu, vv, ug_plus_vg, ub, vr, val;
+    
+    int num = (offset/4)*8;
+    for(i=offset, j=num; i<boundry; i+=4, j+=8){
+//        if(i % rowBytes*2 < rowBytes)
+        
         y = yuv[i+1];
         u = yuv[i];
         v = yuv[i+2];
         
-        rgb[j+1]   =red[y][v];
-        rgb[j+2] = green[y][u][v];
-        rgb[j+3] = blue[y][u];
+        yy         = y << 8;
+        vv         = v - 128;
+        uu              = u - 128;
         
+        unsigned char * r = red[v];
+        unsigned char * g = green[u][v];
+        unsigned char * b = blue[u];
+        
+        rgb[j+1] =r[y];
+        rgb[j+2] = g[y];
+        rgb[j+3] = b[y];
+        /*
+         // rgb[j+1]   =red[y][v];
+         {
+         vr         = vv * 359;
+         val        = (yy + vr) >>  8;
+         rgb[j+1]  = Clamp(val);
+         
+         }
+         
+         //rgb[j+2] = green[y][u][v];
+         {
+         ug_plus_vg      = uu * 88 + vv * 183;
+         val             = (yy - ug_plus_vg) >> 8;
+         rgb[j+2]  = Clamp(val);
+         }
+         //  rgb[j+3] = blue[y][u];
+         {
+         ub          = uu * 454;
+         val         = (yy + ub) >> 8;
+         rgb[j+3]  = Clamp(val);
+         }*/
+        /*
+         rgb[j+3] = 1.164*(y - 16)                   + 2.018*(u - 128);
+         rgb[j+2] = 1.164*(u - 16) - 0.813*(v - 128) - 0.391*(u - 128);
+         rgb[j+1] = 1.164*(v - 16) + 1.596*(v - 128);
+         */
         y = yuv[i+3];
         
-        rgb[j+5] =red[y][v];
-        rgb[j+6] = green[y][u][v];
-        rgb[j+7] = blue[y][u];
+        yy         = y << 8;
+        
+        rgb[j+5] =r[y];
+        rgb[j+6] = g[y];
+        rgb[j+7] = b[y];
+        /*
+         // rgb[j+1]   =red[y][v];
+         {
+         val        = (yy + vr) >>  8;
+         rgb[j+5]  = Clamp(val);
+         
+         }
+         
+         //rgb[j+2] = green[y][u][v];
+         {
+         val             = (yy - ug_plus_vg) >> 8;
+         rgb[j+6]  = Clamp(val);
+         }
+         //  rgb[j+3] = blue[y][u];
+         {
+         val         = (yy + ub) >> 8;
+         rgb[j+7]  = Clamp(val);
+         }
+         */
+        /*        rgb[j+3] = 1.164*(y - 16)                   + 2.018*(u - 128);
+         rgb[j+2] = 1.164*(u - 16) - 0.813*(v - 128) - 0.391*(u - 128);
+         rgb[j+1] = 1.164*(v - 16) + 1.596*(v - 128);
+         */
+        
     }
     
     /*
@@ -153,24 +217,25 @@ unsigned char * DecklinkCallback::YuvToRgb(IDeckLinkVideoInputFrame* pArrivedFra
     int num_workers = 8;
     
     int a;
-    // unsigned t0=clock(),t1;
+    //   unsigned t0=clock(),t1;
     
     // split up the image into memory-aligned chunks so they take advantage of
     // the CPU cache
     int     mConversionChunkSize = pArrivedFrame->GetRowBytes() * (long)ceil(pArrivedFrame->GetHeight() /(float) num_workers);
     
+    int rowBytes = pArrivedFrame->GetRowBytes();
     
     dispatch_queue_t queue = dispatch_queue_create("com.halfdanj.yuv", 0);
     dispatch_group_t group = dispatch_group_create();
     
     for(int i=0;i<num_workers;i++){
         dispatch_group_async(group,queue,^{
-            YuvToRgbChunk(yuv,rgb, mConversionChunkSize*i, mConversionChunkSize);
+            YuvToRgbChunk(yuv,rgb, mConversionChunkSize*i, mConversionChunkSize, rowBytes);
         });
     }
     dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
     
-    // t1=clock()-t0;
+    //   t1=clock()-t0;
     //printf("%i\n",t1);
     
     return rgb;
@@ -249,29 +314,34 @@ HRESULT		DecklinkCallback::VideoInputFormatChanged (/* in */ BMDVideoInputFormat
 HRESULT 	DecklinkCallback::VideoInputFrameArrived (/* in */ IDeckLinkVideoInputFrame* videoFrame, /* in */ IDeckLinkAudioInputPacket* audioPacket)
 {
     //NSLog(@"-Frame arrived start");
-
+    even = !even;
     @autoreleasepool {
         if(!delegateBusy){
-
+            
             if(!_videoFrame && [lock tryLock]){
-              
+                
                 _videoFrame = videoFrame;
                 _videoFrame->AddRef();
-               
-                //dispatch_queue_t queue = dispatch_get_main_queue();                
+                
+                //dispatch_queue_t queue = dispatch_get_main_queue();
                 dispatch_queue_t queue = dispatch_queue_create("com.halfdanj.newFrame", 0);
                 dispatch_async(queue, ^{
                     [lock lock];
-
+                    
                     BMDTimeValue		frameTime, frameDuration;
                     _videoFrame->GetStreamTime(&frameTime, &frameDuration, 600);
                     decklinkOutput->ScheduleVideoFrame(_videoFrame, frameTime, frameDuration, 600);
                     
                     w = (int)_videoFrame->GetWidth();
                     h = (int)_videoFrame->GetHeight();
+                    //                    NSLog(@"%i",_videoFrame->GetFlags());
                     size = w * h * 4;
                     
+                    // NSLog(@"%i %i",w,h);
+                    
                     bytes = YuvToRgb(videoFrame);
+                    //                    videoFrame->GetBytes((void**)&bytes);
+                    
                     
                     if(buffer){
                         CVPixelBufferRelease(buffer);
@@ -279,7 +349,7 @@ HRESULT 	DecklinkCallback::VideoInputFrameArrived (/* in */ IDeckLinkVideoInputF
                     buffer = [delegate createCVImageBufferFromCallback:this];
                     
                     newFrame = true;
-                                       
+                    
                     delegateBusy = YES;
                     [delegate newFrame:this];
                     
@@ -289,16 +359,17 @@ HRESULT 	DecklinkCallback::VideoInputFrameArrived (/* in */ IDeckLinkVideoInputF
                 });
                 
                 [lock unlock];
+                
             } else {
-             //   NSLog(@"Could not arqquire lock");
+                //   NSLog(@"Could not arqquire lock");
             }
             //   NSLog(@"Frame out %i",this);
         } else {
-           // NSLog(@"###########busy delegate");
+            // NSLog(@"###########busy delegate");
         }
     }
     
-  //  NSLog(@"-Frame arrived stop");
+    //  NSLog(@"-Frame arrived stop");
     //  videoFrame->get
     
     /*	BOOL					hasValidInputSource = (videoFrame->GetFlags() & bmdFrameHasNoInputSource) != 0 ? NO : YES;

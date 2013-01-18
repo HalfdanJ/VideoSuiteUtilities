@@ -53,23 +53,28 @@ static void *FiltersContext = &FiltersContext;
                 
                 break;
         }
-        
-        
-        
-        return (NSEvent*)nil;
-    }];*/
+     
+     
+     
+     return (NSEvent*)nil;
+     }];*/
 }
 
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
+    [CATransaction begin];
+    [CATransaction setValue:[NSNumber numberWithFloat:00.0f]
+                     forKey:kCATransactionAnimationDuration];
+
+        
+        for(CALayer * layer in [self.layer sublayers]){
+            layer.filters = nil;
+            layer.filters = self.filters;
+        }
+        
+        self.imageViewer.filters = self.filters;
     
-    
-    for(CALayer * layer in [self.layer sublayers]){
-        layer.filters = nil;
-        layer.filters = self.filters;
-    }
-    
-    self.imageViewer.filters = self.filters;
+    [CATransaction commit];
 
 }
 

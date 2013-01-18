@@ -15,6 +15,7 @@
 
 @property CIFilter * dissolveFilter;
 @property CIFilter * constantColorFilter;
+@property CIFilter * HDtoSDFilter;
 
 
 @end
@@ -41,6 +42,8 @@
         self.constantColorFilter = [CIFilter filterWithName:@"CIConstantColorGenerator"];
         [self.constantColorFilter setValue:[CIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:1.0] forKey:@"inputColor"];
         
+               
+        
         
         int num = 30;
         [globalMidi addBindingTo:self path:@"selectedInput" channel:1 number:num++ rangeMin:0 rangeLength:127];
@@ -53,12 +56,28 @@
 }
 
 -(CIImage*) input:(int)num{
-
+//    NSLog(@"Res %f",self.input2.extent.size.width);
+    
+    if(!self.HDtoSDFilter && self.input2){
+        self.HDtoSDFilter = [CIFilter filterWithName:@"CIAffineTransform"];
+        [self.HDtoSDFilter setDefaults];
+        
+        float w = self.input2.extent.size.width;
+        float h = self.input2.extent.size.height;
+        
+        NSAffineTransform * transform = [NSAffineTransform transform];
+        [transform scaleBy:576.0/h];
+        [transform translateXBy:-((w-720)*0.5)*576.0/h yBy:0];
+        [self.HDtoSDFilter setValue:transform forKey:@"inputTransform"];
+    }
+    
+    
     switch (num) {
         case 1:
             return self.input1;
         case 2:
-            return self.input2;
+            [self.HDtoSDFilter setValue:self.input2 forKey:@"inputImage"];
+            return [self.HDtoSDFilter valueForKey:@"outputImage"];
         case 3:
             return self.input3;
             
@@ -70,6 +89,8 @@
 }
 
 -(CIImage *)output{
+   
+
     CIImage * _outputImage;
     if(self.opacity == 0){
         return [self input:0];

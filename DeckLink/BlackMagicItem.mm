@@ -314,6 +314,8 @@ void MyPixelBufferReleaseCallback(void *releaseRefCon, const void *baseAddress){
         self.size = NSMakeSize(w, h);
     //  unsigned char * bytes = callback->bytes;
     
+  //  NSLog(@"%i %i",w,h);
+    
     dispatch_once(&onceMallocToken, ^{
         bytes = (unsigned char * ) malloc(callback->w*callback->h*4 * sizeof(unsigned char)) ;
     });

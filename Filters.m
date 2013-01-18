@@ -102,7 +102,7 @@ static void *UpdateFiltersContext = &UpdateFiltersContext;
 }
 
 -(NSArray *)filters{
-    NSLog(@"filters");
+  //  NSLog(@"filters");
     
     NSMutableArray * arr = [NSMutableArray array];
     

@@ -10,8 +10,8 @@
 #import <AVFoundation/AVFoundation.h>
 #import "NSString+Timecode.h"
 #import "QLabController.h"
-
-
+#import <Quartz/Quartz.h>
+#import "MyAvPlayerLayer.h"
 
 @interface VideoBankPlayer ()
 
@@ -24,7 +24,6 @@
 //@property NSMutableArray * outTimes;
 //@property NSMutableArray * bankRefs;
 @property NSMutableDictionary * playerData;
-
 @end
 
 
@@ -159,6 +158,10 @@ static void *LabelContext = &LabelContext;
         
         
         thisLayer.opacity = 1.0;
+
+        
+        
+        
         
         
         
@@ -292,12 +295,15 @@ static void *LabelContext = &LabelContext;
     
     //    [avPlayer[self.pingPong] removeTimeObserver:timeObserverToken[self.pingPong]];
     //    timeObserverToken[self.pingPong] = nil;
-    
+    [avPlayerLayer[0] removeObserver:self forKeyPath:@"readyForDisplay"];
+    [avPlayerLayer[1] removeObserver:self forKeyPath:@"readyForDisplay"];
+
     if(avPlayerLayer[self.pingPong]){
         [avPlayerLayer[self.pingPong] removeFromSuperlayer];
     }
     
     if(avPlayer[self.pingPong]){
+        
         [avPlayer[self.pingPong] removeObserver:self forKeyPath:@"currentItem"];
         avPlayer[self.pingPong] = nil;
         
@@ -415,7 +421,7 @@ static void *LabelContext = &LabelContext;
     
     //Layer
     for(int i=0;i<2;i++){
-        AVPlayerLayer *newPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:avPlayer[i]];
+        AVPlayerLayer *newPlayerLayer = [MyAvPlayerLayer playerLayerWithPlayer:avPlayer[i]];
         [newPlayerLayer setFrame:self.layer.frame];
         newPlayerLayer.videoGravity = AVLayerVideoGravityResize;
         [newPlayerLayer setAutoresizingMask:kCALayerWidthSizable | kCALayerHeightSizable];

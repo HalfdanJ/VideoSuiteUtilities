@@ -189,7 +189,7 @@ static void *OutTimeContext = &OutTimeContext;
         
         AVPlayerLayer *newPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:self.avPlayer];
         [newPlayerLayer setFrame:frame];
-        newPlayerLayer.videoGravity = AVLayerVideoGravityResizeAspect;
+        newPlayerLayer.videoGravity = AVLayerVideoGravityResize;
         [newPlayerLayer setAutoresizingMask:kCALayerWidthSizable | kCALayerHeightSizable];
          [newPlayerLayer setHidden:YES];
         [self.layer addSublayer:newPlayerLayer];

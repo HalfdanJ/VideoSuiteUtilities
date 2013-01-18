@@ -119,13 +119,21 @@ static void *LockedContext = &LockedContext;
         if ([[self.avPlayerItemTrim.asset tracksWithMediaType:AVMediaTypeVideo] count] > 0) {
             AVAssetImageGenerator *imageGenerator = [AVAssetImageGenerator assetImageGeneratorWithAsset:self.avPlayerItemTrim.asset];
             imageGenerator.maximumSize = CGSizeMake(60, 50);
-            NSError * error;
-            CGImageRef image = [imageGenerator copyCGImageAtTime:CMTimeMakeWithSeconds(0, 100) actualTime:nil error:&error];
-            if(error){
-                NSLog(@"Could not create thumbnail");
-            } else {
-                self.thumbnail = [[NSImage alloc] initWithCGImage:image size: NSZeroSize];
-            }
+            
+            dispatch_queue_t queue = dispatch_queue_create("thumb", 0);
+            dispatch_async(queue, ^{
+                NSError * error;
+
+                CGImageRef image = [imageGenerator copyCGImageAtTime:CMTimeMakeWithSeconds(0, 100) actualTime:nil error:&error];
+                if(error){
+                    NSLog(@"Could not create thumbnail");
+                } else {
+                    
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        self.thumbnail = [[NSImage alloc] initWithCGImage:image size: NSZeroSize];
+                    });
+                }
+            });
         }
     }
     if(context == TrimContext){
