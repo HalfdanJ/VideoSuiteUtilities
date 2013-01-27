@@ -15,8 +15,12 @@
 }
 //@property BOOL fullscreen;
 
-@property CoreImageViewer * imageViewer;
-@property CALayer * layer;
+@property CoreImageViewer * imageViewer1;
+@property CoreImageViewer * imageViewer2;
+@property CoreImageViewer * imageViewer3;
+@property CALayer * layer1;
+@property CALayer * layer2;
+@property CALayer * layer3;
 
 @property NSArray * filters;
 

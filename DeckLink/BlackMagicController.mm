@@ -11,6 +11,46 @@
 @implementation BlackMagicController
 
 
+-(id)initWithModes:(NSArray*)modes{
+    self = [self init];
+    if (self) {
+        
+        self.items = [NSMutableArray array];
+        
+        IDeckLinkIterator*          deckLinkIterator = NULL;
+        IDeckLink*                  deckLink = NULL;
+        
+        // Create an iterator
+        deckLinkIterator = CreateDeckLinkIteratorInstance();
+        
+        if(deckLinkIterator){
+            // List all DeckLink devices
+            while (deckLinkIterator->Next(&deckLink) == S_OK)
+            {
+                deviceList.push_back(deckLink);
+            }
+        }
+        
+        int index = 0;
+        for(NSNumber * _mode in modes){
+            //    for(int index=0;index<deviceList.size();index++){
+            int mode = [_mode intValue];
+          
+            BlackMagicItem * newItem = [[BlackMagicItem alloc] initWithDecklink:deviceList[index] mode:mode];
+            if(newItem){
+                newItem.index = index;
+                [self.items addObject:newItem];
+            }
+            index++;
+        }
+        
+    }
+    return self;
+    
+
+}
+
+
 -(id)initWithNumItems:(int)numItems{
     self = [self init];
     if (self) {

@@ -76,8 +76,12 @@
         case 1:
             return self.input1;
         case 2:
-            [self.HDtoSDFilter setValue:self.input2 forKey:@"inputImage"];
-            return [self.HDtoSDFilter valueForKey:@"outputImage"];
+            if(self.input2.extent.size.width > 720){
+                [self.HDtoSDFilter setValue:self.input2 forKey:@"inputImage"];
+                return [self.HDtoSDFilter valueForKey:@"outputImage"];
+            } else {
+                return self.input2;
+            }
         case 3:
             return self.input3;
             

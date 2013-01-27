@@ -26,16 +26,42 @@ static void *FiltersContext = &FiltersContext;
     
     
     NSView * contentView = self.contentView;
-    self.imageViewer = [[CoreImageViewer alloc] initWithFrame:contentView.frame];
-    [self.imageViewer setAutoresizingMask:NSViewWidthSizable|NSViewHeightSizable];
-    [self.contentView addSubview:self.imageViewer];
+    NSRect frame = contentView.frame;
+    frame.size.width /= 3;
+    self.imageViewer1 = [[CoreImageViewer alloc] initWithFrame:frame];
+    [self.imageViewer1 setAutoresizingMask:NSViewWidthSizable|NSViewHeightSizable|NSViewMinXMargin|NSViewMaxXMargin];
+    [self.contentView addSubview:self.imageViewer1];
     
-    NSView * view = [[NSView alloc] initWithFrame:contentView.frame];
+    NSView * view = [[NSView alloc] initWithFrame:frame];
     [view setAutoresizingMask:NSViewWidthSizable|NSViewHeightSizable];
     [view setWantsLayer:YES];
-    self.layer = view.layer;
+    self.layer1 = view.layer;
     [self.contentView addSubview:view];
     
+    
+    
+    
+    frame.origin.x += frame.size.width;
+    self.imageViewer2 = [[CoreImageViewer alloc] initWithFrame:frame];
+    [self.imageViewer2 setAutoresizingMask:NSViewWidthSizable|NSViewHeightSizable|NSViewMinXMargin|NSViewMaxXMargin];
+    [self.contentView addSubview:self.imageViewer2];
+    
+    NSView * view2 = [[NSView alloc] initWithFrame:frame];
+    [view2 setAutoresizingMask:NSViewWidthSizable|NSViewHeightSizable];
+    [view2 setWantsLayer:YES];
+    self.layer2 = view2.layer;
+    [self.contentView addSubview:view2];
+
+    frame.origin.x += frame.size.width;
+    self.imageViewer3 = [[CoreImageViewer alloc] initWithFrame:frame];
+    [self.imageViewer3 setAutoresizingMask:NSViewWidthSizable|NSViewHeightSizable|NSViewMinXMargin|NSViewMaxXMargin];
+    [self.contentView addSubview:self.imageViewer3];
+    
+    NSView * view3 = [[NSView alloc] initWithFrame:frame];
+    [view3 setAutoresizingMask:NSViewWidthSizable|NSViewHeightSizable];
+    [view3 setWantsLayer:YES];
+    self.layer3 = view3.layer;
+    [self.contentView addSubview:view3];
     
     [self addObserver:self forKeyPath:@"filters" options:0 context:FiltersContext];
     
@@ -65,17 +91,27 @@ static void *FiltersContext = &FiltersContext;
     [CATransaction begin];
     [CATransaction setValue:[NSNumber numberWithFloat:00.0f]
                      forKey:kCATransactionAnimationDuration];
-
-        
-        for(CALayer * layer in [self.layer sublayers]){
-            layer.filters = nil;
-            layer.filters = self.filters;
-        }
-        
-        self.imageViewer.filters = self.filters;
+    
+    
+    for(CALayer * layer in [self.layer1 sublayers]){
+        layer.filters = nil;
+        layer.filters = self.filters;
+    }
+    
+    for(CALayer * layer in [self.layer2 sublayers]){
+        layer.filters = nil;
+        layer.filters = self.filters;
+    }
+    for(CALayer * layer in [self.layer3 sublayers]){
+        layer.filters = nil;
+        layer.filters = self.filters;
+    }
+    self.imageViewer1.filters = self.filters;
+    self.imageViewer2.filters = self.filters;
+    self.imageViewer3.filters = self.filters;
     
     [CATransaction commit];
-
+    
 }
 
 /*

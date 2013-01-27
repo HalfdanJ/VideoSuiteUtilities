@@ -50,7 +50,7 @@ static void *CIImageContext = &CIImageContext;
     NSRectFill(dirtyRect);
     
     if(!self.ciImage){
-        NSLog(@"No ciimage");
+     //   NSLog(@"No ciimage");
 
     } else {
         @autoreleasepool {

@@ -22,5 +22,5 @@
 -(DecklinkCallback*)callbacks:(int)num;
 
 -(id)initWithNumItems:(int)numItems;
-
+-(id)initWithModes:(NSArray*)modes;
 @end

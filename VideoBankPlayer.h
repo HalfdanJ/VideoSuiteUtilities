@@ -17,7 +17,7 @@ extern MIDIReceiver * globalMidi;
     BOOL _playing;
     
     AVQueuePlayer * avPlayer[2];
-    AVPlayerLayer * avPlayerLayer[2];
+    AVPlayerLayer * avPlayerLayer[3][2];
     
     id timeObserverToken[2];
     id timeOutTimeObserverToken[2];
@@ -25,6 +25,7 @@ extern MIDIReceiver * globalMidi;
     id fadeOutObserverToken[2];
     id fadeOutEventObserverToken[2];
     
+    bool playOnOutput[3];
 //    VideoBankItem * uiUpdateBankItem[2];
 
 }
@@ -40,9 +41,12 @@ extern MIDIReceiver * globalMidi;
 @property BOOL loop;
 @property float playbackRate;
 
-@property CALayer * layer;
+@property CALayer * layer1;
+@property CALayer * layer2;
+@property CALayer * layer3;
 
 @property NSString * currentTimeString;
+@property (weak) NSSegmentedControl * segmentControl;
 
 -(id)initWithBank:(VideoBank*)bank;
 -(void) qlabPlay;

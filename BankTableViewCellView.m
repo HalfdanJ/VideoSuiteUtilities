@@ -101,7 +101,7 @@ static void *RedrawContext = &RedrawContext;
     
     
     
-    
+    /*
     NSRect labelRect = NSMakeRect(dirtyRect.size.width-145, 15, 18, 18);
     if(item.standardPlayerLabel){
         NSRect label = labelRect;
@@ -110,10 +110,7 @@ static void *RedrawContext = &RedrawContext;
         NSBezierPath * path = [NSBezierPath bezierPathWithRoundedRect:label xRadius:4 yRadius:4];
         [path setLineWidth:1.0];
         [path stroke];
-        
-        /*  [[NSColor colorWithDeviceRed:1.0 green:1.0 blue:1.0 alpha:1.0] set];
-         NSRectFill(label);*/
-        {
+              {
             NSMutableParagraphStyle *style = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
             [style setAlignment:NSCenterTextAlignment];
             NSDictionary *attr = @{
@@ -137,9 +134,7 @@ static void *RedrawContext = &RedrawContext;
         [path setLineWidth:1.0];
         [path stroke];
         
-        /*  [[NSColor colorWithDeviceRed:1.0 green:1.0 blue:1.0 alpha:1.0] set];
-         NSRectFill(label);*/
-        {
+               {
             NSMutableParagraphStyle *style = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
             [style setAlignment:NSCenterTextAlignment];
             NSDictionary *attr = @{
@@ -184,9 +179,7 @@ static void *RedrawContext = &RedrawContext;
         if(item.recordLabel == 2)
             [path fill];
         
-        /*  [[NSColor colorWithDeviceRed:1.0 green:1.0 blue:1.0 alpha:1.0] set];
-         NSRectFill(label);*/
-        {
+               {
             NSMutableParagraphStyle *style = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
             [style setAlignment:NSCenterTextAlignment];
             NSDictionary *attr = @{
@@ -197,10 +190,10 @@ static void *RedrawContext = &RedrawContext;
             
             [@"R" drawInRect:label withAttributes:attr];
         }
-        
+     
         
     }
-
+*/
 }
 
 

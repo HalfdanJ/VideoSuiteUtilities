@@ -50,9 +50,22 @@ static void *LabelContext = &LabelContext;
         [self addObserver:self forKeyPath:@"numberOfBanksToPlay" options:0 context:LabelContext];
 
         
-        self.layer = [CALayer layer];
-        [self.layer setAutoresizingMask: kCALayerWidthSizable | kCALayerHeightSizable];
-        self.layer.hidden = YES;
+        self.layer1 = [CALayer layer];
+        [self.layer1 setAutoresizingMask: kCALayerWidthSizable | kCALayerHeightSizable];
+        self.layer1.hidden = YES;
+
+        self.layer2 = [CALayer layer];
+        [self.layer2 setAutoresizingMask: kCALayerWidthSizable | kCALayerHeightSizable];
+        self.layer2.hidden = YES;
+
+        self.layer3 = [CALayer layer];
+        [self.layer3 setAutoresizingMask: kCALayerWidthSizable | kCALayerHeightSizable];
+        self.layer3.hidden = YES;
+
+        [self.layer1 bind:@"opacity" toObject:self withKeyPath:@"opacity" options:nil];
+        [self.layer2 bind:@"opacity" toObject:self withKeyPath:@"opacity" options:nil];
+        [self.layer3 bind:@"opacity" toObject:self withKeyPath:@"opacity" options:nil];
+
         
         self.playing = NO;
         self.bankSelection = 0;
@@ -60,7 +73,7 @@ static void *LabelContext = &LabelContext;
         self.numberOfBanksToPlay = 1;
         self.playbackRate = 1.0;
         
-        [self.layer bind:@"opacity" toObject:self withKeyPath:@"opacity" options:nil];
+
         self.opacity = 1.0;
         
         // [self addObserver:self forKeyPath:@"opdacity" options:0 context:OpacityContext];
@@ -161,11 +174,21 @@ static void *LabelContext = &LabelContext;
         
         
         __weak AVQueuePlayer * thisPlayer = avPlayer[self.pingPong];
-        __weak AVPlayerLayer * thisLayer = avPlayerLayer[self.pingPong];
+//        __weak AVPlayerLayer * thisLayer = avPlayerLayer[self.pingPong];
+         
+        NSMutableArray * thisLayerArray = [NSMutableArray array];
+        for(int j=0;j<3;j++){
+            if(playOnOutput[j]){
+                [thisLayerArray addObject:avPlayerLayer[j][self.pingPong]];
+            }
+        }
+        
+        
         int pingPong = self.pingPong;
         
-        
-        thisLayer.opacity = 1.0;
+        for(AVPlayerLayer* thisLayer in thisLayerArray){
+            thisLayer.opacity = 1.0;
+        }
 
         
         
@@ -176,20 +199,25 @@ static void *LabelContext = &LabelContext;
         //Crossfade IN
         double crossfadeTimeIn = [[data valueForKey:@"crossfadeTimeIn"] doubleValue];
         if(crossfadeTimeIn == 0){
-            thisLayer.opacity = 1.0;
+            for(AVPlayerLayer* thisLayer in thisLayerArray){
+                thisLayer.opacity = 1.0;
+            }
         } else {
-            thisLayer.opacity = 0.0;
-            
+            for(AVPlayerLayer* thisLayer in thisLayerArray){
+                thisLayer.opacity = 0.0;
+            }
             fadeInObserverToken[pingPong] = [thisPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 25) queue:NULL usingBlock:^(CMTime time) {
-                    
-                    double p = CMTimeGetSeconds(time) / crossfadeTimeIn;
+                
+                double p = CMTimeGetSeconds(time) / crossfadeTimeIn;
+                for(AVPlayerLayer* thisLayer in thisLayerArray){
                     thisLayer.opacity = p;
-                    avPlayer[pingPong].volume = p;
-                    
-                    if(p >= 1){
-                        [thisPlayer removeTimeObserver:fadeInObserverToken[pingPong]];
-                        fadeInObserverToken[pingPong] = nil;
-                    }
+                }
+                avPlayer[pingPong].volume = p;
+                
+                if(p >= 1){
+                    [thisPlayer removeTimeObserver:fadeInObserverToken[pingPong]];
+                    fadeInObserverToken[pingPong] = nil;
+                }
                 
                 //  NSLog(@"Fade up %f",p);
             }];
@@ -221,16 +249,18 @@ static void *LabelContext = &LabelContext;
                 self.pingPong = !self.pingPong;
                 
                 fadeOutObserverToken[pingPong] = [thisPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 25) queue:NULL usingBlock:^(CMTime time) {
-                        double p = MAX(0,(CMTimeGetSeconds(time)-eventTime) / crossfadeTimeOut);
+                    double p = MAX(0,(CMTimeGetSeconds(time)-eventTime) / crossfadeTimeOut);
+                    for(AVPlayerLayer* thisLayer in thisLayerArray){
                         thisLayer.opacity = 1-p;
-                        avPlayer[pingPong].volume = 1-p;
-                        
-                        //NSLog(@"Fade down %f",1-p);
-                        
-                        if(p == 0){
-                            [thisPlayer removeTimeObserver:fadeOutObserverToken[pingPong]];
-                            fadeOutObserverToken[pingPong] = nil;
-                        }
+                    }
+                    avPlayer[pingPong].volume = 1-p;
+                    
+                    //NSLog(@"Fade down %f",1-p);
+                    
+                    if(p == 0){
+                        [thisPlayer removeTimeObserver:fadeOutObserverToken[pingPong]];
+                        fadeOutObserverToken[pingPong] = nil;
+                    }
                 }];
                 
                 //Start new player
@@ -256,8 +286,10 @@ static void *LabelContext = &LabelContext;
                     
                     [avPlayer[self.pingPong] addObserver:self forKeyPath:@"currentItem" options:0 context:AvPlayerCurrentItemContext];
                     
-                    avPlayerLayer[self.pingPong].player = avPlayer[self.pingPong];
-                    
+                    for(int j=0;j<3;j++){
+                        if(playOnOutput[j])
+                            avPlayerLayer[j][self.pingPong].player = avPlayer[self.pingPong];
+                    }
                     
                     //                    if(timeObserverToken[self.pingPong] ){
                     //                        [avPlayer[self.pingPong] removeTimeObserver:timeObserverToken[self.pingPong]];
@@ -307,13 +339,15 @@ static void *LabelContext = &LabelContext;
     
     //    [avPlayer[self.pingPong] removeTimeObserver:timeObserverToken[self.pingPong]];
     //    timeObserverToken[self.pingPong] = nil;
-    [avPlayerLayer[0] removeObserver:self forKeyPath:@"readyForDisplay"];
-    [avPlayerLayer[1] removeObserver:self forKeyPath:@"readyForDisplay"];
-
-    if(avPlayerLayer[self.pingPong]){
-        [avPlayerLayer[self.pingPong] removeFromSuperlayer];
+    for(int j=0;j<3;j++){
+        
+        [avPlayerLayer[j][0] removeObserver:self forKeyPath:@"readyForDisplay"];
+        [avPlayerLayer[j][1] removeObserver:self forKeyPath:@"readyForDisplay"];
+        
+        if(avPlayerLayer[self.pingPong]){
+            [avPlayerLayer[j][self.pingPong] removeFromSuperlayer];
+        }
     }
-    
     if(avPlayer[self.pingPong]){
         
         [avPlayer[self.pingPong] removeObserver:self forKeyPath:@"currentItem"];
@@ -431,16 +465,34 @@ static void *LabelContext = &LabelContext;
     avPlayer[0] = [AVQueuePlayer queuePlayerWithItems:initialPlayerItems];
     
     //Layer
-    for(int i=0;i<2;i++){
-        AVPlayerLayer *newPlayerLayer = [MyAvPlayerLayer playerLayerWithPlayer:avPlayer[i]];
-        [newPlayerLayer setFrame:self.layer.frame];
-        newPlayerLayer.videoGravity = AVLayerVideoGravityResize;
-        [newPlayerLayer setAutoresizingMask:kCALayerWidthSizable | kCALayerHeightSizable];
-        [newPlayerLayer setHidden:NO];
-        newPlayerLayer.opacity = 0.0;
+    for(int j=0;j<3;j++){
         
-        avPlayerLayer[i] = newPlayerLayer;
-        [self.layer addSublayer:avPlayerLayer[i]];
+        CALayer * layer;
+        if(j == 0){
+            layer = self.layer1;
+        }
+        if(j==1){
+            layer = self.layer2;
+        }
+        if(j == 2){
+            layer = self.layer3;
+        }
+        
+        playOnOutput[j] = [self.segmentControl isSelectedForSegment:j];
+        
+        if(playOnOutput[j]){
+            for(int i=0;i<2;i++){
+                AVPlayerLayer *newPlayerLayer = [MyAvPlayerLayer playerLayerWithPlayer:avPlayer[i]];
+                [newPlayerLayer setFrame:layer.frame];
+                newPlayerLayer.videoGravity = AVLayerVideoGravityResize;
+                [newPlayerLayer setAutoresizingMask:kCALayerWidthSizable | kCALayerHeightSizable];
+                [newPlayerLayer setHidden:NO];
+                newPlayerLayer.opacity = 0.0;
+                
+                avPlayerLayer[j][i] = newPlayerLayer;
+                [layer addSublayer:avPlayerLayer[j][i]];
+            }
+        }
     }
     [self newItemPlaying];
     //avPlayerLayer[0].opacity = 1.0;
@@ -470,13 +522,16 @@ static void *LabelContext = &LabelContext;
     [CATransaction begin];
     [CATransaction setValue:(id)kCFBooleanTrue
                      forKey:kCATransactionDisableActions];
-    self.layer.hidden = !self.playing;
+    self.layer1.hidden = !self.playing;
+    self.layer2.hidden = !self.playing;
+    self.layer3.hidden = !self.playing;
     [CATransaction commit];
     
     //Observers
-    [avPlayerLayer[0] addObserver:self forKeyPath:@"readyForDisplay" options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew context:AVSPPlayerLayerReadyForDisplay0];
-    [avPlayerLayer[1] addObserver:self forKeyPath:@"readyForDisplay" options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew context:AVSPPlayerLayerReadyForDisplay1];
-
+    for(int j=0;j<3;j++){
+        [avPlayerLayer[j][0] addObserver:self forKeyPath:@"readyForDisplay" options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew context:AVSPPlayerLayerReadyForDisplay0];
+        [avPlayerLayer[j][1] addObserver:self forKeyPath:@"readyForDisplay" options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew context:AVSPPlayerLayerReadyForDisplay1];
+    }
     [avPlayer[self.pingPong] addObserver:self forKeyPath:@"currentItem" options:0 context:AvPlayerCurrentItemContext];
     
     
@@ -533,10 +588,14 @@ static void *LabelContext = &LabelContext;
             
             [CATransaction begin];
             [CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
-            [avPlayerLayer[0] removeFromSuperlayer];
-            [avPlayerLayer[1] removeFromSuperlayer];
-            
-            self.layer.hidden = YES;
+            for(int j=0;j<3;j++){
+                
+                [avPlayerLayer[j][0] removeFromSuperlayer];
+                [avPlayerLayer[j][1] removeFromSuperlayer];
+            }
+            self.layer1.hidden = YES;
+            self.layer2.hidden = YES;
+            self.layer3.hidden = YES;
             [CATransaction commit];
             
             

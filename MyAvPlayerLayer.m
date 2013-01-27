@@ -36,9 +36,9 @@ static void *CurrentItemContext = &CurrentItemContext;
     if(naturalSize.width == 720){
         
     } else {
-        NSAffineTransform * transform = [NSAffineTransform transform];
+   /*     NSAffineTransform * transform = [NSAffineTransform transform];
         [transform scaleXBy:naturalSize.width/720.0 yBy:naturalSize.height/576.0];
-        [newPlayer.baseTransformFilter setValue:transform forKey:@"inputTransform"];
+        [newPlayer.baseTransformFilter setValue:transform forKey:@"inputTransform"];*/
     }
     
     [newPlayer calcCurrentFilter];
@@ -54,7 +54,7 @@ static void *CurrentItemContext = &CurrentItemContext;
 }
 
 -(void) calcCurrentFilter{
-    NSLog(@"Calc");
+   /* NSLog(@"Calc");
     [CATransaction begin];
     [CATransaction setAnimationDuration:0];
     
@@ -96,7 +96,7 @@ static void *CurrentItemContext = &CurrentItemContext;
 
     [self setFilters:@[self.baseTransformFilter, self.currentTransformFilter]];
     [CATransaction commit];
-
+*/
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
