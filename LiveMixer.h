@@ -28,8 +28,11 @@ extern MIDIReceiver * globalMidi;
 @property (readonly) BOOL input2Selected;
 @property (readonly) BOOL input3Selected;
 
+@property int num;
+
 @property (readonly) CIImage * output;
 
 -(void) imageViewMouseDown:(id)sender;
+- (id)initWithNum:(int)num;
 
 @end

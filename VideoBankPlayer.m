@@ -32,6 +32,7 @@ static void *AVSPPlayerLayerReadyForDisplay0 = &AVSPPlayerLayerReadyForDisplay0;
 static void *AVSPPlayerLayerReadyForDisplay1 = &AVSPPlayerLayerReadyForDisplay1;
 static void *AVPlayerRateContext = &AVPlayerRateContext;
 static void *AvPlayerCurrentItemContext = &AvPlayerCurrentItemContext;
+static void *OuputContext = &OuputContext;
 
 static void *LabelContext = &LabelContext;
 //static void *OpacityContext = &OpacityContext;
@@ -87,6 +88,11 @@ static void *LabelContext = &LabelContext;
         [globalMidi addBindingTo:self path:@"playing" channel:1 number:num++ rangeMin:0 rangeLength:127];
         [globalMidi addBindingTo:self path:@"loop" channel:1 number:num++ rangeMin:0 rangeLength:127];
         [globalMidi addBindingTo:self path:@"playbackRate" channel:1 number:num++ rangeMin:0.5 rangeLength:2];
+
+        [globalMidi addBindingTo:self path:@"playOnOutput1" channel:1 number:num++ rangeMin:0 rangeLength:127];
+        [globalMidi addBindingTo:self path:@"playOnOutput2" channel:1 number:num++ rangeMin:0 rangeLength:127];
+        [globalMidi addBindingTo:self path:@"playOnOutput3" channel:1 number:num++ rangeMin:0 rangeLength:127];
+        
         
     }
     return self;
@@ -612,6 +618,9 @@ static void *LabelContext = &LabelContext;
 
 -(void)qlabPlay{
     NSArray * cues = @[
+    @{QName : [NSString stringWithFormat:@"Output 1: %i", self.playOnOutput1], QPath: @"playOnOutput1"},
+    @{QName : [NSString stringWithFormat:@"Output 2: %i", self.playOnOutput2], QPath: @"playOnOutput2"},
+    @{QName : [NSString stringWithFormat:@"Output 3: %i", self.playOnOutput3], QPath: @"playOnOutput3"},
     @{QName : [NSString stringWithFormat:@"Bank Selection: %02i",self.bankSelection], QPath: @"bankSelection"},
     @{QName : [NSString stringWithFormat:@"Banks to play: %i",self.numberOfBanksToPlay], QPath: @"numberOfBanksToPlay"},
     @{QName : [NSString stringWithFormat:@"Opacity: %.2f",self.opacity], QPath: @"opacity"},
@@ -638,4 +647,24 @@ static void *LabelContext = &LabelContext;
 
 }
 
+
+-(void)setPlayOnOutput1:(BOOL)playOnOutput1{
+    [self.segmentControl setSelected:playOnOutput1 forSegment:0];
+}
+-(void)setPlayOnOutput2:(BOOL)playOnOutput1{
+    [self.segmentControl setSelected:playOnOutput1 forSegment:1];
+}
+-(void)setPlayOnOutput3:(BOOL)playOnOutput1{
+    [self.segmentControl setSelected:playOnOutput1 forSegment:2];
+}
+
+-(BOOL)playOnOutput1{
+    return [self.segmentControl isSelectedForSegment:0];
+}
+-(BOOL)playOnOutput2{
+    return [self.segmentControl isSelectedForSegment:1];
+}
+-(BOOL)playOnOutput3{
+    return [self.segmentControl isSelectedForSegment:2];
+}
 @end

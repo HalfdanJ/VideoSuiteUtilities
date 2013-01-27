@@ -19,6 +19,7 @@ static void *FiltersContext = &FiltersContext;
 
     
     if([[NSScreen screens] count] > 1){
+        [self setStyleMask:NSBorderlessWindowMask];
         NSScreen * screen = [NSScreen screens][1];
         NSRect screenRect = [screen frame];
         [self setFrame:screenRect display:YES];

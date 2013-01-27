@@ -26,14 +26,14 @@
     return @"Live Mixer";
 }
 
-- (id)init
+- (id)initWithNum:(int)num
 {
     self = [super init];
     if (self) {
         self.selectedInput = 1;
         self.transitionTime = -1;
         self.opacity = 1;
-        
+        self.num = num;
         
         
         self.dissolveFilter = [CIFilter filterWithName:@"CIDissolveTransition"];
@@ -44,11 +44,10 @@
         
                
         
-        
-        int num = 30;
-        [globalMidi addBindingTo:self path:@"selectedInput" channel:1 number:num++ rangeMin:0 rangeLength:127];
-        [globalMidi addBindingTo:self path:@"opacity" channel:1 number:num++ rangeMin:0 rangeLength:1];
-        [globalMidi addBindingTo:self path:@"crossfade" channel:1 number:num++ rangeMin:0 rangeLength:1];
+        int midiNum = 30 + num*3;
+        [globalMidi addBindingTo:self path:@"selectedInput" channel:1 number:midiNum++ rangeMin:0 rangeLength:127];
+        [globalMidi addBindingTo:self path:@"opacity" channel:1 number:midiNum++ rangeMin:0 rangeLength:1];
+        [globalMidi addBindingTo:self path:@"crossfade" channel:1 number:midiNum++ rangeMin:0 rangeLength:1];
 
 
     }
@@ -198,7 +197,7 @@
     @{QName : [NSString stringWithFormat:@"Select input: %i",self.selectedInput], QPath: @"selectedInput"}
     ];
     
-    NSString * title = [NSString stringWithFormat:@"Select Live Input %i",self.selectedInput];
+    NSString * title = [NSString stringWithFormat:@"Input %i : Output %i",self.selectedInput,self.num+1];
     if(self.opacity == 0){
         title = [NSString stringWithFormat:@"Hide Live Input"];
     }
