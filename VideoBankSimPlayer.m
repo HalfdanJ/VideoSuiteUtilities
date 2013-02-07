@@ -27,6 +27,7 @@
 static void *PlayingContext = &PlayingContext;
 static void *LabelContext = &LabelContext;
 static void *MaskContext = &MaskContext;
+static void *PlayRateContext = &PlayRateContext;
 -(NSString*)name{
     return @"Composite Player";
 
@@ -63,6 +64,11 @@ static void *MaskContext = &MaskContext;
         num++;
         [globalMidi addBindingTo:self path:@"playing" channel:1 number:num++ rangeMin:0 rangeLength:127];
         [globalMidi addBindingTo:self path:@"playbackRate" channel:1 number:num++ rangeMin:0 rangeLength:4];
+        [globalMidi addBindingTo:self path:@"midi" channel:1 number:num++ rangeMin:0 rangeLength:127];
+        
+        [self addObserver:self forKeyPath:@"playbackRate" options:0 context:PlayRateContext];
+        
+        self.players = [NSMutableArray array];
     }
     return self;
 }
@@ -78,11 +84,15 @@ static void *MaskContext = &MaskContext;
     self.timeObserverToken = [NSMutableArray array];
     self.playerData = [NSMutableDictionary dictionary];
 
+    [self.players removeAllObjects];
     
     NSMutableArray * players = [NSMutableArray arrayWithCapacity:self.numberOfBanksToPlay];
     NSMutableArray * layers = [NSMutableArray arrayWithCapacity:self.numberOfBanksToPlay];
     
     int count = 0;
+    
+    double shortest = -1;
+    __weak AVPlayer * shortesBank;
     for(int i=self.bankSelection;i<self.bankSelection + self.numberOfBanksToPlay;i++){
         if([self.videoBank.content count] > i){
             VideoBankItem * bankItem = [self.videoBank content][i];
@@ -103,7 +113,7 @@ static void *MaskContext = &MaskContext;
                  object:[newPlayer currentItem]];
                 
                 
-                double delayInSeconds = 0.1;
+                double delayInSeconds = 0.01;
                 dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
                 dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
                   
@@ -118,11 +128,32 @@ static void *MaskContext = &MaskContext;
                         }
                     }];
                     
+                    double eventTime =  bankItem.duration - 0.1;
+                    eventTime = MAX(0, eventTime);
+                    CMTime eventCMTime = CMTimeMakeWithSeconds(eventTime, 100);
+                    NSValue * value = [NSValue valueWithCMTime:eventCMTime];
+                    
+                    
+                    NSLog(@"%f",eventTime);
+                    
+                    double delayInSeconds = 0.1;
+                    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+                    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                        
+                        midiSendObserverToken = [newPlayer addBoundaryTimeObserverForTimes:@[value] queue:dispatch_get_current_queue() usingBlock:^{
+                            [globalMidi sendMidiChannel:1 number:2 value:self.bankSelection];
+                            //[newPlayer removeTimeObserver:midiSendObserverToken];
+                            midiSendObserverToken = nil;
+                        }];
+                    });
+
+                    
                     [self.timeObserverToken addObject:newToken];
+                    
+                    [newPlayer play];
+                    newPlayer.rate = self.playbackRate;
+
                 });
-                
-                [newPlayer bind:@"rate" toObject:self withKeyPath:@"playbackRate" options:nil];
-                [newPlayer play];
 
                 [players addObject:newPlayer];
                 
@@ -152,12 +183,41 @@ static void *MaskContext = &MaskContext;
                 [layers addObject:newPlayerLayer];
                 [self.layer addSublayer:newPlayerLayer];
                 
-
+                [self.players addObject:newPlayer];
+                
+                float duration = bankItem.duration;
+                if(shortest == -1 || duration < shortest){
+                    shortest = duration;
+                    shortesBank = newPlayer;
+                }
             }
         }
         count++;
     }
     
+    /*if(shortesBank){
+        if(self.midi){
+            double eventTime =  shortest - 0.1;
+            eventTime = MAX(0, eventTime);
+            CMTime eventCMTime = CMTimeMakeWithSeconds(eventTime, 100);
+            NSValue * value = [NSValue valueWithCMTime:eventCMTime];
+            
+            
+            NSLog(@"%f",eventTime);
+            
+            double delayInSeconds = 0.1;
+            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                
+                midiSendObserverToken = [shortesBank addBoundaryTimeObserverForTimes:@[value] queue:dispatch_get_current_queue() usingBlock:^{
+                    [globalMidi sendMidiChannel:1 number:2 value:self.bankSelection];
+                    [shortesBank removeTimeObserver:midiSendObserverToken];
+                    midiSendObserverToken = nil;
+                }];
+            });
+        }
+    }
+    */
     
     int i=0;
     for(AVPlayer * player in players){
@@ -190,6 +250,12 @@ static void *MaskContext = &MaskContext;
 
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
+    if(context == PlayRateContext){
+        for(AVPlayer * player in self.players){
+            player.rate = self.playbackRate;
+                    }
+    }
+    
     if(context == MaskContext){
         VideoBankItem * bankItem = object;
         CALayer * mask = bankItem.maskLayer;
@@ -263,6 +329,7 @@ static void *MaskContext = &MaskContext;
     @{QName : [NSString stringWithFormat:@"Banks to play: %i",self.numberOfBanksToPlay], QPath: @"numberOfBanksToPlay"},
     @{QName : [NSString stringWithFormat:@"Opacity: %.2f",self.opacity], QPath: @"opacity"},
     @{QName : [NSString stringWithFormat:@"PlaybackRate: %.2f",self.playbackRate], QPath: @"playbackRate"},
+    @{QName : [NSString stringWithFormat:@"Midi: %i",self.midi], QPath: @"midi"},
 //    @{QName : [NSString stringWithFormat:@"Mask: %i",self.mask], QPath: @"mask"},
     @{QName : [NSString stringWithFormat:@"Play: Yes"], QPath: @"playing", QValue: @(1)},
     ];

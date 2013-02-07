@@ -76,7 +76,9 @@ static void *LastItemContext = &LastItemContext;
         [globalMidi addBindingTo:self path:@"opacity" channel:1 number:num++ rangeMin:0 rangeLength:1];
         [globalMidi addBindingTo:self path:@"playing" channel:1 number:num++ rangeMin:0 rangeLength:127];
         [globalMidi addBindingTo:self path:@"loop" channel:1 number:num++ rangeMin:0 rangeLength:127];
-        [globalMidi addBindingTo:self path:@"playbackRate" channel:1 number:num++ rangeMin:0.5 rangeLength:2];
+        [globalMidi addBindingTo:self path:@"midi" channel:1 number:num++ rangeMin:0 rangeLength:127];
+
+        [globalMidi addBindingTo:self path:@"playbackRate" channel:1 number:num++ rangeMin:00 rangeLength:4];
         
         
         [self addObserver:self forKeyPath:@"lastItem" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:LastItemContext];
@@ -627,6 +629,8 @@ static void *MaskContext = &MaskContext;
     @{QName : [NSString stringWithFormat:@"Banks to play: %i",self.numberOfBanksToPlay], QPath: @"numberOfBanksToPlay"},
     @{QName : [NSString stringWithFormat:@"Opacity: %.2f",self.opacity], QPath: @"opacity"},
     @{QName : [NSString stringWithFormat:@"Loop: %i",self.loop], QPath: @"loop"},
+    @{QName : [NSString stringWithFormat:@"Midi: %i",self.midi], QPath: @"midi"},
+
     @{QName : [NSString stringWithFormat:@"Playback Rate: %.2f",self.playbackRate], QPath: @"playbackRate"},
     @{QName : [NSString stringWithFormat:@"Play: Yes"], QPath: @"playing", QValue: @(1)},
     ];

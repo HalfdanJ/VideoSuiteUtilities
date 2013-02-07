@@ -127,6 +127,9 @@ static void *LabelContext = &LabelContext;
         if (!append_ok) {
             NSLog(@"%@",self.videoWriter.error);
             printf("error appending image %d times %d\n", frameCount, j);
+            self.error = YES;
+            self.record = NO;
+
         }
         
         // });
@@ -218,7 +221,7 @@ static void *LabelContext = &LabelContext;
     if(context == RecordContext){
         self.startRecordTime = nil;
         
-        if(!self.record && [self canRecord]){
+        if(!self.record && [self canRecord] && !self.error){
             dispatch_queue_t queue = dispatch_queue_create("saver", 0);
             dispatch_async(queue, ^{
                 [self willChangeValueForKey:@"recordings"];
@@ -253,6 +256,7 @@ static void *LabelContext = &LabelContext;
             });
             
         }
+        self.error = NO;
     }
     
     if(context == DeviceIndexContext){
@@ -266,7 +270,7 @@ static void *LabelContext = &LabelContext;
         }
         
         
-        [self prepareRecording];
+      //  [self prepareRecording];
     }
 }
 

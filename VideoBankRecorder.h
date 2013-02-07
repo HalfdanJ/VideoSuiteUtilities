@@ -15,6 +15,7 @@ extern MIDIReceiver * globalMidi;
 
 @interface VideoBankRecorder : NSObject<BlackMagicItemDelegate>
 
+@property BOOL error;
 @property int bankIndex;
 @property int deviceIndex;
 @property BOOL recordPal;

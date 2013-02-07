@@ -12,7 +12,9 @@
 #import "MIDIReceiver.h"
 extern MIDIReceiver * globalMidi;
 
-@interface VideoBankSimPlayer : NSObject
+@interface VideoBankSimPlayer : NSObject{
+    id midiSendObserverToken;
+}
 
 @property VideoBank * videoBank;
 
@@ -20,13 +22,17 @@ extern MIDIReceiver * globalMidi;
 @property int numberOfBanksToPlay;
 @property float playbackRate;
 //@property int mask;
+@property BOOL midi;
 
 @property CALayer * layer;
 
 @property BOOL playing;
 @property float opacity;
 
+
 @property NSString * currentTimeString;
+
+@property NSMutableArray * players;
 
 -(id)initWithBank:(VideoBank*)bank;
 
