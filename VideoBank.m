@@ -67,7 +67,7 @@ static void *SelectionContext = &SelectionContext;
         self.content = [NSMutableArray arrayWithCapacity:banks];
         
         for(int i=0;i<banks;i++){
-            VideoBankItem * newItem = [[VideoBankItem alloc] initWithName:[NSString stringWithFormat:@"Bank %02i",i]];
+            VideoBankItem * newItem = [[VideoBankItem alloc] initWithName:[NSString stringWithFormat:@"%02i Bank",i]];
             
             [newItem loadBankFromDrive];
 

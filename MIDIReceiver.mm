@@ -7,7 +7,6 @@
 //
 
 #import "MIDIReceiver.h"
-#import <CoreMIDI/CoreMIDI.h>
 
 
 MIDIReceiver * globalMidi;
@@ -37,6 +36,10 @@ MIDIReceiver * globalMidi;
             }
         }
         
+        
+        
+        MIDIOutputPortCreate(client, (CFStringRef)@"MIDI Output Port", &outputPort);
+        
         //------------------------------
         
         globalMidi = self;
@@ -46,6 +49,7 @@ MIDIReceiver * globalMidi;
     }
     return self;
 }
+
 
 -(void)addBindingTo:(id)object path:(NSString*)path channel:(int)channel number:(int)number rangeMin:(float)rangeMin rangeLength:(float)rangeLength{
     [self willChangeValueForKey:@"bindings"];
@@ -94,6 +98,30 @@ MIDIReceiver * globalMidi;
     [self.bindings addObject:newBinding];
     
     [self didChangeValueForKey:@"bindings"];
+}
+
+
+- (void) sendMidiChannel:(int)_midiChannel number:(int)midiNote value:(int)midiValue
+{
+    
+    
+	MIDIPacketList packetlist;
+	MIDIPacket     *packet     = MIDIPacketListInit(&packetlist);
+	Byte mdata[3] = {(const Byte)(143+_midiChannel), (const Byte) midiNote, (const Byte)midiValue};
+	packet = MIDIPacketListAdd(&packetlist, sizeof(packetlist),
+                      packet, 0, 3, mdata);
+    
+    
+    // Send it to every destination in the system...
+    for (ItemCount index = 0; index < MIDIGetNumberOfDestinations(); ++index)
+    {
+        MIDIEndpointRef outputEndpoint = MIDIGetDestination(index);
+        if (outputEndpoint)
+        {
+            // Send it
+            OSStatus s = MIDISend(outputPort, outputEndpoint, &packetlist);
+        }
+    }
 }
 
 static void MyMIDIReadProc(const MIDIPacketList *pklist, void *refCon, void *connRefCon){

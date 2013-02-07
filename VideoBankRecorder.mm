@@ -299,7 +299,7 @@ static void *LabelContext = &LabelContext;
     @{QName : [NSString stringWithFormat:@"Record: Yes"], QPath: @"record", QValue: @(1)},
     ];
     
-    NSString * title = [NSString stringWithFormat:@"Start Record bank %02i cam %i",self.bankIndex, self.deviceIndex];
+    NSString * title = [NSString stringWithFormat:@"Start Record bank #%02i Cam %i",self.bankIndex, self.deviceIndex+1];
 
     [QLabController createCues:cues groupTitle:title sender:self];
 }

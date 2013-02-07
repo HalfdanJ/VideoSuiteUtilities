@@ -7,9 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
+#include <CoreMIDI/CoreMIDI.h>
 
 
-@interface MIDIReceiver : NSObject
+@interface MIDIReceiver : NSObject{
+    MIDIPortRef outputPort;
+}
 
 @property NSMutableArray * bindings;
 
