@@ -55,9 +55,9 @@ static void *UpdateFiltersContext = &UpdateFiltersContext;
         num = 100;
         
         [globalMidi addBindingTo:self selector:@"makeDefaults" channel:1 number:num++];
-        [globalMidi addBindingTo:self path:@"transformX" channel:1 number:num++ rangeMin:-1000 rangeLength:2000];
-        [globalMidi addBindingTo:self path:@"transformY" channel:1 number:num++ rangeMin:-1000 rangeLength:2000];
-        [globalMidi addBindingTo:self path:@"transformScale" channel:1 number:num++ rangeMin:0 rangeLength:3];
+        [globalMidi addBindingTo:self path:@"transformX" channel:1 number:num++ rangeMin:-1000/5 rangeLength:2000/5];
+        [globalMidi addBindingTo:self path:@"transformY" channel:1 number:num++ rangeMin:-1000/5 rangeLength:2000/5];
+        [globalMidi addBindingTo:self path:@"transformScale" channel:1 number:num++ rangeMin:0.5 rangeLength:2];
         [globalMidi addBindingTo:self path:@"deinterlace" channel:1 number:num++ rangeMin:0 rangeLength:1];
         
         for(CIFilter * filter in self.allFilters){
