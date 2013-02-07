@@ -34,9 +34,9 @@
         for(int index=0;index<numItems;index++){
             //    for(int index=0;index<deviceList.size();index++){
             int mode = 2;
-            if(index == 1){
+        /*    if(index == 1){
                 mode = 10;
-            }
+            }*/
             BlackMagicItem * newItem = [[BlackMagicItem alloc] initWithDecklink:deviceList[index] mode:mode];
             if(newItem){
                 newItem.index = index;

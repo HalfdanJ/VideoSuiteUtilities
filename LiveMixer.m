@@ -58,7 +58,7 @@
 -(CIImage*) input:(int)num{
 //    NSLog(@"Res %f",self.input2.extent.size.width);
     
-    if(!self.HDtoSDFilter && self.input2){
+    /*if(!self.HDtoSDFilter && self.input2){
         self.HDtoSDFilter = [CIFilter filterWithName:@"CIAffineTransform"];
         [self.HDtoSDFilter setDefaults];
         
@@ -69,15 +69,16 @@
         [transform scaleBy:576.0/h];
         [transform translateXBy:-((w-850)*0.5)*576.0/h yBy:0];
         [self.HDtoSDFilter setValue:transform forKey:@"inputTransform"];
-    }
+    }*/
     
     
     switch (num) {
         case 1:
             return self.input1;
         case 2:
-            [self.HDtoSDFilter setValue:self.input2 forKey:@"inputImage"];
-            return [self.HDtoSDFilter valueForKey:@"outputImage"];
+          //  [self.HDtoSDFilter setValue:self.input2 forKey:@"inputImage"];
+            //return [self.HDtoSDFilter valueForKey:@"outputImage"];
+            return self.input2;
         case 3:
             return self.input3;
             
