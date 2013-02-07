@@ -24,13 +24,13 @@ extern MIDIReceiver * globalMidi;
     id fadeInObserverToken[2];
     id fadeOutObserverToken[2];
     id fadeOutEventObserverToken[2];
-    
+    id midiSendObserverToken[2];
 //    VideoBankItem * uiUpdateBankItem[2];
 
 }
 
 
-
+@property int counter;
 @property VideoBank * videoBank;
 
 @property int bankSelection;
@@ -38,6 +38,7 @@ extern MIDIReceiver * globalMidi;
 @property BOOL playing;
 @property float opacity;
 @property BOOL loop;
+@property BOOL midi;
 @property float playbackRate;
 @property VideoBankItem * lastItem;
 

@@ -131,7 +131,8 @@ static void *LastItemContext = &LastItemContext;
     }
     if (context == AVSPPlayerLayerReadyForDisplay0)
     {
-        if ([[change objectForKey:NSKeyValueChangeNewKey] boolValue] == YES)
+        
+            if ([[change objectForKey:NSKeyValueChangeNewKey] boolValue] == YES)
         {
             [avPlayer[0] play];
             avPlayer[0].rate = self.playbackRate;
@@ -140,7 +141,8 @@ static void *LastItemContext = &LastItemContext;
 	}
     if (context == AVSPPlayerLayerReadyForDisplay1)
 	{
-		if ([[change objectForKey:NSKeyValueChangeNewKey] boolValue] == YES)
+        
+     		if ([[change objectForKey:NSKeyValueChangeNewKey] boolValue] == YES)
 		{
             [avPlayer[1] play];
             avPlayer[1].rate = self.playbackRate;
@@ -188,6 +190,7 @@ static void *MaskContext = &MaskContext;
 
 -(void) newItemPlaying{
     NSLog(@"\n\nNew item playing");
+    self.counter = self.counter + 1;
     
     NSDictionary * data = [self getDataForCurrentItem];
     if(data){
@@ -217,6 +220,18 @@ static void *MaskContext = &MaskContext;
         
         self.lastItem = bankItem;
         
+        double eventTime =  bankItem.duration - 0.1;
+        eventTime = MAX(0, eventTime);
+        CMTime eventCMTime = CMTimeMakeWithSeconds(eventTime, 100);
+        NSValue * value = [NSValue valueWithCMTime:eventCMTime];
+        
+        if(self.midi){
+        midiSendObserverToken[pingPong] = [thisPlayer addBoundaryTimeObserverForTimes:@[value] queue:dispatch_get_current_queue() usingBlock:^{
+            [globalMidi sendMidiChannel:1 number:1 value:self.bankSelection+self.counter-1];
+            [thisPlayer removeTimeObserver:midiSendObserverToken[pingPong]];
+            midiSendObserverToken[pingPong] = nil;
+        }];
+        }
         
         //Crossfade IN
         double crossfadeTimeIn = [[data valueForKey:@"crossfadeTimeIn"] doubleValue];
@@ -346,7 +361,7 @@ static void *MaskContext = &MaskContext;
 }
 
 -(void) preparePlayback{
-    
+    self.counter = 0;
     //Cleanup
     //    [avPlayer[self.pingPong] removeTimeObserver:timeOutTimeObserverToken[self.pingPong]];
     //    timeOutTimeObserverToken[self.pingPong] = nil;
@@ -356,18 +371,18 @@ static void *MaskContext = &MaskContext;
     [avPlayerLayer[0] removeObserver:self forKeyPath:@"readyForDisplay"];
     [avPlayerLayer[1] removeObserver:self forKeyPath:@"readyForDisplay"];
 
-    if(avPlayerLayer[self.pingPong]){
-        [avPlayerLayer[self.pingPong] removeFromSuperlayer];
+    if(avPlayerLayer[!self.pingPong]){
+        [avPlayerLayer[!self.pingPong] removeFromSuperlayer];
     }
     
-    if(avPlayer[self.pingPong]){
+    if(avPlayer[!self.pingPong]){
         
-        [avPlayer[self.pingPong] removeObserver:self forKeyPath:@"currentItem"];
-        avPlayer[self.pingPong] = nil;
+        [avPlayer[!self.pingPong] removeObserver:self forKeyPath:@"currentItem"];
+        avPlayer[!self.pingPong] = nil;
         
     }
-    
-    self.pingPong = 0;
+
+//    self.pingPong = 0;
     
     //Prepare items
     NSMutableArray * playerItems = [NSMutableArray array];
@@ -473,8 +488,12 @@ static void *MaskContext = &MaskContext;
         return;
     }
     
+    self.pingPong = !self.pingPong;
+    
+    int pingPong = self.pingPong;
+
     //Create AVPlayer
-    avPlayer[0] = [AVQueuePlayer queuePlayerWithItems:initialPlayerItems];
+    avPlayer[pingPong] = [AVQueuePlayer queuePlayerWithItems:initialPlayerItems];
     
     //Layer
     for(int i=0;i<2;i++){
@@ -493,14 +512,13 @@ static void *MaskContext = &MaskContext;
 
     //Timecode updater
     //    timeObserverToken[0] = [avPlayer[0] addPeriodicTimeObserverForInterval:CMTimeMake(1, 50) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
-    
-    timeObserverToken[0] = [avPlayer[0] addPeriodicTimeObserverForInterval:CMTimeMake(1, 50) queue:NULL usingBlock:^(CMTime time) {
+    timeObserverToken[self.pingPong] = [avPlayer[pingPong] addPeriodicTimeObserverForInterval:CMTimeMake(1, 50) queue:NULL usingBlock:^(CMTime time) {
       //  NSLog(@"Update1");
 //        dispatch_async(dispatch_get_main_queue(), ^{
             self.currentTimeString = [NSString stringWithTimecode:CMTimeGetSeconds(time)];
             
-            if(avPlayer[0].rate){
-                VideoBankItem * item = [[self getDataForItem:avPlayer[0].currentItem] valueForKey:@"bankRef"];
+            if(avPlayer[pingPong].rate){
+                VideoBankItem * item = [[self getDataForItem:avPlayer[pingPong].currentItem] valueForKey:@"bankRef"];
                 item.queued = NO;
                 item.playing = YES;
                 item.playHeadPosition = CMTimeGetSeconds(time)+[item.inTime doubleValue];
@@ -526,6 +544,8 @@ static void *MaskContext = &MaskContext;
     [avPlayer[self.pingPong] addObserver:self forKeyPath:@"currentItem" options:0 context:AvPlayerCurrentItemContext];
     
     
+
+    
 }
 
 -(void) clearBankStatus{
@@ -538,7 +558,7 @@ static void *MaskContext = &MaskContext;
 }
 
 -(void)setPlaying:(BOOL)playing{
-    if(_playing != playing){
+    //if(_playing != playing){
         _playing = playing;
         
         
@@ -549,6 +569,10 @@ static void *MaskContext = &MaskContext;
             [self clearBankStatus];
             
             for(int i=0;i<2;i++){
+                if(midiSendObserverToken[i]){
+                    [avPlayer[i] removeTimeObserver:midiSendObserverToken[i]];
+                    midiSendObserverToken[i] = nil;
+                }
                 if(timeObserverToken[i]){
                     [avPlayer[i] removeTimeObserver:timeObserverToken[i]];
                     timeObserverToken[i] = nil;
@@ -590,7 +614,7 @@ static void *MaskContext = &MaskContext;
         }
         
         
-    }
+   // }
 }
 
 -(BOOL)playing{

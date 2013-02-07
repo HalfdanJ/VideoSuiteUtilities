@@ -22,4 +22,6 @@
 
 
 -(void)addBindingTo:(id)object selector:(NSString*)selector channel:(int)channel number:(int)number;
+
+- (void) sendMidiChannel:(int)_midiChannel number:(int)midiNote value:(int)midiValue;
 @end
