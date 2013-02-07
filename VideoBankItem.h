@@ -33,6 +33,9 @@
 
 @property NSNumber * crossfadeTime;
 
+@property int mask;
+@property CALayer * maskLayer;
+
 //@property AVAsset * avAsset;
 
 @property AVPlayerItem * avPlayerItemOriginal;
@@ -55,5 +58,6 @@
 -(void) clear;
 -(void) loadBankFromDrive;
 -(void) loadBankFromPath:(NSString*)path;
+-(CALayer*) loadMask:(int)num;
 
 @end

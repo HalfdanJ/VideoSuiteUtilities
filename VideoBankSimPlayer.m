@@ -26,7 +26,7 @@
 @implementation VideoBankSimPlayer
 static void *PlayingContext = &PlayingContext;
 static void *LabelContext = &LabelContext;
-
+static void *MaskContext = &MaskContext;
 -(NSString*)name{
     return @"Composite Player";
 
@@ -58,25 +58,13 @@ static void *LabelContext = &LabelContext;
         [globalMidi addBindingTo:self path:@"bankSelection" channel:1 number:num++ rangeMin:0 rangeLength:127];
         [globalMidi addBindingTo:self path:@"numberOfBanksToPlay" channel:1 number:num++ rangeMin:0 rangeLength:127];
         [globalMidi addBindingTo:self path:@"opacity" channel:1 number:num++ rangeMin:0 rangeLength:1];
-        [globalMidi addBindingTo:self path:@"mask" channel:1 number:num++ rangeMin:0 rangeLength:127];
+        num++;
         [globalMidi addBindingTo:self path:@"playing" channel:1 number:num++ rangeMin:0 rangeLength:127];
     }
     return self;
 }
 
--(CALayer*) loadMask:(int)num{
-    NSString * path = [[NSString stringWithFormat:@"~/Movies/Compositing Masks/Mask %02i.png", num] stringByExpandingTildeInPath];
 
-    NSImage * image = [[NSImage alloc] initWithContentsOfFile:path];
-    
-    if(!image)
-        return  nil;
-    
-    CALayer * layer = [CALayer layer];
-    layer.contents = image;
-    
-    return layer;
-}
 
 -(NSDictionary*)getDataForItem:(AVPlayerItem*)item{
     return [self.playerData objectForKey:item.asset];
@@ -141,10 +129,10 @@ static void *LabelContext = &LabelContext;
                 
                 [self.playerData setObject:dict forKey:playerItem.asset];
 
+                [bankItem addObserver:self forKeyPath:@"maskLayer" options:0 context:MaskContext];
                 
                 
-                
-                CALayer * mask = [self loadMask:count+self.mask];
+                CALayer * mask = bankItem.maskLayer;
                 [mask setFrame:self.layer.frame];
                 [mask setAutoresizingMask:kCALayerWidthSizable | kCALayerHeightSizable];
                 
@@ -198,6 +186,20 @@ static void *LabelContext = &LabelContext;
 
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
+    if(context == MaskContext){
+        NSLog(@"Mask");
+        VideoBankItem * bankItem = object;
+        CALayer * mask = bankItem.maskLayer;
+        [mask setFrame:self.layer.frame];
+        [mask setAutoresizingMask:kCALayerWidthSizable | kCALayerHeightSizable];
+
+        
+        for(CALayer * layer in self.avPlayerLayers){
+            layer.mask = mask;
+        }
+        
+    }
+    
     if(context == LabelContext){
         for(VideoBankItem * item in self.videoBank.content){
             item.compositePlayerLabel = -1;
@@ -207,7 +209,7 @@ static void *LabelContext = &LabelContext;
         for(int i=self.bankSelection;i<self.bankSelection + self.numberOfBanksToPlay;i++){
             if([self.videoBank.content count] > i){
                 VideoBankItem * bankItem = [self.videoBank content][i];
-                bankItem.compositePlayerLabel = self.mask+count;
+                bankItem.compositePlayerLabel = bankItem.mask+count;
                 
                 count++;
             }
@@ -257,7 +259,7 @@ static void *LabelContext = &LabelContext;
     @{QName : [NSString stringWithFormat:@"Bank Selection: %02i",self.bankSelection], QPath: @"bankSelection"},
     @{QName : [NSString stringWithFormat:@"Banks to play: %i",self.numberOfBanksToPlay], QPath: @"numberOfBanksToPlay"},
     @{QName : [NSString stringWithFormat:@"Opacity: %.2f",self.opacity], QPath: @"opacity"},
-    @{QName : [NSString stringWithFormat:@"Mask: %i",self.mask], QPath: @"mask"},
+//    @{QName : [NSString stringWithFormat:@"Mask: %i",self.mask], QPath: @"mask"},
     @{QName : [NSString stringWithFormat:@"Play: Yes"], QPath: @"playing", QValue: @(1)},
     ];
     

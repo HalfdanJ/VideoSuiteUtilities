@@ -149,11 +149,11 @@ static void *RedrawContext = &RedrawContext;
             };
             
             NSRect c = label;
-            c.origin.y += 2;
+           // c.origin.y += 2;
             
             [@"C" drawInRect:c withAttributes:attr];
         }
-        
+      /*
         {
             NSMutableParagraphStyle *style = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
             [style setAlignment:NSCenterTextAlignment];
@@ -165,7 +165,8 @@ static void *RedrawContext = &RedrawContext;
             NSRect _rect = label;
             _rect.size.height -= 10;
             [[NSString stringWithFormat:@"M%i",item.compositePlayerLabel] drawInRect:_rect withAttributes:attr];
-        }
+        }*/
+       
         
     }
     if(item.recordLabel){

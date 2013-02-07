@@ -23,7 +23,7 @@ static void *VideoStatusContext = &VideoStatusContext;
 static void *TrimContext = &TrimContext;
 static void *AssetContext = &AssetContext;
 static void *LockedContext = &LockedContext;
-
+static void *MaskContext = &MaskContext;
 
 
 
@@ -32,6 +32,7 @@ static void *LockedContext = &LockedContext;
     self = [super init];
     if (self) {
         self.name = name;
+        self.mask = 0;
         
         NSNumber * locked = [[NSUserDefaults standardUserDefaults] valueForKey:[NSString stringWithFormat:@"%@Locked",self.name]];
         if(locked){
@@ -42,13 +43,26 @@ static void *LockedContext = &LockedContext;
         [self addObserver:self forKeyPath:@"outTime" options:0 context:TrimContext];
         [self addObserver:self forKeyPath:@"avPlayerItemTrim.asset" options:0 context:AssetContext];
         [self addObserver:self forKeyPath:@"locked" options:0 context:LockedContext];
+        [self addObserver:self forKeyPath:@"mask" options:0 context:MaskContext];
         
         
-
     }
     return self;
 }
 
+-(CALayer*) loadMask:(int)num{
+    NSString * path = [[NSString stringWithFormat:@"~/Movies/Compositing Masks/Mask %02i.png", num] stringByExpandingTildeInPath];
+    
+    NSImage * image = [[NSImage alloc] initWithContentsOfFile:path];
+    
+    if(!image)
+        return  nil;
+    
+    CALayer * layer = [CALayer layer];
+    layer.contents = image;
+    
+    return layer;
+}
 
 -(void)loadBankFromDrive{
     [self loadBankFromPath:self.path ];
@@ -110,7 +124,9 @@ static void *LockedContext = &LockedContext;
 }
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
-    
+    if(context == MaskContext){
+        self.maskLayer = [self loadMask:self.mask];
+    }
     if(context == LockedContext){
         NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
         [defaults setValue:@(self.locked) forKey:[NSString stringWithFormat:@"%@Locked", self.name]];

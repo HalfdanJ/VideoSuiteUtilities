@@ -18,7 +18,7 @@ extern MIDIReceiver * globalMidi;
 
 @property int bankSelection;
 @property int numberOfBanksToPlay;
-@property int mask;
+//@property int mask;
 
 @property CALayer * layer;
 
