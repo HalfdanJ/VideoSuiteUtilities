@@ -84,9 +84,6 @@ static void *LastItemContext = &LastItemContext;
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
     if(context == MaskContext){
-        NSLog(@"Mask contexte");
-
-        
         VideoBankItem * bankItem = object;
         if(bankItem.mask){
             CALayer * mask = bankItem.maskLayer;

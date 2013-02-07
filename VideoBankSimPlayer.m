@@ -48,6 +48,7 @@ static void *MaskContext = &MaskContext;
         self.playing = NO;
         self.bankSelection = 0;
         self.numberOfBanksToPlay = 2;
+        self.playbackRate = 1;
         
         [self.layer bind:@"opacity" toObject:self withKeyPath:@"opacity" options:nil];
         self.opacity = 1.0;
@@ -60,6 +61,7 @@ static void *MaskContext = &MaskContext;
         [globalMidi addBindingTo:self path:@"opacity" channel:1 number:num++ rangeMin:0 rangeLength:1];
         num++;
         [globalMidi addBindingTo:self path:@"playing" channel:1 number:num++ rangeMin:0 rangeLength:127];
+        [globalMidi addBindingTo:self path:@"playbackRate" channel:1 number:num++ rangeMin:0 rangeLength:4];
     }
     return self;
 }
@@ -118,6 +120,7 @@ static void *MaskContext = &MaskContext;
                     [self.timeObserverToken addObject:newToken];
                 });
                 
+                [newPlayer bind:@"rate" toObject:self withKeyPath:@"playbackRate" options:nil];
                 [newPlayer play];
 
                 [players addObject:newPlayer];
@@ -187,7 +190,6 @@ static void *MaskContext = &MaskContext;
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
     if(context == MaskContext){
-        NSLog(@"Mask");
         VideoBankItem * bankItem = object;
         CALayer * mask = bankItem.maskLayer;
         [mask setFrame:self.layer.frame];
@@ -259,6 +261,7 @@ static void *MaskContext = &MaskContext;
     @{QName : [NSString stringWithFormat:@"Bank Selection: %02i",self.bankSelection], QPath: @"bankSelection"},
     @{QName : [NSString stringWithFormat:@"Banks to play: %i",self.numberOfBanksToPlay], QPath: @"numberOfBanksToPlay"},
     @{QName : [NSString stringWithFormat:@"Opacity: %.2f",self.opacity], QPath: @"opacity"},
+    @{QName : [NSString stringWithFormat:@"PlaybackRate: %.2f",self.playbackRate], QPath: @"playbackRate"},
 //    @{QName : [NSString stringWithFormat:@"Mask: %i",self.mask], QPath: @"mask"},
     @{QName : [NSString stringWithFormat:@"Play: Yes"], QPath: @"playing", QValue: @(1)},
     ];
