@@ -135,18 +135,20 @@ static void *PlayRateContext = &PlayRateContext;
                     
                     
                     NSLog(@"%f",eventTime);
-                    
-                    double delayInSeconds = 0.1;
-                    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
-                    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                    if(self.midi){
                         
-                        midiSendObserverToken = [newPlayer addBoundaryTimeObserverForTimes:@[value] queue:dispatch_get_current_queue() usingBlock:^{
-                            [globalMidi sendMidiChannel:1 number:2 value:self.bankSelection];
-                            //[newPlayer removeTimeObserver:midiSendObserverToken];
-                            midiSendObserverToken = nil;
-                        }];
-                    });
-
+                        double delayInSeconds = 0.1;
+                        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+                        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                            
+                            midiSendObserverToken = [newPlayer addBoundaryTimeObserverForTimes:@[value] queue:dispatch_get_current_queue() usingBlock:^{
+                                [globalMidi sendMidiChannel:1 number:2 value:self.bankSelection];
+                                //[newPlayer removeTimeObserver:midiSendObserverToken];
+                                midiSendObserverToken = nil;
+                            }];
+                        });
+                        
+                    }
                     
                     [self.timeObserverToken addObject:newToken];
                     
