@@ -39,6 +39,7 @@ extern MIDIReceiver * globalMidi;
 @property float opacity;
 @property BOOL loop;
 @property float playbackRate;
+@property VideoBankItem * lastItem;
 
 @property CALayer * layer;
 

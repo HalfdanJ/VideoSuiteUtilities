@@ -50,7 +50,7 @@ static void *CurrentItemContext = &CurrentItemContext;
 }
 
 -(void)dealloc{
-    [self removeObserver:self forKeyPath:@"player.currentItem"];
+    //[self removeObserver:self forKeyPath:@"player.currentItem"];
 }
 
 -(void) calcCurrentFilter{

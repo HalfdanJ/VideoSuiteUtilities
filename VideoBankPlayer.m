@@ -34,6 +34,7 @@ static void *AVPlayerRateContext = &AVPlayerRateContext;
 static void *AvPlayerCurrentItemContext = &AvPlayerCurrentItemContext;
 
 static void *LabelContext = &LabelContext;
+static void *LastItemContext = &LastItemContext;
 //static void *OpacityContext = &OpacityContext;
 
 -(NSString*)name{
@@ -75,11 +76,17 @@ static void *LabelContext = &LabelContext;
         [globalMidi addBindingTo:self path:@"loop" channel:1 number:num++ rangeMin:0 rangeLength:127];
         [globalMidi addBindingTo:self path:@"playbackRate" channel:1 number:num++ rangeMin:0.5 rangeLength:2];
         
+        
+        [self addObserver:self forKeyPath:@"lastItem" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:LastItemContext];
     }
     return self;
 }
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
+    
+    if(context==LastItemContext){
+        NSLog(@"Last item %@",change);
+    }
     //    if(context == OpacityContext){
     //        self.layer.opacity = self.opacity;
     //    }
@@ -152,11 +159,17 @@ static void *LabelContext = &LabelContext;
     return [self.playerData objectForKey:item.asset];
 }
 
+
+static void *MaskContext = &MaskContext;
+
 -(void) newItemPlaying{
     NSLog(@"\n\nNew item playing");
     
     NSDictionary * data = [self getDataForCurrentItem];
     if(data){
+        
+
+        
         VideoBankItem * bankItem = [data valueForKey:@"bankRef"];
         
         
@@ -164,13 +177,19 @@ static void *LabelContext = &LabelContext;
         __weak AVPlayerLayer * thisLayer = avPlayerLayer[self.pingPong];
         int pingPong = self.pingPong;
         
+        if(bankItem.mask){
+            CALayer * mask = bankItem.maskLayer;
+            [mask setFrame:self.layer.frame];
+            [mask setAutoresizingMask:kCALayerWidthSizable | kCALayerHeightSizable];
+            
+            thisLayer.mask = mask;
+        } else {
+            thisLayer.mask = nil;
+        }
         
         thisLayer.opacity = 1.0;
-
         
-        
-        
-        
+        self.lastItem = bankItem;
         
         
         //Crossfade IN
@@ -249,6 +268,7 @@ static void *LabelContext = &LabelContext;
                     fadeInObserverToken[self.pingPong] = nil;
                     fadeOutObserverToken[self.pingPong] = nil;
                     fadeOutEventObserverToken[self.pingPong] = nil;
+                    
                     [avPlayer[!self.pingPong] removeObserver:self forKeyPath:@"currentItem"];
                     
                     //Start player
