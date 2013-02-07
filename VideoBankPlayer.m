@@ -83,9 +83,34 @@ static void *LastItemContext = &LastItemContext;
 }
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
-    
+    if(context == MaskContext){
+        NSLog(@"Mask contexte");
+
+        
+        VideoBankItem * bankItem = object;
+        if(bankItem.mask){
+            CALayer * mask = bankItem.maskLayer;
+            [mask setFrame:self.layer.frame];
+            [mask setAutoresizingMask:kCALayerWidthSizable | kCALayerHeightSizable];
+            avPlayerLayer[self.pingPong].mask =mask;
+        } else {
+            avPlayerLayer[self.pingPong].mask = nil;
+        }
+        
+        
+        
+    }
     if(context==LastItemContext){
-        NSLog(@"Last item %@",change);
+        VideoBankItem * old = [change objectForKey:@"old"];
+        VideoBankItem * new = [change objectForKey:@"new"];
+      
+   
+        if([old isKindOfClass:[VideoBankItem class]]){
+            [old removeObserver:self forKeyPath:@"maskLayer"];
+        }
+        if([new isKindOfClass:[VideoBankItem class]]){
+            [new addObserver:self forKeyPath:@"maskLayer" options:0 context:MaskContext];
+        }
     }
     //    if(context == OpacityContext){
     //        self.layer.opacity = self.opacity;
@@ -172,9 +197,10 @@ static void *MaskContext = &MaskContext;
         
         VideoBankItem * bankItem = [data valueForKey:@"bankRef"];
         
-        
+            
         __weak AVQueuePlayer * thisPlayer = avPlayer[self.pingPong];
         __weak AVPlayerLayer * thisLayer = avPlayerLayer[self.pingPong];
+        __weak AVPlayerLayer * otherLayer = avPlayerLayer[!self.pingPong];
         int pingPong = self.pingPong;
         
         if(bankItem.mask){
@@ -183,6 +209,7 @@ static void *MaskContext = &MaskContext;
             [mask setAutoresizingMask:kCALayerWidthSizable | kCALayerHeightSizable];
             
             thisLayer.mask = mask;
+//            otherLayer.mask = mask;
         } else {
             thisLayer.mask = nil;
         }
@@ -210,7 +237,7 @@ static void *MaskContext = &MaskContext;
                         fadeInObserverToken[pingPong] = nil;
                     }
                 
-                //  NSLog(@"Fade up %f",p);
+                  NSLog(@"Fade up %f",p);
             }];
             
         }
