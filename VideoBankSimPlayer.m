@@ -39,7 +39,6 @@ static void *MaskContext = &MaskContext;
         
         [self addObserver:self forKeyPath:@"bankSelection" options:0 context:LabelContext];
         [self addObserver:self forKeyPath:@"numberOfBanksToPlay" options:0 context:LabelContext];
-        [self addObserver:self forKeyPath:@"mask" options:0 context:LabelContext];
 
         self.layer = [CALayer layer];
         [self.layer setAutoresizingMask: kCALayerWidthSizable | kCALayerHeightSizable];
@@ -56,7 +55,9 @@ static void *MaskContext = &MaskContext;
         [self addObserver:self forKeyPath:@"playing" options:0 context:PlayingContext];
         
         int num = 10;
-        [globalMidi addBindingTo:self path:@"bankSelection" channel:1 number:num++ rangeMin:0 rangeLength:127];
+        [globalMidi addBindingPitchTo:self path:@"bankSelection" channel:3 rangeMin:-8192 rangeLength:128*128];
+//        [globalMidi addBindingTo:self path:@"bankSelection" channel:1 number:num++ rangeMin:0 rangeLength:127];
+        
         [globalMidi addBindingTo:self path:@"numberOfBanksToPlay" channel:1 number:num++ rangeMin:0 rangeLength:127];
         [globalMidi addBindingTo:self path:@"opacity" channel:1 number:num++ rangeMin:0 rangeLength:1];
         num++;

@@ -24,11 +24,17 @@ static void *SelectionContext = &SelectionContext;
         [self addObserver:self forKeyPath:@"selection.avPlayerItemOriginal" options:0 context:SelectionContext];
         
         int num = 40;
-        [globalMidi addBindingTo:self path:@"selectionIndex" channel:1 number:num++ rangeMin:0 rangeLength:127];
+        //[globalMidi addBindingTo:self path:@"selectionIndex" channel:1 number:num++ rangeMin:0 rangeLength:127];
+        [globalMidi addBindingPitchTo:self path:@"selectionIndex" channel:1 rangeMin:-8192 rangeLength:128*128];
         [globalMidi addBindingTo:self path:@"selectedBank.inTime" channel:1 number:num++ rangeMin:0 rangeLength:127];
         [globalMidi addBindingTo:self path:@"selectedBank.outTime" channel:1 number:num++ rangeMin:0 rangeLength:127];
+
         [globalMidi addBindingTo:self path:@"selectedBank.crossfadeTime" channel:1 number:num++ rangeMin:0 rangeLength:127];
-        [globalMidi addBindingTo:self path:@"copyToBankIndex" channel:1 number:num++ rangeMin:0 rangeLength:127];
+        [globalMidi addBindingTo:self path:@"selectedBank.mask" channel:1 number:num++ rangeMin:0 rangeLength:127];
+
+        [globalMidi addBindingPitchTo:self path:@"copyToBankIndex" channel:5 rangeMin:-8192 rangeLength:128*128];
+
+//        [globalMidi addBindingTo:self path:@"copyToBankIndex" channel:1 number:num++ rangeMin:0 rangeLength:127];
         
         
         [globalMidi addBindingTo:self selector:@"defaultsAll" channel:1 number:num++];
@@ -153,6 +159,7 @@ static void *SelectionContext = &SelectionContext;
         @{QName : [NSString stringWithFormat:@"In time: %.2f",[selected.inTime floatValue]], QPath: @"selectedBank.inTime"},
         @{QName : [NSString stringWithFormat:@"Out time: %.2f",[selected.outTime floatValue]], QPath: @"selectedBank.outTime"},
         @{QName : [NSString stringWithFormat:@"Crossfade time: %.2f",[selected.crossfadeTime floatValue]], QPath: @"selectedBank.crossfadeTime"},
+        @{QName : [NSString stringWithFormat:@"Mask: %i",selected.mask], QPath: @"selectedBank.mask"},
         @{QName : [NSString stringWithFormat:@"Bank Selection: 00 (hack)"], QPath: @"selectionIndex", QValue: @(0)},
         @{QName : [NSString stringWithFormat:@"Bank Selection: %02li (hack)",self.selectionIndex], QPath: @"selectionIndex"},
         ];

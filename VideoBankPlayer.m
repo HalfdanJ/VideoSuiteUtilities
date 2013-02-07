@@ -69,7 +69,9 @@ static void *LastItemContext = &LastItemContext;
         
         
         int num = 0;
-        [globalMidi addBindingTo:self path:@"bankSelection" channel:1 number:num++ rangeMin:0 rangeLength:127];
+        [globalMidi addBindingPitchTo:self path:@"bankSelection" channel:2 rangeMin:-8192 rangeLength:128*128];
+
+//        [globalMidi addBindingTo:self path:@"bankSelection" channel:1 number:num++ rangeMin:0 rangeLength:127];
         [globalMidi addBindingTo:self path:@"numberOfBanksToPlay" channel:1 number:num++ rangeMin:0 rangeLength:127];
         [globalMidi addBindingTo:self path:@"opacity" channel:1 number:num++ rangeMin:0 rangeLength:1];
         [globalMidi addBindingTo:self path:@"playing" channel:1 number:num++ rangeMin:0 rangeLength:127];

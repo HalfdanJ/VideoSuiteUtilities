@@ -53,7 +53,25 @@ MIDIReceiver * globalMidi;
     @"path" : path,
     @"object" : object,
     @"channel" : @(channel),
+    @"pitch"   : @(NO),
     @"number": @(number),
+    @"rangeMin" : @(rangeMin),
+    @"rangeLength" : @(rangeLength)
+    };
+    
+    [self.bindings addObject:newBinding];
+    
+    [self didChangeValueForKey:@"bindings"];
+}
+
+-(void)addBindingPitchTo:(id)object path:(NSString*)path channel:(int)channel rangeMin:(float)rangeMin rangeLength:(float)rangeLength{
+    
+    NSDictionary * newBinding = @{
+    @"path" : path,
+    @"object" : object,
+    @"channel" : @(channel),
+    @"pitch"   : @(YES),
+    @"number": @(0),
     @"rangeMin" : @(rangeMin),
     @"rangeLength" : @(rangeLength)
     };
@@ -70,6 +88,7 @@ MIDIReceiver * globalMidi;
     @"object" : object,
     @"channel" : @(channel),
     @"number": @(number),
+    @"pitch"   : @(NO),
     };
     
     [self.bindings addObject:newBinding];
@@ -87,7 +106,41 @@ static void MyMIDIReadProc(const MIDIPacketList *pklist, void *refCon, void *con
             
             
             Byte midiCommand = packet->data[0+j] >> 4;
-            
+            if(midiCommand == 14){ //Pitch
+                int channel = (packet->data[0+j] & 0xF) + 1;
+                int value = (packet->data[1+j]& 0x7F) + 128*(packet->data[2+j] & 0x7F);
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    for(NSDictionary * dict in ad.bindings){
+                        if([[dict valueForKey:@"channel"] intValue] == channel && [[dict valueForKey:@"pitch"] boolValue]){
+                            
+                            id object = [dict valueForKey:@"object"];
+                            
+                            if([dict valueForKey:@"selector"]){
+                                SEL selector = NSSelectorFromString([dict valueForKey:@"selector"]);
+                                
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+                                [object performSelector:selector];
+#pragma clang diagnostic pop
+                                
+                            } else {
+                                
+                                float rangeMin = [[dict valueForKey:@"rangeMin"] floatValue];
+                                float rangeLength = [[dict valueForKey:@"rangeLength"] floatValue];
+                                
+                                float _val = value;
+                                
+                                float scale = rangeLength / (128.0*128.0);
+                                _val *= scale;
+                                _val += rangeMin;
+                                [object setValue:@(_val) forKeyPath:[dict valueForKey:@"path"]];
+                            }
+                        }
+                    }
+                    
+                });
+            }
             if(midiCommand==11){//CC
                 int channel = (packet->data[0+j] & 0xF) + 1;
                 int number = packet->data[1+j] & 0x7F;
@@ -96,7 +149,7 @@ static void MyMIDIReadProc(const MIDIPacketList *pklist, void *refCon, void *con
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
                     for(NSDictionary * dict in ad.bindings){
-                        if([[dict valueForKey:@"number"] intValue] == number && [[dict valueForKey:@"channel"] intValue] == channel){
+                        if([[dict valueForKey:@"number"] intValue] == number && [[dict valueForKey:@"channel"] intValue] == channel&& ![[dict valueForKey:@"pitch"] boolValue]){
                             
                             id object = [dict valueForKey:@"object"];
                             

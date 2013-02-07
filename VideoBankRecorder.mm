@@ -63,7 +63,8 @@ static void *LabelContext = &LabelContext;
         
         
         int num = 20;
-        [globalMidi addBindingTo:self path:@"bankIndex" channel:1 number:num++ rangeMin:0 rangeLength:127];
+                [globalMidi addBindingPitchTo:self path:@"bankIndex" channel:4 rangeMin:-8192 rangeLength:128*128];
+//        [globalMidi addBindingTo:self path:@"bankIndex" channel:1 number:num++ rangeMin:0 rangeLength:127];
         [globalMidi addBindingTo:self path:@"deviceIndex" channel:1 number:num++ rangeMin:0 rangeLength:127];
         [globalMidi addBindingTo:self path:@"record" channel:1 number:num++ rangeMin:0 rangeLength:127];
         [globalMidi addBindingTo:self path:@"recordPal" channel:1 number:num++ rangeMin:0 rangeLength:127];
