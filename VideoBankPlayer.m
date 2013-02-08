@@ -612,6 +612,12 @@ static void *MaskContext = &MaskContext;
             [CATransaction commit];
             
             
+            for(int i=0;i<2;i++){
+                if(avPlayerLayer[i] != nil){
+                    [avPlayerLayer[i] removeObserver:self forKeyPath:@"readyForDisplay"];
+                    avPlayerLayer[i] = nil;
+                }
+            }
             
         }
         

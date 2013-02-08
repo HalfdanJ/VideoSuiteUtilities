@@ -137,6 +137,7 @@ static void *SelectionContext = &SelectionContext;
             item.inTime = nil;
             item.outTime = nil;
             item.crossfadeTime = nil;
+            item.mask = 0;
         }
     }
 }

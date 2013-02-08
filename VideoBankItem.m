@@ -55,8 +55,12 @@ static void *MaskContext = &MaskContext;
     
     NSImage * image = [[NSImage alloc] initWithContentsOfFile:path];
     
-    if(!image)
+    if(!image){
+        NSLog(@"No mask at %@",path);
         return  nil;
+    } else {
+        //NSLog(@"Loaded mask");
+    }
     
     CALayer * layer = [CALayer layer];
     layer.contents = image;
@@ -92,6 +96,8 @@ static void *MaskContext = &MaskContext;
 }
 
 -(void) updateTrimmedVersion {
+    if(self.outTime != nil && [self.outTime floatValue] == 0)
+        self.outTime = nil;
     
     if([self.inTime doubleValue] > 0 || self.outTime){
         AVMutableComposition * composition = [AVMutableComposition composition];
