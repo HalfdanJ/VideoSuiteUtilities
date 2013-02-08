@@ -46,6 +46,8 @@ extern MIDIReceiver * globalMidi;
 
 @property NSString * currentTimeString;
 
+@property int stopWhenReady;
+
 -(id)initWithBank:(VideoBank*)bank;
 -(void) qlabPlay;
 -(void) qlabStop;

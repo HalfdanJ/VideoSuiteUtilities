@@ -14,6 +14,7 @@ extern MIDIReceiver * globalMidi;
 
 @interface VideoBankSimPlayer : NSObject{
     id midiSendObserverToken;
+    BOOL _playing;
 }
 
 @property VideoBank * videoBank;

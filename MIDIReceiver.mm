@@ -100,11 +100,17 @@ MIDIReceiver * globalMidi;
     [self didChangeValueForKey:@"bindings"];
 }
 
+NSString *getDisplayName(MIDIObjectRef object)
+{
+    // Returns the display name of a given MIDIObjectRef as an NSString
+    CFStringRef name = nil;
+    if (noErr != MIDIObjectGetStringProperty(object, kMIDIPropertyDisplayName, &name))
+        return nil;
+    return (__bridge NSString *)name;
+}
 
 - (void) sendMidiChannel:(int)_midiChannel number:(int)midiNote value:(int)midiValue
 {
-    
-    
 	MIDIPacketList packetlist;
 	MIDIPacket     *packet     = MIDIPacketListInit(&packetlist);
 	Byte mdata[3] = {(const Byte)(143+_midiChannel), (const Byte) midiNote, (const Byte)midiValue};
@@ -115,18 +121,23 @@ MIDIReceiver * globalMidi;
     // Send it to every destination in the system...
     for (ItemCount index = 0; index < MIDIGetNumberOfDestinations(); ++index)
     {
+        
         MIDIEndpointRef outputEndpoint = MIDIGetDestination(index);
         if (outputEndpoint)
         {
+            //NSLog(@"  Source: %@", getDisplayName(outputEndpoint));
+            if([getDisplayName(outputEndpoint) rangeOfString:@"IAC"].location != NSNotFound){
+
             // Send it
+
             OSStatus s = MIDISend(outputPort, outputEndpoint, &packetlist);
+            }
         }
     }
 }
 
 static void MyMIDIReadProc(const MIDIPacketList *pklist, void *refCon, void *connRefCon){
     MIDIReceiver * ad = (__bridge MIDIReceiver*)refCon;
-    
     MIDIPacket * packet = (MIDIPacket*)pklist->packet;
     
     for (int i = 0; i < pklist->numPackets; ++i) {

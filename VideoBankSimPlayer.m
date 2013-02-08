@@ -28,6 +28,8 @@ static void *PlayingContext = &PlayingContext;
 static void *LabelContext = &LabelContext;
 static void *MaskContext = &MaskContext;
 static void *PlayRateContext = &PlayRateContext;
+static void *AVSPPlayerLayerReadyForDisplay = &AVSPPlayerLayerReadyForDisplay;
+
 -(NSString*)name{
     return @"Composite Player";
 
@@ -81,6 +83,10 @@ static void *PlayRateContext = &PlayRateContext;
 
 
 -(void) preparePlayback{
+    [CATransaction begin];
+    [CATransaction setValue:(id)kCFBooleanTrue
+                     forKey:kCATransactionDisableActions];
+    
     self.timeObserverToken = [NSMutableArray array];
     self.playerData = [NSMutableDictionary dictionary];
 
@@ -105,6 +111,8 @@ static void *PlayRateContext = &PlayRateContext;
                 AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:asset];
                 AVPlayer * newPlayer = [AVPlayer playerWithPlayerItem:playerItem];
                 
+                
+        
         
                 [[NSNotificationCenter defaultCenter]
                  addObserver:self
@@ -113,10 +121,10 @@ static void *PlayRateContext = &PlayRateContext;
                  object:[newPlayer currentItem]];
                 
                 
-                double delayInSeconds = 0.01;
+             /*   double delayInSeconds = 0.01;
                 dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
                 dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-                  
+              */    
                     id newToken = [newPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 50) queue:NULL usingBlock:^(CMTime time) {
                         self.currentTimeString = [NSString stringWithTimecode:CMTimeGetSeconds(time)];
                         
@@ -134,28 +142,25 @@ static void *PlayRateContext = &PlayRateContext;
                     NSValue * value = [NSValue valueWithCMTime:eventCMTime];
                     
                     
-                    NSLog(@"%f",eventTime);
                     if(self.midi){
                         
-                        double delayInSeconds = 0.1;
+                       /* double delayInSeconds = 0.1;
                         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
                         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-                            
+                         */   
                             midiSendObserverToken = [newPlayer addBoundaryTimeObserverForTimes:@[value] queue:dispatch_get_current_queue() usingBlock:^{
                                 [globalMidi sendMidiChannel:1 number:2 value:self.bankSelection];
                                 //[newPlayer removeTimeObserver:midiSendObserverToken];
                                 midiSendObserverToken = nil;
                             }];
-                        });
+                        //});
                         
                     }
                     
                     [self.timeObserverToken addObject:newToken];
                     
-                    [newPlayer play];
-                    newPlayer.rate = self.playbackRate;
 
-                });
+//                });
 
                 [players addObject:newPlayer];
                 
@@ -181,6 +186,8 @@ static void *PlayRateContext = &PlayRateContext;
                 [newPlayerLayer setHidden:NO];
                 newPlayerLayer.opacity = 1.0;
                 newPlayerLayer.mask = mask;
+                
+                 [newPlayerLayer addObserver:self forKeyPath:@"readyForDisplay" options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew context:AVSPPlayerLayerReadyForDisplay];
                 
                 [layers addObject:newPlayerLayer];
                 [self.layer addSublayer:newPlayerLayer];
@@ -229,15 +236,12 @@ static void *PlayRateContext = &PlayRateContext;
     self.avPlayerLayers = [NSArray arrayWithArray:layers];
     self.avPlayers = [NSArray arrayWithArray:players];
     
-    [CATransaction begin];
-    [CATransaction setValue:(id)kCFBooleanTrue
-                     forKey:kCATransactionDisableActions];
     self.layer.hidden = NO;
     [CATransaction commit];
 }
 
 - (void)playerItemDidReachEnd:(NSNotification *)notification {
-    self.playing = NO;
+   self.playing = NO;
 }
 
 
@@ -252,18 +256,32 @@ static void *PlayRateContext = &PlayRateContext;
 
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
-    if(context == PlayRateContext){
-        for(AVPlayer * player in self.players){
+    /*if(context == PlayRateContext){
+        if(self.playing){
+            for(AVPlayer * player in self.players){
+                
+                player.rate = self.playbackRate;
+            }
+        }
+    }*/
+    if (context == AVSPPlayerLayerReadyForDisplay)
+	{
+        AVPlayerLayer * layer = object;
+        AVPlayer * player = layer.player;
+        
+        if ([[change objectForKey:NSKeyValueChangeNewKey] boolValue] == YES)
+		{
+            [player play];
             player.rate = self.playbackRate;
-                    }
-    }
+		}
+	}
     
     if(context == MaskContext){
         VideoBankItem * bankItem = object;
         CALayer * mask = bankItem.maskLayer;
         [mask setFrame:self.layer.frame];
         [mask setAutoresizingMask:kCALayerWidthSizable | kCALayerHeightSizable];
-
+        
         
         for(CALayer * layer in self.avPlayerLayers){
             layer.mask = mask;
@@ -286,43 +304,63 @@ static void *PlayRateContext = &PlayRateContext;
             }
         }
     }
-
+    
     if(context == PlayingContext){
-        if(self.playing){
-            [self preparePlayback];
-        } else {
-            [self clearBankStatus];
-
-            [CATransaction begin];
-            [CATransaction setValue:(id)kCFBooleanTrue
-                             forKey:kCATransactionDisableActions];
-            self.layer.hidden = YES;
-            [CATransaction commit];
-            
-            
-            for(AVPlayer * player in self.avPlayers){
-                [player pause];
-            }
-            for(AVPlayerLayer * layer in self.avPlayerLayers){
-                [layer removeFromSuperlayer];
-            }
-
-            
-            int i=0;
-            for(id t in self.timeObserverToken){
-                [self.avPlayers[i] removeTimeObserver:t];
-                i++;
-            }
-            
-            
-            self.avPlayers = nil;
-            self.avPlayerLayers = nil;
-            
-            self.timeObserverToken = nil;
-
-
-        }
     }
+}
+
+
+-(void)setPlaying:(BOOL)playing{
+
+    if(_playing && playing){
+        self.playing = NO;
+        self.playing = YES;
+        return;
+    }
+    _playing = playing;
+    
+    if(self.playing){
+        [self preparePlayback];
+    } else {
+        [self clearBankStatus];
+        
+        [CATransaction begin];
+        [CATransaction setValue:(id)kCFBooleanTrue
+                         forKey:kCATransactionDisableActions];
+        self.layer.hidden = YES;
+        [CATransaction commit];
+        
+        
+        for(AVPlayer * player in self.avPlayers){
+            [player pause];
+        }
+        for(AVPlayerLayer * layer in self.avPlayerLayers){
+            [layer removeObserver:self forKeyPath:@"readyForDisplay"];
+
+            [layer removeFromSuperlayer];
+        }
+        
+        
+        int i=0;
+        for(id t in self.timeObserverToken){
+            [self.avPlayers[i] removeTimeObserver:t];
+            i++;
+        }
+        
+        
+        self.avPlayers = nil;
+        self.avPlayerLayers = nil;
+        
+        self.timeObserverToken = nil;
+        
+        
+    }
+    
+    
+}
+
+-(BOOL)playing{
+    return _playing;
 }
 
 -(void)qlabPlay{
