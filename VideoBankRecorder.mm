@@ -248,9 +248,9 @@ static void *LabelContext = &LabelContext;
                 self.readyToRecord = YES;
                 [self didChangeValueForKey:@"recordings"];
                 
-                [self performSelector:@selector(prepareRecording) withObject:nil afterDelay:0.5];
+              //  [self performSelector:@selector(prepareRecording) withObject:nil afterDelay:2];
                 
-                //   [self prepareRecording];
+                   [self prepareRecording];
                 
 
             });
