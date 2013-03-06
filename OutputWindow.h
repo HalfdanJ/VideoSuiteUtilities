@@ -20,4 +20,10 @@
 
 @property NSArray * filters;
 
+@property CIFilter * transformFilter;
+@property CIFilter * movieColorFilter;
+@property CIFilter * movieColorControls;
+
+
+
 @end

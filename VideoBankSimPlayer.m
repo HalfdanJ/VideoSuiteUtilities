@@ -179,13 +179,14 @@ static void *AVSPPlayerLayerReadyForDisplay = &AVSPPlayerLayerReadyForDisplay;
                 [mask setAutoresizingMask:kCALayerWidthSizable | kCALayerHeightSizable];
                 
                 
-                AVPlayerLayer *newPlayerLayer = [MyAvPlayerLayer playerLayerWithPlayer:newPlayer];
+                MyAvPlayerLayer *newPlayerLayer = [MyAvPlayerLayer playerLayerWithPlayer:newPlayer];
                 [newPlayerLayer setFrame:self.layer.frame];
                 newPlayerLayer.videoGravity = AVLayerVideoGravityResize;
                 [newPlayerLayer setAutoresizingMask:kCALayerWidthSizable | kCALayerHeightSizable];
                 [newPlayerLayer setHidden:NO];
                 newPlayerLayer.opacity = 1.0;
                 newPlayerLayer.mask = mask;
+                newPlayerLayer.bankItem = bankItem;
                 
                  [newPlayerLayer addObserver:self forKeyPath:@"readyForDisplay" options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew context:AVSPPlayerLayerReadyForDisplay];
                 
@@ -284,7 +285,11 @@ static void *AVSPPlayerLayerReadyForDisplay = &AVSPPlayerLayerReadyForDisplay;
         
         
         for(CALayer * layer in self.avPlayerLayers){
-            layer.mask = mask;
+            MyAvPlayerLayer * avLayer = (MyAvPlayerLayer*)layer;
+            
+            if(avLayer.bankItem == bankItem){
+                layer.mask = mask;
+            }
         }
         
     }

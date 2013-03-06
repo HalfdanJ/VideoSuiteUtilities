@@ -17,7 +17,7 @@
 @implementation MyAvPlayerLayer
 static void *CurrentItemContext = &CurrentItemContext;
 
-+(AVPlayerLayer *)playerLayerWithPlayer:(AVPlayer *)player{
++(MyAvPlayerLayer *)playerLayerWithPlayer:(AVPlayer *)player{
     MyAvPlayerLayer * newPlayer = [[MyAvPlayerLayer alloc] init];
     newPlayer.player = player;
     

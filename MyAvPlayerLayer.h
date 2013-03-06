@@ -10,6 +10,6 @@
 
 @interface MyAvPlayerLayer : AVPlayerLayer
 
-
+@property id bankItem;
 
 @end
