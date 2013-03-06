@@ -65,7 +65,7 @@ static void *LastItemContext = &LastItemContext;
         [globalMidi addBindingTo:self path:@"playing" channel:1 number:num++ rangeMin:0 rangeLength:127];
         [globalMidi addBindingTo:self path:@"loop" channel:1 number:num++ rangeMin:0 rangeLength:127];
         [globalMidi addBindingTo:self path:@"midi" channel:1 number:num++ rangeMin:0 rangeLength:127];
-        [globalMidi addBindingTo:self path:@"playbackRate" channel:1 number:num++ rangeMin:00 rangeLength:4];
+        [globalMidi addBindingTo:self path:@"playbackRate" channel:1 number:num++ rangeMin:0 rangeLength:(1.0/31.0)*127.0];
         
     }
     return self;
